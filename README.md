@@ -21,7 +21,7 @@ Este entorno actúa como el motor de captación del ecosistema. Es un frontend d
   - **Service Pages:** Basadas en una plantilla única con flujo lógico (Problema -> Solución -> Proceso Automatizado) y call-to-action directo al Hub privado.
   - **Blog SEO Engine:** Sistema categorizado por verticales estratégicos (Estrategia, Visual, Automate).
     > Automatizado con n8n???
-- **Gestión de Leads:** Integración de formularios de contacto mediante automatización externa con n8n para el procesamiento de datos sin necesidad de backend propio en este módulo.
+  - **Gestión de Leads:** Integración de formularios de contacto mediante automatización externa con n8n para el procesamiento de datos sin necesidad de backend propio en este módulo.
 - **Seguridad Frontend:** Infraestructura en React fortalecida contra vulnerabilidades comunes y ataques externos mediante la higienización de entradas y configuraciones seguras de cabeceras.
 
 ---
