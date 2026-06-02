@@ -2,7 +2,7 @@
 
 ## 1. DESCRIPCIÓN GENERAL DEL PROYECTO
 
-Swift Studio es un ecosistema digital diseñado para ser una "Plantilla Maestra Escalable". El proyecto se divide en dos plataformas independientes pero conectadas funcionalmente para cubrir el ciclo de vida completo del cliente: desde la captación orgánica hasta la gestión privada de servicios productizados [1, 2].
+Swift Studio es un ecosistema digital diseñado para ser una "Plantilla Maestra Escalable". El proyecto se divide en dos plataformas independientes pero conectadas funcionalmente para cubrir el ciclo de vida completo del cliente: desde la captación orgánica hasta la gestión privada de servicios productizados.
 
 El ecosistema implementa una arquitectura robusta que combina un frontend de alto rendimiento para SEO con un entorno fullstack privado que integra agentes de Inteligencia Artificial y automatizaciones de flujos de trabajo.
 
@@ -33,8 +33,8 @@ Plataforma fullstack privada destinada a la contratación y gestión de servicio
 ### STACK TECNOLÓGICO Y FUNCIONALIDADES
 
 - **Backend:** Desarrollado en Node.js (Express v5) con arquitectura SOLID, utilizando Prisma ORM para la interacción con una base de datos PostgreSQL de 5 tablas relacionadas.
-- **Seguridad:** Autenticación mediante JSON Web Tokens (JWT) con duración de 7 días, cifrado bcryptjs y control de acceso basado en roles (RBAC: USER/ADMIN) [4, 7].
-- **Sistema de E-commerce:** Catálogo de servicios productizados (SEO, Contenidos, Fotografía, Automatización) con gestión de estados de pedido (PENDING, PROGRESS, DONE) [5, 7].
+- **Seguridad:** Autenticación mediante JSON Web Tokens (JWT) con duración de 7 días, cifrado bcryptjs y control de acceso basado en roles (RBAC: USER/ADMIN).
+- **Sistema de E-commerce:** Catálogo de servicios productizados (SEO, Contenidos, Fotografía, Automatización) con gestión de estados de pedido (PENDING, PROGRESS, DONE).
 - **Integración de IA (Agente LangGraph):** Implementación de un agente inteligente con memoria conversacional persistente y capacidad de ejecución de herramientas (tools).
 - **Motor RAG (Retrieval-Augmented Generation):** Uso de ChromaDB como base de datos vectorial para indexar documentación del dominio, permitiendo al agente responder consultas técnicas citando fuentes específicas.
 
@@ -61,18 +61,18 @@ El proyecto satisface los requisitos obligatorios establecidos para el Proyecto 
 
 ## 5. INFRAESTRUCTURA Y SEGURIDAD
 
-El proyecto sigue las directrices del OWASP API Top 10 para mitigar vulnerabilidades de seguridad [14]:
+El proyecto sigue las directrices del OWASP API Top 10 para mitigar vulnerabilidades de seguridad:
 
-- **Validación de Datos:** Uso de Zod y Pydantic/Joi para la validación estricta de inputs y outputs [4, 14].
-- **Protección de Recursos:** Implementación de Rate Limiting y Helmet para la seguridad de cabeceras HTTP [4, 14].
-- **Control de Acceso:** Verificación de propiedad (BOLA check) y autorización por roles en todos los endpoints sensibles [14].
-- **Variables de Entorno:** Configuración segregada de claves API (Groq, DB, JWT) mediante archivos `.env` y ejemplos documentados [13].
+- **Validación de Datos:** Uso de Zod y Pydantic/Joi para la validación estricta de inputs y outputs.
+- **Protección de Recursos:** Implementación de Rate Limiting y Helmet para la seguridad de cabeceras HTTP.
+- **Control de Acceso:** Verificación de propiedad (BOLA check) y autorización por roles en todos los endpoints sensibles.
+- **Variables de Entorno:** Configuración segregada de claves API (Groq, DB, JWT) mediante archivos `.env` y ejemplos documentados.
 
 ---
 
 ## 6. INSTALACIÓN Y DESPLIEGUE
 
-El repositorio está organizado siguiendo una estructura de monorepo para facilitar la gestión de ambos entornos [15].
+El repositorio está organizado siguiendo una estructura de monorepo para facilitar la gestión de ambos entornos.
 
 1.  **Backend:** `npm install` en `/backend`, configuración de `.env` y despliegue en Render.
 2.  **Frontend (Hub 360):** `npm install` en `/frontend`, configuración de API endpoint y despliegue en Vercel/Netlify.
