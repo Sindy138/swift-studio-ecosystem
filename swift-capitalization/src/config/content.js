@@ -18,7 +18,7 @@ export const SECTOR_CONFIG = {
   // =========================================
   // 2. HERO SECTION
   // =========================================
-  //
+
   hero: {
     valueProp: {
       headline:
@@ -47,32 +47,32 @@ export const SECTOR_CONFIG = {
   // 3. SOCIAL PROOF (Logos + Testimonios)
   // =========================================
   socialProof: {
-    title: "Confían en Nosotros",
-    subtitle: "Más de 150 proyectos completados y clientes satisfied",
+    title: "Más de 150 proyectos completados y clientes satisfechos",
+    subtitle: "Confían en nosotros:",
 
     logos: [
       {
         id: "client-1",
         name: "Cliente 1",
-        image: "/assets/clients/logo-1.png",
+        image: "/logos/airbnb-logo.svg",
         alt: "Logo cliente 1",
       },
       {
         id: "client-2",
         name: "Cliente 2",
-        image: "/assets/clients/logo-2.png",
+        image: "/logos/amazon-logo.svg",
         alt: "Logo cliente 2",
       },
       {
         id: "client-3",
         name: "Cliente 3",
-        image: "/assets/clients/logo-3.png",
+        image: "/logos/google-logo.svg",
         alt: "Logo cliente 3",
       },
       {
         id: "client-4",
         name: "Cliente 4",
-        image: "/assets/clients/logo-4.png",
+        image: "/logos/fedex-logo.svg",
         alt: "Logo cliente 4",
       },
     ],
@@ -101,6 +101,14 @@ export const SECTOR_CONFIG = {
         role: "Founder, StartupX",
         rating: 5,
       },
+      {
+        id: "testimonial-4",
+        quote:
+          "Nuestra campaña superó todas las expectativas gracias a Swift Studio. Profesionalidad y resultados reales.",
+        author: "Ana Martínez",
+        role: "Directora de Marketing, EduTech Solutions",
+        rating: 5,
+      },
     ],
   },
 
@@ -108,16 +116,16 @@ export const SECTOR_CONFIG = {
   // 4. GRID DE SERVICIOS (The Core - 5 Pilares)
   // =========================================
   services: {
-    title: "The Core",
-    subtitle: "Los 5 Pilares que Transforman tu Negocio",
-    description:
-      "Cada servicio está optimizado para trabajar en sinergia. Tu visión. Nuestro poder de ejecución.",
+    title: "Los 5 Pilares que Transforman tu Negocio",
+    subtitle:
+      "Cada servicio está optimizado para trabajar en sinergia. Tu visión es nuestro poder de ejecución.",
+    // description:"Cada servicio está optimizado para trabajar en sinergia. Tu visión. Nuestro poder de ejecución.",
 
     serviceCards: [
       {
         id: "seo",
         name: "SEO & Posicionamiento",
-        image: "",
+        image: "/services/seo-score.svg",
         shortDescription: "Domina la primera página de Google",
         longDescription:
           "Estrategia integral SEO técnico, contenido y link building para autoridad digital.",
@@ -134,9 +142,9 @@ export const SECTOR_CONFIG = {
       },
       {
         id: "social",
-        name: "Social Media & Community",
-        image: "",
-        shortDescription: "Comunidad. Engagement. Ventas.",
+        name: "Social Media",
+        image: "/services/social-media.svg",
+        shortDescription: "Community. Engagement. Sales.",
         longDescription:
           "Estrategia de redes sociales integrada con automatización y análisis de datos.",
         features: [
@@ -153,8 +161,8 @@ export const SECTOR_CONFIG = {
       {
         id: "fotografia",
         name: "Fotografía Profesional",
-        image: "/assets/services/fotografia.jpg",
-        shortDescription: "Historias visuales que venden",
+        image: "/services/photo-session.svg",
+        shortDescription: "Storytelling. Historias visuales que venden",
         longDescription:
           "Sesiones fotográficas profesionales para productos, eventos y corporate.",
         features: [
@@ -171,7 +179,7 @@ export const SECTOR_CONFIG = {
       {
         id: "blogs",
         name: "Content & Blogs",
-        image: "",
+        image: "/services/content-seo.svg",
         shortDescription: "Contenido que atrae y convierte",
         longDescription:
           "Estrategia de contenido integrada: blogs, whitepapers, casos de estudio.",
@@ -188,9 +196,9 @@ export const SECTOR_CONFIG = {
       },
       {
         id: "automatizacion",
-        name: "Automatización con n8n",
-        image: "",
-        shortDescription: "Tu agencia funcionando 24/7",
+        name: "Automation n8n",
+        image: "/services/automation.svg",
+        shortDescription: "Tu agencia funcionando en 24/7",
         longDescription:
           "Flujos de trabajo automatizados que integran todos tus sistemas y herramientas.",
         features: [
@@ -211,12 +219,20 @@ export const SECTOR_CONFIG = {
   // 5. THE ENGINE SECTION
   // =========================================
   engine: {
-    title: "The Engine",
-    subtitle: "¿Qué nos diferencia de una agencia tradicional?",
+    title: "¿Qué nos diferencia de una agencia tradicional?",
+    /*subtitle: "¿Qué nos diferencia de una agencia tradicional?",*/
     description:
       "Agencias 360º + Automatización Avanzada = Resultados Exponenciales",
 
     advantages: [
+      {
+        id: "advantage-4",
+        title: "Equipo Especializado",
+        description:
+          "SEO Experts, Fotógrafos, Content Writers y Automation Engineers. Todo integrado.",
+        visual: "/engine/engine.gif",
+      },
+      /*
       {
         id: "advantage-1",
         title: "Dashboard Propio",
@@ -224,26 +240,20 @@ export const SECTOR_CONFIG = {
           "Panel centralizado para monitorear todos tus servicios en tiempo real. ROI visible.",
         icon: "📈",
       },
+      */
       {
         id: "advantage-2",
         title: "Integraciones n8n",
         description:
           "Conecta todos tus sistemas. CRM, Email, Analytics, Social. Sin duplicar trabajo.",
-        icon: "🔗",
+        visual: "/engine/engine.gif",
       },
       {
         id: "advantage-3",
         title: "Optimización Continua",
         description:
           "Machine learning y análisis de datos para mejora permanente. No solo ejecución.",
-        icon: "🤖",
-      },
-      {
-        id: "advantage-4",
-        title: "Equipo Especializado",
-        description:
-          "SEO Experts, Fotógrafos, Content Writers y Automation Engineers. Todo integrado.",
-        icon: "👥",
+        visual: "/engine/engine.gif",
       },
     ],
 
@@ -266,12 +276,12 @@ export const SECTOR_CONFIG = {
         label: "Proyectos Completados",
       },
       {
-        metric: "95%",
+        metric: "99%",
         label: "Satisfacción de Clientes",
       },
       {
-        metric: "6 Meses",
-        label: "Tiempo promedio para resultados",
+        metric: "6",
+        label: "Meses, resultados",
       },
       {
         metric: "300%",

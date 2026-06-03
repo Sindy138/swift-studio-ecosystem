@@ -10,15 +10,15 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 1rem 0;
+  padding: 2.2rem 0;
   height: auto;
   min-height: fit-content;
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,7 +35,7 @@
 }
 
 .logo-image {
-  width: clamp(125px, calc(125px + 5vw), 255px);
+  width: clamp(150px, calc(150px + 5vw), 300px);
   height: auto;
   transition: transform 0.3s ease;
   display: block;
@@ -59,7 +59,7 @@
   color: #333;
   font-weight: 500;
   transition: color 0.3s ease;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   white-space: nowrap;
 }
 

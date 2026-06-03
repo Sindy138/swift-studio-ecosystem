@@ -1,15 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SECTOR_CONFIG from "../../config/content";
 import styles from "./styles/ServiceGrid.module.css";
 
 /**
  * SERVICE GRID - The Core (5 Pilares)
- * Grid de servicios con cards interactivas
- * Cada card dirige a una subpágina de captación
- * Escalable: Cambiar cantidad de servicios en config
+ * Grid de servicios con tarjetas interactivas y animadas
+ * Estructura unificada: Cada tarjeta procesa sus propios textos rotativos
  */
 const ServiceGrid = ({ config = SECTOR_CONFIG.services }) => {
   const { title, subtitle, description, serviceCards } = config;
+
+  // Estados para controlar de forma síncrona el índice del texto rotativo y el fade
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  // Efecto para la rotación global de los textos en todas las tarjetas
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        // Rotación cíclica basada en un estándar de 4 elementos
+        setCurrentIdx((prevIdx) => (prevIdx + 1) % 4);
+        setFade(true);
+      }, 300); // Duración del fade-out en milisegundos
+    }, 3000); // Cambio de texto cada 3 segundos
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className={styles["services-section"]} id="services">
@@ -23,46 +40,58 @@ const ServiceGrid = ({ config = SECTOR_CONFIG.services }) => {
 
         {/* Services Grid */}
         <div className={styles["services-grid"]}>
-          {serviceCards.map((service) => (
-            <div key={service.id} className={styles["service-card"]}>
-              {/* Color accent bar */}
-              <div
-                className={styles["color-accent"]}
-                style={{ backgroundColor: service.color }}
-              ></div>
+          {serviceCards.map((service) => {
+            // Usamos las 'features' de tu content.js como la lista de textos que van a rotar
+            const rotatingTexts =
+              service.features && service.features.length > 0
+                ? service.features
+                : ["Optimización", "Eficiencia", "Resultados"];
 
-              {/* Card content */}
-              <div className={styles["card-content"]}>
-                <div className={styles["service-icon"]}>{service.icon}</div>
-                <h3 className={styles["service-name"]}>{service.name}</h3>
-                <p className={styles["service-short"]}>
+            // Evitamos desbordamientos de índice si alguna tarjeta tiene menos características
+            const textToShow = rotatingTexts[currentIdx % rotatingTexts.length];
+
+            return (
+              <div key={service.id} className={styles["service-card"]}>
+                {/* Cabecera superior de la tarjeta principal */}
+                <h4 className={styles["card-main-title"]}>{service.name}</h4>
+                <p className={styles["card-main-desc"]}>
                   {service.shortDescription}
                 </p>
-                <p className={styles["service-long"]}>
-                  {service.longDescription}
-                </p>
 
-                {/* Features list */}
-                <ul className={styles["service-features"]}>
-                  {service.features.map((feature, idx) => (
-                    <li key={idx}>
-                      <span className={styles["feature-check"]}>✓</span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                {/* SUB-CARD INTERNA: Contenedor con borde animado interactivo */}
+                <div className={styles["card-wrapper"]}>
+                  <div className={styles["card-inner"]}>
+                    <div className={styles["card-sub-header"]}>
+                      <span className={styles["memory-label"]}>
+                        Core Vitals OK
+                      </span>
+                      <span className={styles["sparkle-icon"]}>✦</span>
+                    </div>
 
-                {/* CTA Button */}
+                    <p className={styles["pref-label"]}>USER PREFERENCE:</p>
+
+                    <div className={styles["rotating-text-container"]}>
+                      <p
+                        className={styles["rotating-text"]}
+                        style={{
+                          opacity: fade ? 1 : 0,
+                          transition: "opacity 0.3s ease-in-out",
+                        }}
+                      >
+                        {textToShow}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botón de acción o enlace inferior de la tarjeta */}
                 <a href={service.link} className={styles["service-cta"]}>
                   {service.ctaText}
                   <span className={styles.arrow}>→</span>
                 </a>
               </div>
-
-              {/* Hover effect overlay */}
-              <div className={styles["card-hover-overlay"]}></div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Secondary CTA */}

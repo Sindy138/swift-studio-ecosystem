@@ -11,7 +11,7 @@ const NavBar = () => {
       <div className={styles["navbar-container"]}>
         <a href="/" className={styles["navbar-logo"]}>
           <img
-            src="/logo-swift.svg"
+            src="\public\logos\logo-swift.svg"
             alt="Swift Studio"
             className={styles["logo-image"]}
           />
