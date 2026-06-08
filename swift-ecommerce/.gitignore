@@ -1,0 +1,11 @@
+# Python — entorno virtual ChromaDB
+chroma-env/
+__pycache__/
+*.pyc
+
+# ChromaDB — datos persistidos localmente
+chroma_data/
+
+# Variables de entorno
+.env
+chroma-env/

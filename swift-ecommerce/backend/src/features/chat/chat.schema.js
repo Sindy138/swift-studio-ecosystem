@@ -11,4 +11,11 @@ const FeedbackSchema = z.object({
   }),
 })
 
-module.exports = { SendMessageSchema, FeedbackSchema }
+// Valida la respuesta del agente antes de guardarla en BD (OWASP API10)
+const AgentResponseSchema = z.object({
+  answer: z.string().min(1),
+  sources: z.array(z.string()).default([]),
+  traceId: z.string().nullable().default(null),
+})
+
+module.exports = { SendMessageSchema, FeedbackSchema, AgentResponseSchema }

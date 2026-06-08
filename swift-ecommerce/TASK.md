@@ -22,6 +22,8 @@
 - 10 tests de integración con Vitest + Supertest
 - **Módulo Chat** — `ConversationMessage` en BD, `POST /api/chat`, `GET /api/chat/history/:conversationId`, `POST /api/chat/:traceId/feedback` ✅ _(2026-06-08)_
 - **Agente LangGraph** — `createReactAgent` con 2 tools (`search_agency_docs` + `search_services`), `ChatGroq`, historial de conversación, extracción de fuentes, manejo de errores ✅ _(2026-06-08)_
+- **ChromaDB / RAG** — `lib/chroma.js`, 5 docs en `data/docs/`, script `indexDocs.js`, 49 fragmentos indexados ✅ _(2026-06-08)_
+- **Seguridad IA** — middleware de prompt injection (14 patrones), system prompt endurecido, rate limiter de chat (30/min), security logging, validación Zod del output del agente ✅ _(2026-06-08)_
 
 ---
 
@@ -46,36 +48,27 @@
 
 ---
 
-### 3. ChromaDB / RAG — Requisito BRIEF (≥5 docs, cita fuentes)
+### ~~3. ChromaDB / RAG — Requisito BRIEF (≥5 docs, cita fuentes)~~ ✅ Completado 2026-06-08
 
-- [ ] **3.1** Instalar cliente ChromaDB
-  ```bash
-  npm install chromadb
-  ```
-
-- [ ] **3.2** Crear `backend/src/lib/chroma.js` — singleton del cliente y helper de búsqueda
-
-- [ ] **3.3** Crear script `backend/scripts/indexDocs.js` para indexar documentos
-
-- [ ] **3.4** Preparar y indexar ≥5 documentos en `backend/data/docs/`
-  - `about-agency.md` — quiénes somos, misión, clientes tipo
-  - `services-seo.md` — servicios SEO con descripción detallada
-  - `services-content.md` — servicios de contenido y fotografía
-  - `services-automation.md` — servicios de automatización con N8N
-  - `faq.md` — preguntas frecuentes, plazos, revisiones, proceso de trabajo
-
-- [ ] **3.5** Verificar que las respuestas del agente incluyen el campo `sources` con la referencia al doc
+- [x] **3.1** `chromadb` + `@chroma-core/default-embed` instalados
+- [x] **3.2** `backend/src/lib/chroma.js` — singleton con `host`/`port`, `DefaultEmbeddingFunction`, helper `searchDocs`
+- [x] **3.3** `backend/scripts/indexDocs.js` — re-indexa desde cero, chunking por párrafo/oración, metadato `source`
+- [x] **3.4** 5 documentos en `backend/data/docs/`: `about-agency.md`, `services-seo.md`, `services-content.md`, `services-automation.md`, `faq.md`
+- [x] **3.5** `tools.js` actualizado — `searchAgencyDocs` consulta ChromaDB real, extrae `sources`, manejo de error si el servidor no responde
+- [x] **3.6** Servidor ChromaDB levantado con Python venv (`chroma run`) — 49 fragmentos indexados en 5 documentos ✅
 
 ---
 
 ### 4. LangFuse — Observabilidad LLM
 
 - [ ] **4.1** Instalar SDK
+
   ```bash
   npm install langfuse
   ```
 
 - [ ] **4.2** Añadir variables de entorno al `.env`:
+
   ```env
   LANGFUSE_SECRET_KEY="sk-lf-..."
   LANGFUSE_PUBLIC_KEY="pk-lf-..."
@@ -95,6 +88,7 @@
 ### 5. Swagger / Documentación API — Requisito BRIEF
 
 - [ ] **5.1** Instalar dependencias
+
   ```bash
   npm install swagger-jsdoc swagger-ui-express redoc-express
   ```
@@ -111,8 +105,8 @@
 
 - [ ] **5.4** Montar las rutas de documentación en `app.js`
   ```js
-  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(spec))
-  app.use('/api/redoc', redoc({ specUrl: '/api/docs/swagger.json' }))
+  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(spec));
+  app.use("/api/redoc", redoc({ specUrl: "/api/docs/swagger.json" }));
   ```
 
 ---
@@ -120,6 +114,7 @@
 ### 6. Variables de Entorno y Configuración
 
 - [ ] **6.1** Añadir al `.env` todas las variables de IA que faltan:
+
   ```env
   GROQ_API_KEY="gsk_..."
   CHROMA_HOST="localhost"
@@ -132,8 +127,13 @@
 
 ### 7. Seguridad — OWASP gaps pendientes
 
-- [ ] **7.1** API10 — Validar respuestas del agente IA con Zod antes de guardar en BD
-  - Schema: `AgentResponseSchema` con `answer` (string), `sources` (array de strings), `conversationId`
+### ~~7. Seguridad IA y prompts~~ ✅ Completado 2026-06-08
+
+- [x] **7.1** `promptSecurity.middleware.js` — 14 patrones regex de prompt injection y jailbreaking, log de auditoría (solo metadatos), 400 con mensaje genérico (detección de patrones de inyección (validación de input))
+- [x] **7.2** System prompt endurecido en `agent.js` — reglas explícitas anti-injection, anti-jailbreak, nunca revelar el prompt, ignorar instrucciones del RAG malicioso. (System prompt robusto)
+- [x] **7.3** Rate limiter específico para `/api/chat` — 30 req/min (más restrictivo que el global de 100/15min). (Rate limiting IA)
+- [x] **7.4** Security logging en `chat.controller.js` — `userId` + `messageLength` + `convId`, nunca el contenido del mensaje. (Security logging)
+- [x] **7.5** `AgentResponseSchema` (Zod) en `chat.schema.js` — valida output del agente antes de guardar en BD, devuelve 502 si la respuesta es inválida (API10). (Output validation)
 
 ---
 
@@ -173,17 +173,20 @@
 ### F1. Scaffolding y configuración inicial
 
 - [ ] **F1.1** Crear el proyecto con Vite
+
   ```bash
   npm create vite@latest frontend -- --template react
   cd frontend && npm install
   ```
 
 - [ ] **F1.2** Instalar dependencias necesarias
+
   ```bash
   npm install react-router-dom axios
   ```
 
 - [ ] **F1.3** Crear `frontend/.env` y `frontend/.env.example`
+
   ```env
   VITE_API_URL=http://localhost:3000/api
   ```
@@ -216,6 +219,7 @@
 ### F3. Router y rutas protegidas (BRIEF: mínimo 3 rutas)
 
 - [ ] **F3.1** Crear `src/router/index.jsx` con React Router v6
+
   ```
   /              → redirige a /dashboard si auth, a /login si no
   /login         → LoginPage (pública)
@@ -430,6 +434,7 @@ Despliegue al final:
 # RESUMEN DE DEPENDENCIAS A INSTALAR
 
 **Backend:**
+
 ```bash
 npm install @langchain/langgraph @langchain/core @langchain/groq langchain \
             chromadb langfuse \
@@ -437,6 +442,7 @@ npm install @langchain/langgraph @langchain/core @langchain/groq langchain \
 ```
 
 **Frontend:**
+
 ```bash
 npm create vite@latest frontend -- --template react
 cd frontend

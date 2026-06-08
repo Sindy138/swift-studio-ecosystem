@@ -1,17 +1,24 @@
 const { tool } = require('@langchain/core/tools')
 const { z } = require('zod')
 const prisma = require('../../../lib/prisma')
+const { searchDocs } = require('../../../lib/chroma')
 
-// Tool 1: RAG — busca en documentación de la agencia
-// Stub hasta Tarea B3 (ChromaDB). La firma y el contrato de respuesta no cambian.
+// Tool 1: RAG — busca en documentación de la agencia vía ChromaDB
 const searchAgencyDocs = tool(
   async ({ query }) => {
-    // TODO (Tarea B3): reemplazar con consulta real a ChromaDB
-    return JSON.stringify({
-      results: [],
-      sources: [],
-      note: 'La documentación RAG aún no está indexada. Responde solo con lo que sabes de Swift Studio 360.',
-    })
+    try {
+      const results = await searchDocs(query, 3)
+      if (results.length === 0) {
+        return JSON.stringify({ results: [], sources: [], note: 'No se encontraron documentos relevantes.' })
+      }
+      return JSON.stringify({
+        results: results.map((r) => r.content),
+        sources: [...new Set(results.map((r) => r.source))],
+      })
+    } catch (err) {
+      console.error('[RAG error]', err.message)
+      return JSON.stringify({ results: [], sources: [], note: 'Error al consultar la documentación RAG.' })
+    }
   },
   {
     name: 'search_agency_docs',

@@ -2,10 +2,14 @@ const { randomUUID } = require('crypto')
 const prisma = require('../../lib/prisma')
 const asyncHandler = require('../../lib/asyncHandler')
 const { runAgent } = require('./agent/agent')
+const { AgentResponseSchema } = require('./chat.schema')
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { message, conversationId } = req.body
   const userId = req.user.id
+
+  // Capa 5: log de auditoría — solo metadatos, nunca el contenido del mensaje
+  console.info(`[CHAT] userId: ${userId} | length: ${message.length} | convId: ${conversationId ?? 'new'}`)
 
   // Si se provee conversationId, verificar que pertenece al usuario
   if (conversationId) {
@@ -28,8 +32,16 @@ const sendMessage = asyncHandler(async (req, res) => {
     orderBy: { createdAt: 'asc' },
   })
 
-  // Llamar al agente (stub hasta Tarea 2)
-  const agentResponse = await runAgent(message, history)
+  const rawResponse = await runAgent(message, history)
+
+  // API10: validar la respuesta del agente con Zod antes de guardar en BD
+  const parsed = AgentResponseSchema.safeParse(rawResponse)
+  if (!parsed.success) {
+    console.error('[CHAT] Respuesta del agente no válida:', parsed.error.flatten())
+    return res.status(502).json({ error: 'El agente devolvió una respuesta inesperada. Inténtalo de nuevo.' })
+  }
+
+  const agentResponse = parsed.data
 
   // Guardar respuesta del agente
   const assistantMessage = await prisma.conversationMessage.create({
@@ -37,8 +49,8 @@ const sendMessage = asyncHandler(async (req, res) => {
       conversationId: convId,
       role: 'ASSISTANT',
       content: agentResponse.answer,
-      sources: agentResponse.sources ?? [],
-      traceId: agentResponse.traceId ?? null,
+      sources: agentResponse.sources,
+      traceId: agentResponse.traceId,
       userId,
     },
   })

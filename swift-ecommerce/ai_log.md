@@ -2,6 +2,40 @@
 
 ---
 
+## 2026-06-08 — Backend: Seguridad IA y prompts
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** Antes de continuar con LangFuse, había que verificar e implementar las medidas de seguridad de IA y prompts descritas en `documents/3_seguridad-ia.md` y `documents/4_seguridad-prompts.md`. El código del chat tenía el límite de 2000 chars pero le faltaban las otras cuatro capas de defensa.
+- **Prompt usado:** "antes del langfuse vamos a verificar que están implementadas las medidas de seguridad de ia y seguridad de prompts que se encuentran en la carpeta documents de la raiz, si no lo están, impleméntalas"
+- **Qué obtuvo:**
+  - `promptSecurity.middleware.js` — 14 patrones regex (español e inglés) detectan prompt injection directa, jailbreaking y sobrescritura de rol; log de auditoría con userId + longitud (nunca el contenido); respuesta genérica 400
+  - `agent.js` — system prompt ampliado con sección "REGLAS DE SEGURIDAD INNEGOCIABLES": rechazar peticiones de ignorar instrucciones, nunca revelar el system prompt, ignorar instrucciones ocultas en el RAG, no ejecutar código ni acceder a URLs externas
+  - `chat.routes.js` — rate limiter específico para `/api/chat` (30 req/min) más restrictivo que el global (100/15min) para mitigar ataques de fuerza bruta y bucles de coste
+  - `chat.controller.js` — `console.info` de auditoría solo con metadatos (userId, messageLength, convId), nunca el mensaje
+  - `chat.schema.js` — `AgentResponseSchema` con Zod valida el output del agente antes de persistirlo; si la forma no es la esperada devuelve 502 en lugar de guardar datos corruptos (cierra OWASP API10)
+- **Qué modificó o descartó:** Se descartó la validación de output por palabras prohibidas ("contraseña", "confidencial") porque en el contexto de esta app los documentos RAG son controlados por nosotros y el riesgo de data leakage es bajo. La separación de colecciones por nivel de acceso (doc 3_seguridad-ia.md) también se omitió — YAGNI para MVP con un único tipo de usuario cliente.
+- **Tiempo con IA:** ~20 min | **Tiempo sin IA (estimado):** ~2 horas
+- **Aprendizaje:** La defensa en profundidad para IA no es un solo check sino capas independientes: validar el input ANTES del LLM (middleware), reforzar el system prompt para que el modelo rechace ataques, limitar la tasa de llamadas, loguear solo metadatos (no datos personales), y validar el output con un schema estricto antes de persistir. Cada capa falla sola; juntas reducen el riesgo significativamente.
+
+---
+
+## 2026-06-08 — Backend: ChromaDB RAG (indexación de documentos)
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El agente tenía el stub RAG que devolvía resultados vacíos. Había que conectar ChromaDB real: crear el cliente singleton, los 5 documentos de la agencia, el script de indexación y actualizar la tool para que busque en la colección real.
+- **Prompt usado:** "sí (al final, en el ai_log añade un prompt completo)"
+- **Qué obtuvo:**
+  - `npm install chromadb @chroma-core/default-embed` — cliente v2 con función de embeddings local
+  - `src/lib/chroma.js` — singleton con `host`/`port` (API v2), `DefaultEmbeddingFunction`, helper `searchDocs(query, nResults)`
+  - 5 documentos en `backend/data/docs/`: `about-agency.md`, `services-seo.md`, `services-content.md`, `services-automation.md`, `faq.md`
+  - `scripts/indexDocs.js` — borra y re-crea la colección, chunking por párrafos/oraciones (máx 600 chars), añade metadato `source` a cada fragmento
+  - `tools.js` actualizado — `searchAgencyDocs` llama a `searchDocs`, extrae `sources` únicos, captura errores de red sin crashear el agente
+- **Qué modificó o descartó:** La primera versión usaba `path` en el constructor de `ChromaClient` (API v1) — en v2 hay que usar `host` y `port` por separado. También fallaba por falta del paquete de embeddings: chromadb v2 requiere `@chroma-core/default-embed` explícitamente. Se detectó en el primer intento de ejecución del script y se corrigió. La indexación real queda pendiente de `docker run -p 8000:8000 chromadb/chroma` por parte del usuario.
+- **Tiempo con IA:** ~25 min | **Tiempo sin IA (estimado):** ~2 horas
+- **Aprendizaje:** En `chromadb` v2 el constructor cambió de `{ path: 'http://...' }` a `{ host, port }`. Además ya no crea una `DefaultEmbeddingFunction` automáticamente — hay que instalar `@chroma-core/default-embed` y pasarla explícitamente al crear/obtener la colección. El manejo de error en la tool RAG es crítico: si ChromaDB no está corriendo, el agente no debe crashear sino degradarse con gracia devolviendo `sources: []`.
+
+---
+
 ## 2026-06-08 — Backend: Agente LangGraph + tools
 
 - **Herramienta:** Claude Code (claude-sonnet-4-6)
