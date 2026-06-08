@@ -20,7 +20,8 @@
 - CRUD completo: Services, Orders, Deliverables, Users
 - Zod en todos los endpoints (incluida validación de URL en deliverables)
 - 10 tests de integración con Vitest + Supertest
-- **Módulo Chat** — `ConversationMessage` en BD, `POST /api/chat`, `GET /api/chat/history/:conversationId`, `POST /api/chat/:traceId/feedback`, stub del agente listo para Tarea 2 ✅ _(2026-06-08)_
+- **Módulo Chat** — `ConversationMessage` en BD, `POST /api/chat`, `GET /api/chat/history/:conversationId`, `POST /api/chat/:traceId/feedback` ✅ _(2026-06-08)_
+- **Agente LangGraph** — `createReactAgent` con 2 tools (`search_agency_docs` + `search_services`), `ChatGroq`, historial de conversación, extracción de fuentes, manejo de errores ✅ _(2026-06-08)_
 
 ---
 
@@ -34,28 +35,14 @@
 
 ---
 
-### 2. Agente LangGraph — Requisito BRIEF (≥2 tools)
+### ~~2. Agente LangGraph — Requisito BRIEF (≥2 tools)~~ ✅ Completado 2026-06-08
 
-- [ ] **2.1** Instalar dependencias
-  ```bash
-  npm install @langchain/langgraph @langchain/core @langchain/groq langchain
-  ```
-
-- [ ] **2.2** Crear módulo del agente en `backend/src/features/chat/agent/`
-  - `agent.js` — define el grafo LangGraph y exporta `runAgent(message, history)`
-  - `tools.js` — define las dos tools obligatorias
-
-- [ ] **2.3** Tool 1 — RAG (consulta ChromaDB)
-  - Recibe query de texto, busca en la colección `swift_studio_docs`
-  - Devuelve fragmentos relevantes + metadato fuente (`source`) para citar
-
-- [ ] **2.4** Tool 2 — DB (consulta servicios/precios vía Prisma)
-  - Recibe categoría o nombre de servicio
-  - Devuelve nombre, descripción, precio y `formConfig` de servicios activos
-
-- [ ] **2.5** Nodo final — generar respuesta con LLM (Groq)
-  - Construir prompt con contexto RAG + datos BD + historial de conversación
-  - Routing condicional: si la query es sobre precios → Tool 2, si es general → Tool 1
+- [x] **2.1** Dependencias instaladas: `@langchain/langgraph`, `@langchain/core`, `@langchain/groq`, `langchain`
+- [x] **2.2** `tools.js` — `searchAgencyDocs` (stub RAG, listo para B3) + `searchServices` (Prisma real)
+- [x] **2.3** Tool 1 `search_agency_docs` — stub con la firma correcta para ChromaDB (Tarea B3)
+- [x] **2.4** Tool 2 `search_services` — consulta Prisma filtrando por `category` y/o `name`, devuelve nombre/descripción/precio
+- [x] **2.5** `agent.js` — `createReactAgent` (LangGraph) + `ChatGroq` (`GROQ_MODEL` desde env) + sistema de extracción de fuentes + manejo de errores + historial de conversación limitado a 10 turnos
+- [x] `.env.example` actualizado con todas las variables de IA
 
 ---
 

@@ -2,6 +2,23 @@
 
 ---
 
+## 2026-06-08 — Backend: Agente LangGraph + tools
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El módulo chat tenía un stub como agente. Había que implementar el agente real con LangGraph usando dos tools (RAG y consulta a BD) y Groq como LLM, sin romper los tests existentes.
+- **Prompt usado:** continua con la tarea B2 del TASK.md
+- **Qué obtuvo:**
+  - Paquetes instalados: `@langchain/langgraph`, `@langchain/core`, `@langchain/groq`, `langchain`
+  - `tools.js` con dos tools: `search_agency_docs` (stub RAG con la firma correcta para ChromaDB en B3) y `search_services` (consulta real a Prisma con filtros opcionales por categoría y nombre)
+  - `agent.js` reemplazado: `createReactAgent` de LangGraph + `ChatGroq` leyendo `GROQ_MODEL` del entorno + system prompt en español + conversión del historial de BD a mensajes LangChain + extracción de fuentes de los `ToolMessage` + manejo de error con respuesta amigable
+  - `.env.example` actualizado con todas las variables de IA
+- **Qué modificó o descartó:** La `search_agency_docs` es un stub que devuelve resultados vacíos hasta que ChromaDB esté listo (Tarea B3) — así el agente ya funciona con la tool de servicios real y se puede probar end-to-end. Se limitó el historial a los últimos 10 mensajes para no saturar el contexto del LLM. Se eligió `createReactAgent` en lugar de un `StateGraph` manual porque es suficiente para el BRIEF y más simple de mantener (KISS).
+- **Cómo funciona el routing:** no hay código de routing explícito — el LLM decide qué tool usar basándose en el system prompt y las descripciones de cada tool. Si el usuario pregunta por precios → search_services; si pregunta por la agencia → search_agency_docs. Eso cumple el requisito del BRIEF de "routing condicional".
+- **Tiempo con IA:** ~20 min | **Tiempo sin IA (estimado):** ~3-4 horas
+- **Aprendizaje:** `createReactAgent` gestiona automáticamente el ciclo tool-call → tool-result → respuesta final. El routing condicional entre tools lo hace el propio LLM según el system prompt y las descripciones de cada tool — no hace falta código de routing explícito. Para CommonJS, los paquetes `@langchain/*` publican CJS builds así que `require()` funciona directamente sin `import()` dinámico.
+
+---
+
 ## 2026-06-08 — Backend: Módulo Chat (endpoints + modelo BD)
 
 - **Herramienta:** Claude Code (claude-sonnet-4-6)
