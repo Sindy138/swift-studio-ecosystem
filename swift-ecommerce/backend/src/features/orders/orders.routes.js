@@ -1,4 +1,13 @@
 const { Router } = require('express')
+const rateLimit = require('express-rate-limit')
+
+const createOrderLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many orders created, please try again later' },
+})
 const {
   createOrder,
   listOrders,
@@ -13,7 +22,7 @@ const { authenticate, isAdmin } = require('../../middlewares/auth.middleware')
 
 const router = Router()
 
-router.post('/', authenticate, validate(CreateOrderSchema), createOrder)
+router.post('/', authenticate, createOrderLimiter, validate(CreateOrderSchema), createOrder)
 router.get('/', authenticate, listOrders)
 router.get('/:id', authenticate, getOrder)
 router.put('/:id/status', authenticate, isAdmin, validate(UpdateOrderStatusSchema), updateOrderStatus)

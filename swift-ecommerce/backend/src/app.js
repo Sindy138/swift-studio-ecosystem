@@ -2,16 +2,27 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const path = require("path");
 const authRoutes = require("./features/auth/auth.routes");
 const usersRoutes = require("./features/users/users.routes");
 const servicesRoutes = require("./features/services/services.routes");
 const ordersRoutes = require("./features/orders/orders.routes");
+const chatRoutes = require("./features/chat/chat.routes");
 const { errorHandler } = require("./middlewares/error.middleware");
 
 const app = express();
 
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+});
+
 app.use(helmet());
+app.use(globalLimiter);
 app.use(morgan("dev"));
 app.use(
   cors({
@@ -26,6 +37,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/services", servicesRoutes);
 app.use("/api/orders", ordersRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.use(express.static(path.join(__dirname, "../public")));
 

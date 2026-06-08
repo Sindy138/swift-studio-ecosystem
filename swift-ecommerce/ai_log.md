@@ -1,0 +1,42 @@
+# AI Log — Swift Studio 360
+
+---
+
+## 2026-06-08 — Backend: Módulo Chat (endpoints + modelo BD)
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El backend tenía implementados auth, services, orders y users, pero faltaban los dos endpoints de chat obligatorios del BRIEF (`POST /api/chat` y `GET /api/chat/history/:id`), el modelo de BD para persistir conversaciones, y las rutas de feedback para LangFuse.
+- **Prompt usado:** "vamos a continuar por el backend, tareas pendientes 1. Modulo Chat"
+- **Qué obtuvo:**
+  - Nuevo enum `MessageRole` (USER / ASSISTANT) y modelo `ConversationMessage` en `schema.prisma` con índices en `conversationId` y `userId`, relación con `User` en cascade delete
+  - Migración `20260608180135_add_chat` aplicada y en sync con la BD
+  - `chat.schema.js` — validación Zod para `SendMessageSchema` y `FeedbackSchema`
+  - `agent/agent.js` — stub con la firma contractual que respetará la implementación real de LangGraph (Tarea 2)
+  - `chat.controller.js` — lógica completa: ownership check del `conversationId`, generación de UUID si es conversación nueva, guardado de mensajes usuario/asistente, llamada al agente, endpoint de feedback
+  - `chat.routes.js` — tres rutas: `POST /`, `GET /history/:conversationId`, `POST /:traceId/feedback`, todas protegidas con `authenticate`
+  - `app.js` actualizado con `app.use("/api/chat", chatRoutes)`
+- **Qué modificó o descartó:** Se decidió usar `crypto.randomUUID()` nativo de Node.js en vez de instalar un paquete externo (KISS). El `conversationId` no es un modelo separado sino un string agrupador en `ConversationMessage` — suficiente para el MVP. El endpoint de feedback devuelve `recorded: false` hasta que LangFuse se integre en Tarea 4.
+- **Tiempo con IA:** ~15 min | **Tiempo sin IA (estimado):** ~90 min
+- **Aprendizaje:** El `conversationId` como campo indexado en lugar de tabla propia es un patrón válido cuando no necesitas metadatos propios de la conversación (título, estado, etc.). `randomUUID()` está en Node.js core desde v14.17 — no hace falta `uuid` ni `cuid` como dependencia. En Express v5 el router no expone `_router` hasta recibir la primera petición, por eso el introspect de rutas falló y se validó con los tests existentes en su lugar.
+
+---
+
+## 2026-06-03 — Seguridad: rate limiting global y por endpoint
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El CLAUDE.md tenía marcado OWASP API4 como ⚠️ (rate limit solo en login). Se necesitaba extender la protección al resto de endpoints para tener una seguridad robusta antes de empezar el frontend.
+- **Prompt usado:** "Hay que fortalecer la seguridad de los endpoints. Agrega los limiters donde sea conveniente para que quede una seguridad robusta."
+- **Qué obtuvo:**
+  - La estrategia:
+    - **Global limiter en app.js** — cubre todos los endpoints (OWASP API4)
+    - **registerLimiter en auth.routes.js** — previene creación masiva de cuentas
+    - **createOrderLimiter en orders.routes.js** — previene spam de pedidos
+    - Los endpoints de admin ya están protegidos por isAdmin, el global limiter es suficiente para ellos.
+
+- Análisis de los 4 archivos de rutas + app.js. Propuesta de 3 niveles de limitación y implementación directa:
+  - `globalLimiter` (100 req/15min) en `app.js` — cubre todos los endpoints
+  - `registerLimiter` (5 req/hora) en `auth.routes.js` — previene creación masiva de cuentas
+  - `createOrderLimiter` (20 req/15min) en `orders.routes.js` — previene spam de pedidos
+- **Qué modificó o descartó:** Se decidió no crear un archivo central `limiters.js` (KISS/YAGNI — solo 3 limiters en 3 archivos distintos, no justifica la abstracción). Los endpoints de admin no recibieron limiter específico porque ya están bloqueados por `isAdmin`.
+- **Tiempo con IA:** ~10 min | **Tiempo sin IA (estimado):** ~30 min
+- **Aprendizaje:** El `rateLimit()` es una función fábrica — cada vez que la llamas crea un middleware independiente con su propio contador. Por eso `loginLimiter` y `registerLimiter` son instancias separadas aunque vengan del mismo `require`. El global en `app.use()` actúa antes de cualquier ruta.

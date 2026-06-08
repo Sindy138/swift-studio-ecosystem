@@ -12,9 +12,17 @@ const loginLimiter = rateLimit({
   message: { error: 'Too many login attempts, please try again in 15 minutes' },
 })
 
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many accounts created from this IP, please try again in 1 hour' },
+})
+
 const router = Router()
 
-router.post('/register', validate(RegisterSchema), register)
+router.post('/register', registerLimiter, validate(RegisterSchema), register)
 router.post('/login', loginLimiter, validate(LoginSchema), login)
 
 module.exports = router

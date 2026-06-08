@@ -47,10 +47,14 @@ Se trata de un proyecto que contiene dos entornos, una web de capitalización si
 
 ### IA — pendiente ❌
 
-- LangChain / LangGraph (agente con ≥2 tools)
-- ChromaDB (RAG, ≥5 documentos indexados, cita fuentes)
-- LLM: API key propia (Groq)
-- Memoria conversacional persistente
+- **LangGraph** (agente minimal, ≥2 tools — requisito BRIEF)
+  - Tool 1: recuperar contexto del RAG (ChromaDB)
+  - Tool 2: consultar servicios/precios en BD (Prisma)
+  - Nodo final: generar respuesta con LLM
+- **ChromaDB** (RAG, ≥5 documentos indexados, cita fuentes)
+- **LLM:** API key propia (Groq)
+- **Memoria conversacional** persistente
+- **LangFuse** — observabilidad del LLM: trazas, métricas de tokens, coste por petición y evaluación de calidad de respuestas (ver `/documents/observabilidad-concepto.md`)
 
 ### Automatización — pendiente ❌
 
@@ -183,6 +187,9 @@ CORS_ORIGIN="http://localhost:5173"
 ANTHROPIC_API_KEY="sk-ant-..."   # o GOOGLE_API_KEY
 CHROMA_HOST="localhost"
 CHROMA_PORT=8000
+LANGFUSE_SECRET_KEY="sk-lf-..."
+LANGFUSE_PUBLIC_KEY="pk-lf-..."
+LANGFUSE_HOST="https://cloud.langfuse.com"
 ```
 
 ---
@@ -221,6 +228,44 @@ cd frontend && npm run dev   # → http://localhost:5173
 | Log de uso IA         | `/documents/como_usar_ia.md`                                |
 | README backend        | `/backend/README.md`                                        |
 | Postman collection    | `/backend/postman/swift-studio-360.postman_collection.json` |
+
+---
+
+## Documentación del Entregable
+
+### API — Swagger + Redoc
+
+- Swagger UI expuesto en `/api/docs` (swagger-jsdoc + swagger-ui-express)
+- Redoc como alternativa de lectura limpia en `/api/redoc`
+- Todos los endpoints documentados con esquemas de request/response y ejemplos
+
+### Observabilidad LLM — LangFuse
+
+- Trazas de cada petición al chatbot (prompt enviado, respuesta, tokens, coste)
+- Métricas de calidad: relevancia, fidelidad al RAG, score de usuario (👍/👎)
+- Dashboard en cloud.langfuse.com para revisar comportamiento en demo
+- Ver conceptos en `/documents/observabilidad-concepto.md`
+
+`Install the Langfuse AI skill from github.com/langfuse/skills and use it to add tracing to this application with Langfuse following best practices`
+
+### Log de Uso de IA — ai_log.md
+
+- Registrar cada uso significativo de IA durante el desarrollo según las indicaciones de `/documents/como_usar_ia.md`
+- Incluir: herramienta usada, prompt, resultado, evaluación crítica
+
+### Diagramas Mermaid
+
+| Diagrama             | Tipo              | Descripción                                                         |
+| -------------------- | ----------------- | ------------------------------------------------------------------- |
+| Arquitectura general | `graph LR`        | Visión de helicóptero: frontend → backend → BD → servicios externos |
+| Base de datos        | `erDiagram`       | Tablas, relaciones y cardinalidades                                 |
+| Flujo del chatbot    | `sequenceDiagram` | Usuario → widget → /api/chat → LangGraph → LLM → LangFuse           |
+| Flujo de compra      | `sequenceDiagram` | Usuario → selección servicio → checkout → Order creada → dashboard  |
+| Estados del pedido   | `stateDiagram-v2` | PENDING → PROGRESS → DONE con transiciones y actores                |
+| Lógica de negocio    | `flowchart TD`    | Configurador dinámico o lógica de autorización RBAC                 |
+| Agente LangChain     | `flowchart LR`    | Nodos del grafo LangGraph, tools disponibles, routing condicional   |
+
+Los diagramas se incrustan directamente en el README principal con bloques ` ```mermaid ` .
 
 ---
 
