@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
+const swaggerUi = require("swagger-ui-express");
+const spec = require("./config/swagger");
 const authRoutes = require("./features/auth/auth.routes");
 const usersRoutes = require("./features/users/users.routes");
 const servicesRoutes = require("./features/services/services.routes");
@@ -38,6 +40,9 @@ app.use("/api/users", usersRoutes);
 app.use("/api/services", servicesRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/chat", chatRoutes);
+
+app.get("/api/docs/swagger.json", (req, res) => res.json(spec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(spec));
 
 app.use(express.static(path.join(__dirname, "../public")));
 

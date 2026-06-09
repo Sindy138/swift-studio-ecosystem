@@ -59,69 +59,31 @@
 
 ---
 
-### 4. LangFuse — Observabilidad LLM
+## Programado 09/06/2026
 
-- [ ] **4.1** Instalar SDK
+### ~~4. LangFuse — Observabilidad LLM~~ ✅ Completado 2026-06-09
 
-  ```bash
-  npm install langfuse
-  ```
-
-- [ ] **4.2** Añadir variables de entorno al `.env`:
-
-  ```env
-  LANGFUSE_SECRET_KEY="sk-lf-..."
-  LANGFUSE_PUBLIC_KEY="pk-lf-..."
-  LANGFUSE_HOST="https://cloud.langfuse.com"
-  ```
-
-- [ ] **4.3** Crear `backend/src/lib/langfuse.js` — singleton del cliente
-
-- [ ] **4.4** Instrumentar el agente: traza por petición con `trace → span → generation`
-  - Loguear: prompt enviado, respuesta, tokens de entrada/salida, modelo, latencia
-
-- [ ] **4.5** Añadir endpoint `POST /api/chat/:traceId/feedback` (authenticate)
-  - Payload: `{ score: 1 | 0 }` → registra puntuación 👍/👎 en LangFuse
+- [x] **4.1** Instalar SDK — `npm install langfuse`
+- [x] **4.2** Variables de entorno añadidas al `.env`: `LANGFUSE_SECRET_KEY`, `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_HOST`
+- [x] **4.3** `backend/src/lib/langfuse.js` — singleton con degradación elegante si faltan las keys (devuelve `null`, no rompe el servidor)
+- [x] **4.4** Agente instrumentado: `trace` + `generation` por petición — modelo, input, output, tokens (`usage_metadata` de Groq), latencia. `traceId` retornado y persistido en `ConversationMessage`
+- [x] **4.5** `POST /api/chat/:traceId/feedback` conectado a LangFuse (`langfuse.score`) — `recorded: true` cuando las keys están presentes
 
 ---
 
-### 5. Swagger / Documentación API — Requisito BRIEF
+### ~~5. Swagger / Documentación API~~ ✅ Completado 2026-06-09
 
-- [ ] **5.1** Instalar dependencias
-
-  ```bash
-  npm install swagger-jsdoc swagger-ui-express redoc-express
-  ```
-
-- [ ] **5.2** Crear `backend/src/config/swagger.js` con la definición base (info, servers, securitySchemes)
-
-- [ ] **5.3** Añadir comentarios JSDoc con `@openapi` a todos los routes existentes
-  - `auth.routes.js` — POST /register, POST /login
-  - `services.routes.js` — GET /, GET /:id, POST /, PUT /:id, DELETE /:id
-  - `orders.routes.js` — POST /, GET /, GET /:id, PUT /:id/status
-  - `orders.routes.js` — POST /:id/deliverables, GET /:id/deliverables
-  - `users.routes.js` — GET /, GET /:id, PUT /:id, DELETE /:id
-  - `chat.routes.js` — POST /chat, GET /chat/history/:id, POST /chat/:id/feedback
-
-- [ ] **5.4** Montar las rutas de documentación en `app.js`
-  ```js
-  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(spec));
-  app.use("/api/redoc", redoc({ specUrl: "/api/docs/swagger.json" }));
-  ```
+- [x] **5.1** Instaladas: `swagger-jsdoc`, `swagger-ui-express` (`redoc-express` instalado pero descartado — carga su bundle desde CDN externa, incompatible con la CSP de Helmet sin relajarla)
+- [x] **5.2** `backend/src/config/swagger.js` — definición base OpenAPI 3.0 con info, servidor `/api`, `securitySchemes: bearerAuth (JWT)`
+- [x] **5.3** JSDoc `@openapi` añadido a los 5 route files: 16 endpoints documentados con parámetros, requestBody, responses y ejemplos
+- [x] **5.4** Montado en `app.js`: `GET /api/docs/swagger.json` (spec JSON) + `GET /api/docs` (Swagger UI). Redoc omitido por restricción CSP — Swagger UI cubre el requisito del BRIEF
 
 ---
 
-### 6. Variables de Entorno y Configuración
+### ~~6. Variables de Entorno y Configuración~~ ✅ Ya estaba completo
 
-- [ ] **6.1** Añadir al `.env` todas las variables de IA que faltan:
-
-  ```env
-  GROQ_API_KEY="gsk_..."
-  CHROMA_HOST="localhost"
-  CHROMA_PORT=8000
-  ```
-
-- [ ] **6.2** Crear `.env.example` con todas las variables (sin valores reales) para el repositorio
+- [x] **6.1** `.env` contiene todas las variables: `DATABASE_URL`, `JWT_SECRET`, `PORT`, `CORS_ORIGIN`, `GROQ_API_KEY`, `GROQ_MODEL`, `CHROMA_HOST`, `CHROMA_PORT`, `LANGFUSE_SECRET_KEY`, `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_HOST`
+- [x] **6.2** `.env.example` creado con todas las variables sin valores reales
 
 ---
 
@@ -137,13 +99,13 @@
 
 ---
 
-### 8. Tests
+### ~~8. Tests~~ ✅ Completado 2026-06-09
 
-- [ ] **8.1** Añadir tests para el módulo chat en `api.test.js`
-  - Test: POST /api/chat sin auth → 401
-  - Test: POST /api/chat con auth y mensaje válido → 200 con `answer`
-  - Test: GET /api/chat/history/:id con auth y ownership → 200 con array de mensajes
-  - Test: GET /api/chat/history de otro usuario → 403
+- [x] **8.1** 4 tests añadidos al módulo chat en `api.test.js` — **14/14 passing (2.49s)**
+  - Test 11: POST /api/chat sin auth → 401 ✅
+  - Test 12: POST /api/chat con auth y mensaje válido → 200 con `role: ASSISTANT` y `content` no vacío ✅ (1s, agente real con Groq)
+  - Test 13: GET /api/chat/history/:conversationId con ownership → 200 con array de mensajes ✅
+  - Test 14: GET /api/chat/history de otro usuario (admin) → 403 ✅
 
 ---
 

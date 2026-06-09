@@ -20,78 +20,46 @@
 - CRUD completo: Services, Orders, Deliverables, Users
 - Zod en todos los endpoints (incluida validación de URL en deliverables)
 - 10 tests de integración con Vitest + Supertest
+- **Módulo Chat** — `ConversationMessage` en BD, `POST /api/chat`, `GET /api/chat/history/:conversationId`, `POST /api/chat/:traceId/feedback` ✅ _(2026-06-08)_
+- **Agente LangGraph** — `createReactAgent` con 2 tools (`search_agency_docs` + `search_services`), `ChatGroq`, historial de conversación, extracción de fuentes, manejo de errores ✅ _(2026-06-08)_
+- **ChromaDB / RAG** — `lib/chroma.js`, 5 docs en `data/docs/`, script `indexDocs.js`, 49 fragmentos indexados ✅ _(2026-06-08)_
+- **Seguridad IA** — middleware de prompt injection (14 patrones), system prompt endurecido, rate limiter de chat (30/min), security logging, validación Zod del output del agente ✅ _(2026-06-08)_
 
 ---
 
 ## Tareas Pendientes
 
-### 1. Módulo Chat — Endpoints obligatorios del BRIEF
+### ~~1. Módulo Chat — Endpoints obligatorios del BRIEF~~ ✅ Completado 2026-06-08
 
-- [ ] **1.1** Añadir modelo `ConversationMessage` en `schema.prisma`
-  - Campos: `id`, `conversationId`, `role` (enum `USER`/`ASSISTANT`), `content`, `sources` (Json?), `createdAt`
-  - Relación: `ConversationMessage` pertenece a `User` (restrict on delete)
-  - Ejecutar `npx prisma migrate dev --name add_chat`
-
-- [ ] **1.2** Crear feature folder `backend/src/features/chat/`
-  - `chat.schema.js` — Zod: `SendMessageSchema` (`conversationId` opcional, `message` string)
-  - `chat.controller.js` — lógica: recibe mensaje → llama al agente → guarda en BD → devuelve respuesta
-  - `chat.routes.js` — `POST /api/chat` (authenticate) y `GET /api/chat/history/:conversationId` (authenticate + ownership check)
-
-- [ ] **1.3** Registrar las rutas en `app.js`
-  ```js
-  app.use("/api/chat", chatRoutes);
-  ```
+- [x] **1.1** Modelo `ConversationMessage` + enum `MessageRole` en `schema.prisma` — migración `20260608180135_add_chat` aplicada
+- [x] **1.2** `chat.schema.js`, `chat.controller.js`, `chat.routes.js`, `agent/agent.js` (stub) creados en `backend/src/features/chat/`
+- [x] **1.3** Rutas registradas en `app.js` — 10/10 tests anteriores siguen en verde
 
 ---
 
-### 2. Agente LangGraph — Requisito BRIEF (≥2 tools)
+### ~~2. Agente LangGraph — Requisito BRIEF (≥2 tools)~~ ✅ Completado 2026-06-08
 
-- [ ] **2.1** Instalar dependencias
-
-  ```bash
-  npm install @langchain/langgraph @langchain/core @langchain/groq langchain
-  ```
-
-- [ ] **2.2** Crear módulo del agente en `backend/src/features/chat/agent/`
-  - `agent.js` — define el grafo LangGraph y exporta `runAgent(message, history)`
-  - `tools.js` — define las dos tools obligatorias
-
-- [ ] **2.3** Tool 1 — RAG (consulta ChromaDB)
-  - Recibe query de texto, busca en la colección `swift_studio_docs`
-  - Devuelve fragmentos relevantes + metadato fuente (`source`) para citar
-
-- [ ] **2.4** Tool 2 — DB (consulta servicios/precios vía Prisma)
-  - Recibe categoría o nombre de servicio
-  - Devuelve nombre, descripción, precio y `formConfig` de servicios activos
-
-- [ ] **2.5** Nodo final — generar respuesta con LLM (Groq)
-  - Construir prompt con contexto RAG + datos BD + historial de conversación
-  - Routing condicional: si la query es sobre precios → Tool 2, si es general → Tool 1
+- [x] **2.1** Dependencias instaladas: `@langchain/langgraph`, `@langchain/core`, `@langchain/groq`, `langchain`
+- [x] **2.2** `tools.js` — `searchAgencyDocs` (stub RAG, listo para B3) + `searchServices` (Prisma real)
+- [x] **2.3** Tool 1 `search_agency_docs` — stub con la firma correcta para ChromaDB (Tarea B3)
+- [x] **2.4** Tool 2 `search_services` — consulta Prisma filtrando por `category` y/o `name`, devuelve nombre/descripción/precio
+- [x] **2.5** `agent.js` — `createReactAgent` (LangGraph) + `ChatGroq` (`GROQ_MODEL` desde env) + sistema de extracción de fuentes + manejo de errores + historial de conversación limitado a 10 turnos
+- [x] `.env.example` actualizado con todas las variables de IA
 
 ---
 
-### 3. ChromaDB / RAG — Requisito BRIEF (≥5 docs, cita fuentes)
+### ~~3. ChromaDB / RAG — Requisito BRIEF (≥5 docs, cita fuentes)~~ ✅ Completado 2026-06-08
 
-- [ ] **3.1** Instalar cliente ChromaDB
-
-  ```bash
-  npm install chromadb
-  ```
-
-- [ ] **3.2** Crear `backend/src/lib/chroma.js` — singleton del cliente y helper de búsqueda
-
-- [ ] **3.3** Crear script `backend/scripts/indexDocs.js` para indexar documentos
-
-- [ ] **3.4** Preparar y indexar ≥5 documentos en `backend/data/docs/`
-  - `about-agency.md` — quiénes somos, misión, clientes tipo
-  - `services-seo.md` — servicios SEO con descripción detallada
-  - `services-content.md` — servicios de contenido y fotografía
-  - `services-automation.md` — servicios de automatización con N8N
-  - `faq.md` — preguntas frecuentes, plazos, revisiones, proceso de trabajo
-
-- [ ] **3.5** Verificar que las respuestas del agente incluyen el campo `sources` con la referencia al doc
+- [x] **3.1** `chromadb` + `@chroma-core/default-embed` instalados
+- [x] **3.2** `backend/src/lib/chroma.js` — singleton con `host`/`port`, `DefaultEmbeddingFunction`, helper `searchDocs`
+- [x] **3.3** `backend/scripts/indexDocs.js` — re-indexa desde cero, chunking por párrafo/oración, metadato `source`
+- [x] **3.4** 5 documentos en `backend/data/docs/`: `about-agency.md`, `services-seo.md`, `services-content.md`, `services-automation.md`, `faq.md`
+- [x] **3.5** `tools.js` actualizado — `searchAgencyDocs` consulta ChromaDB real, extrae `sources`, manejo de error si el servidor no responde
+- [x] **3.6** Servidor ChromaDB levantado con Python venv (`chroma run`) — 49 fragmentos indexados en 5 documentos ✅
 
 ---
+
+## Programado 09/06/2026
 
 ### 4. LangFuse — Observabilidad LLM
 
@@ -145,20 +113,43 @@
 
 ---
 
-### .6 Seguridad — OWASP gaps pendientes
+### 6. Variables de Entorno y Configuración
 
-- [ ] **7.1** API10 — Validar respuestas del agente IA con Zod antes de guardar en BD
-  - Schema: `AgentResponseSchema` con `answer` (string), `sources` (array de strings), `conversationId`
+- [ ] **6.1** Añadir al `.env` todas las variables de IA que faltan:
+
+  ```env
+  GROQ_API_KEY="gsk_..."
+  CHROMA_HOST="localhost"
+  CHROMA_PORT=8000
+  ```
+
+- [ ] **6.2** Crear `.env.example` con todas las variables (sin valores reales) para el repositorio
 
 ---
 
-### 7. Tests
+### 7. Seguridad — OWASP gaps pendientes
+
+### ~~7. Seguridad IA y prompts~~ ✅ Completado 2026-06-08
+
+- [x] **7.1** `promptSecurity.middleware.js` — 14 patrones regex de prompt injection y jailbreaking, log de auditoría (solo metadatos), 400 con mensaje genérico (detección de patrones de inyección (validación de input))
+- [x] **7.2** System prompt endurecido en `agent.js` — reglas explícitas anti-injection, anti-jailbreak, nunca revelar el prompt, ignorar instrucciones del RAG malicioso. (System prompt robusto)
+- [x] **7.3** Rate limiter específico para `/api/chat` — 30 req/min (más restrictivo que el global de 100/15min). (Rate limiting IA)
+- [x] **7.4** Security logging en `chat.controller.js` — `userId` + `messageLength` + `convId`, nunca el contenido del mensaje. (Security logging)
+- [x] **7.5** `AgentResponseSchema` (Zod) en `chat.schema.js` — valida output del agente antes de guardar en BD, devuelve 502 si la respuesta es inválida (API10). (Output validation)
+
+---
+
+### 8. Tests
 
 - [ ] **8.1** Añadir tests para el módulo chat en `api.test.js`
   - Test: POST /api/chat sin auth → 401
   - Test: POST /api/chat con auth y mensaje válido → 200 con `answer`
   - Test: GET /api/chat/history/:id con auth y ownership → 200 con array de mensajes
   - Test: GET /api/chat/history de otro usuario → 403
+
+---
+
+## Programado 09/06/2026
 
 ---
 
@@ -411,3 +402,11 @@
 - [ ] **D3.3** LangFuse recibe trazas del entorno de producción
 
 ---
+
+## BACKLOGS
+
+- Web de Capitalización - rutas restringidas, no tiene por que ser funcionalidad real, panel de admin mocks, si adivina la contraseña.
+
+- En una o ambas webs - descarga de un documento json integrarlo, o pdf para descargar.
+
+- frontend con animaciones diseño

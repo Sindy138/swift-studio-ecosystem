@@ -232,3 +232,53 @@ describe('PUT /api/orders/:id/status', () => {
     expect(adminRes.body.status).toBe('PROGRESS')
   })
 })
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CHAT — Módulo IA
+// ══════════════════════════════════════════════════════════════════════════════
+let convId
+
+describe('POST /api/chat', () => {
+  it('11 — sin autenticación devuelve 401', async () => {
+    const res = await request(app)
+      .post('/api/chat')
+      .send({ message: 'Hola' })
+
+    expect(res.status).toBe(401)
+  })
+
+  it('12 — usuario autenticado recibe respuesta del agente con 200', async () => {
+    const res = await request(app)
+      .post('/api/chat')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ message: '¿Qué servicios ofrecéis?' })
+
+    convId = res.body.conversationId
+    expect(res.status).toBe(200)
+    expect(res.body).toHaveProperty('conversationId')
+    expect(res.body.message.role).toBe('ASSISTANT')
+    expect(typeof res.body.message.content).toBe('string')
+    expect(res.body.message.content.length).toBeGreaterThan(0)
+  }, 30000)
+})
+
+describe('GET /api/chat/history/:conversationId', () => {
+  it('13 — usuario obtiene historial de su propia conversación con 200', async () => {
+    const res = await request(app)
+      .get(`/api/chat/history/${convId}`)
+      .set('Authorization', `Bearer ${userToken}`)
+
+    expect(res.status).toBe(200)
+    expect(res.body.conversationId).toBe(convId)
+    expect(Array.isArray(res.body.messages)).toBe(true)
+    expect(res.body.messages.length).toBeGreaterThan(0)
+  })
+
+  it('14 — otro usuario intenta ver la conversación y recibe 403', async () => {
+    const res = await request(app)
+      .get(`/api/chat/history/${convId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+
+    expect(res.status).toBe(403)
+  })
+})

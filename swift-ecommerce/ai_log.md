@@ -2,6 +2,55 @@
 
 ---
 
+## 2026-06-09 — Backend: Tests módulo chat (integración)
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El módulo chat estaba implementado pero sin cobertura de tests. Había que añadir 4 tests de integración al archivo `tests/api.test.js` existente (que ya tenía 10 tests para auth, services y orders).
+- **Prompt usado:** "continuamos con la tarea 8 tests"
+- **Qué obtuvo:**
+  - Test 11: `POST /api/chat` sin token → 401 (middleware `authenticate` rechaza)
+  - Test 12: `POST /api/chat` con token válido y mensaje → 200, `role: ASSISTANT`, `content` no vacío; `convId` guardado para los siguientes tests; timeout explícito de 30s por si Groq tarda (en la práctica tardó 1s)
+  - Test 13: `GET /api/chat/history/:conversationId` del propio usuario → 200 con array de mensajes y `conversationId` correcto
+  - Test 14: `GET /api/chat/history/:conversationId` con token de otro usuario (admin) → 403 (ownership check del controller)
+  - Resultado: **14/14 tests passing en 2.49s**
+- **Qué modificó o descartó:** Se valoró mockear el agente para que el test 12 no llame a Groq, pero el proyecto sigue el patrón de integración real (los tests de BD tampoco mockean Prisma). El agente tiene fallback cuando `GROQ_API_KEY` no está → el test 12 pasa en cualquier entorno. No se añadió cleanup explícito de `ConversationMessage` en `afterAll` porque la relación tiene `onDelete: Cascade` en User — al eliminar los usuarios de test, sus mensajes se borran en cascada.
+- **Tiempo con IA:** ~10 min | **Tiempo sin IA (estimado):** ~30 min
+- **Aprendizaje:** El tercer argumento de `it()` en Vitest es el timeout en milisegundos — útil para tests que llaman a APIs externas reales. El `onDelete: Cascade` de Prisma simplifica el cleanup de tests: basta con eliminar el recurso padre y las relaciones se limpian solas. El `convId` como variable compartida entre describes funciona en Vitest porque los describes del mismo archivo comparten el scope del módulo.
+
+---
+
+## 2026-06-09 — Backend: Swagger / Documentación API
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El backend tenía todos los endpoints implementados pero sin documentación API. El BRIEF exige Swagger UI. Había que crear la configuración base y añadir JSDoc `@openapi` a los 5 route files (16 endpoints en total).
+- **Prompt usado:** "vamos a terminar con el backend, comenzamos [después de LangFuse] con la tarea 5 Swagger"
+- **Qué obtuvo:**
+  - `npm install swagger-jsdoc swagger-ui-express` — las dos dependencias necesarias
+  - `src/config/swagger.js` — spec OpenAPI 3.0 con `swaggerJsdoc`: título, versión, servidor base `/api`, `securitySchemes` con `bearerAuth` (JWT Bearer); glob `./src/features/**/*.routes.js` para recoger automáticamente todos los JSDoc
+  - JSDoc `@openapi` añadido en los 5 route files: `auth` (2), `services` (5), `orders` (6), `users` (4), `chat` (3) — con tags, summary, parameters, requestBody, responses y ejemplos inline
+  - `app.js` actualizado: `GET /api/docs/swagger.json` expone la spec como JSON; `app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(spec))` sirve la UI
+  - `redoc-express` instalado y probado, pero descartado: carga su bundle desde `cdn.jsdelivr.net` y la CSP de Helmet (`default-src 'self'`) bloquea el script externo. Relajar la CSP no es aceptable → se eliminó de `app.js`
+- **Qué modificó o descartó:** Redoc eliminado del código final — intentamos configurar Helmet para permitir `cdn.jsdelivr.net` pero la decisión fue priorizar la seguridad. Swagger UI cubre completamente el requisito del BRIEF. Los JSDoc usan schemas inline en lugar de `$ref` a componentes compartidos (KISS — no justifica abstracción para 16 endpoints).
+- **Tiempo con IA:** ~20 min | **Tiempo sin IA (estimado):** ~2 horas
+- **Aprendizaje:** `swagger-jsdoc` resuelve el glob de rutas en relación al `process.cwd()` (directorio desde donde se lanza Node), no al directorio del fichero de configuración — importante tenerlo en cuenta si el servidor se lanza desde un subdirectorio. `redoc-express` sirve una shell HTML mínima que carga el bundle de Redoc desde CDN, lo cual lo hace incompatible con CSP estricta sin configuración adicional de Helmet. Para producción, la alternativa sería servir el bundle localmente, pero excede el scope del MVP.
+
+---
+
+## 2026-06-09 — Backend: LangFuse — Observabilidad LLM
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El agente LangGraph devolvía siempre `traceId: null` y el endpoint de feedback tenía `recorded: false` como placeholder. Había que conectar LangFuse para tener observabilidad real: trazas por petición, conteo de tokens y puntuaciones 👍/👎 vinculadas a cada respuesta.
+- **Prompt usado:** "vamos a terminar con el backend, comenzamos por la tarea 4 LangFuse. Recuerda que tenemos variable de entorno y si necesitas que instale los frameworks, dimelo."
+- **Qué obtuvo:**
+  - `src/lib/langfuse.js` — singleton con `getLangfuse()`: si `LANGFUSE_SECRET_KEY` o `LANGFUSE_PUBLIC_KEY` no están en el entorno devuelve `null` en vez de crashear; el resto del código usa optional chaining (`langfuse?.trace(...)`) para degradarse con gracia
+  - `agent.js` — `runAgent` recibe ahora `userId` como tercer parámetro; antes de invocar al agente crea un `trace` y un `generation` en LangFuse; tras la respuesta actualiza la `generation` con output y `usage_metadata` de Groq (tokens de entrada/salida); llama a `flushAsync()` para garantizar el envío antes de resolver la petición HTTP; el `trace.id` se devuelve como `traceId` y se persiste en `ConversationMessage`
+  - `chat.controller.js` — `sendMessage` pasa `userId` al agente; `submitFeedback` llama a `langfuse.score()` con `name: 'user-feedback'` y `value: 0|1`, respondiendo `recorded: true` si LangFuse está activo o `false` si no hay keys
+- **Qué modificó o descartó:** Se valoró usar `langfuse.span()` en vez de `generation()` para el agente completo, pero `generation` es el tipo semántico correcto en LangFuse cuando se trata de una llamada a un LLM (registra modelo, tokens y coste automáticamente). El `flushAsync()` añade latencia mínima (~50-100ms) pero es necesario para que las trazas lleguen antes de cerrar la conexión HTTP — en producción se podría hacer en background, pero para MVP está bien así.
+- **Tiempo con IA:** ~15 min | **Tiempo sin IA (estimado):** ~1.5 horas
+- **Aprendizaje:** El patrón singleton con `getLangfuse()` que devuelve `null` cuando no hay configuración permite que la app funcione en entornos sin LangFuse (tests, CI) sin cambiar ningún código de negocio — el optional chaining en el punto de uso actúa como feature flag. `usage_metadata` en LangChain/Groq está en el último `AIMessage` del resultado, no en el objeto `result` raíz — hay que buscarlo en `result.messages[last].usage_metadata`.
+
+---
+
 ## 2026-06-08 — Backend: Seguridad IA y prompts
 
 - **Herramienta:** Claude Code (claude-sonnet-4-6)

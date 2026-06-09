@@ -2,6 +2,7 @@ const { createReactAgent } = require('@langchain/langgraph/prebuilt')
 const { ChatGroq } = require('@langchain/groq')
 const { HumanMessage, AIMessage, SystemMessage } = require('@langchain/core/messages')
 const { searchAgencyDocs, searchServices } = require('./tools')
+const { getLangfuse } = require('../../../lib/langfuse')
 
 const SYSTEM_PROMPT = `Eres el asistente de IA de Swift Studio 360, una agencia de marketing digital y contenido audiovisual.
 Tu misión es ayudar a los clientes a conocer los servicios, precios, procesos de trabajo y resolver sus dudas.
@@ -47,7 +48,7 @@ function extractSources(messages) {
   return [...new Set(sources)]
 }
 
-async function runAgent(message, history) {
+async function runAgent(message, history, userId) {
   if (!process.env.GROQ_API_KEY) {
     return {
       answer: '[Agente IA no configurado] Falta la variable GROQ_API_KEY en el entorno.',
@@ -56,34 +57,50 @@ async function runAgent(message, history) {
     }
   }
 
-  try {
-    const llm = new ChatGroq({
-      model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
-      temperature: 0.3,
-      apiKey: process.env.GROQ_API_KEY,
-    })
+  const langfuse = getLangfuse()
+  const model = process.env.GROQ_MODEL || 'llama-3.1-8b-instant'
 
+  const trace = langfuse?.trace({
+    name: 'chat-agent',
+    userId: String(userId),
+    input: { message },
+  })
+
+  const generation = trace?.generation({
+    name: 'agent-invoke',
+    model,
+    input: { message },
+  })
+
+  try {
+    const llm = new ChatGroq({ model, temperature: 0.3, apiKey: process.env.GROQ_API_KEY })
     const agent = createReactAgent({ llm, tools: [searchAgencyDocs, searchServices] })
 
-    // history ya incluye el mensaje actual del usuario como último elemento
     const messages = buildMessages(history)
     const result = await agent.invoke({ messages })
 
     const lastMessage = result.messages[result.messages.length - 1]
     const sources = extractSources(result.messages)
 
-    return {
-      answer: lastMessage.content,
-      sources,
-      traceId: null, // se rellenará en Tarea B4 (LangFuse)
-    }
+    const usageMeta = lastMessage?.usage_metadata
+    generation?.end({
+      output: lastMessage.content,
+      usage: usageMeta
+        ? { input: usageMeta.input_tokens, output: usageMeta.output_tokens, unit: 'TOKENS' }
+        : undefined,
+    })
+    trace?.update({ output: { answer: lastMessage.content, sources } })
+    await langfuse?.flushAsync()
+
+    return { answer: lastMessage.content, sources, traceId: trace?.id ?? null }
   } catch (err) {
     console.error('[Agent error]', err.message)
+    generation?.end({ output: { error: err.message } })
+    await langfuse?.flushAsync()
     return {
-      answer:
-        'Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, inténtalo de nuevo en unos momentos.',
+      answer: 'Lo siento, ha ocurrido un error al procesar tu consulta. Por favor, inténtalo de nuevo en unos momentos.',
       sources: [],
-      traceId: null,
+      traceId: trace?.id ?? null,
     }
   }
 }

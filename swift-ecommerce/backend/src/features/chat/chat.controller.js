@@ -3,6 +3,7 @@ const prisma = require('../../lib/prisma')
 const asyncHandler = require('../../lib/asyncHandler')
 const { runAgent } = require('./agent/agent')
 const { AgentResponseSchema } = require('./chat.schema')
+const { getLangfuse } = require('../../lib/langfuse')
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { message, conversationId } = req.body
@@ -32,7 +33,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     orderBy: { createdAt: 'asc' },
   })
 
-  const rawResponse = await runAgent(message, history)
+  const rawResponse = await runAgent(message, history, userId)
 
   // API10: validar la respuesta del agente con Zod antes de guardar en BD
   const parsed = AgentResponseSchema.safeParse(rawResponse)
@@ -81,15 +82,18 @@ const submitFeedback = asyncHandler(async (req, res) => {
   const { traceId } = req.params
   const { score } = req.body
 
-  // Verificar que el traceId corresponde a un mensaje del usuario autenticado
   const message = await prisma.conversationMessage.findFirst({
     where: { traceId, userId: req.user.id },
   })
   if (!message) return res.status(404).json({ error: 'Trace not found' })
 
-  // La integración con LangFuse se añade en Tarea 4
-  // Por ahora confirmamos que se recibió el feedback
-  return res.json({ traceId, score, recorded: false })
+  const langfuse = getLangfuse()
+  if (langfuse) {
+    langfuse.score({ traceId, name: 'user-feedback', value: score, comment: score === 1 ? '👍' : '👎' })
+    await langfuse.flushAsync()
+  }
+
+  return res.json({ traceId, score, recorded: !!langfuse })
 })
 
 module.exports = { sendMessage, getChatHistory, submitFeedback }
