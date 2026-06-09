@@ -1,0 +1,103 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* Variants */
+.primary {
+  background: var(--gradient-brand);
+  color: #fff;
+  box-shadow: 0 0 0 0 rgba(108, 99, 255, 0);
+}
+
+.primary:not(:disabled):hover {
+  box-shadow: var(--shadow-brand);
+  transform: translateY(-1px);
+}
+
+/* Shimmer effect */
+.primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  transition: background-position 0.5s ease;
+}
+
+.primary:not(:disabled):hover::after {
+  background-position: -200% 0;
+}
+
+.secondary {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.secondary:not(:disabled):hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: transparent;
+}
+
+.ghost:not(:disabled):hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.danger {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border-color: rgba(239, 71, 101, 0.3);
+}
+
+.danger:not(:disabled):hover {
+  background: var(--color-error);
+  color: #fff;
+}
+
+/* Sizes */
+.sm { font-size: var(--text-sm); padding: var(--space-2) var(--space-3); }
+.md { font-size: var(--text-sm); padding: var(--space-3) var(--space-5); }
+.lg { font-size: var(--text-base); padding: var(--space-4) var(--space-8); }
+
+.fullWidth { width: 100%; }
+
+.loading { cursor: wait; }
+
+.spinner { flex-shrink: 0; }
+
+.hiddenLabel { visibility: hidden; position: absolute; }

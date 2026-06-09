@@ -1,0 +1,101 @@
+/* ============================================================
+   SWIFT STUDIO 360 — DESIGN TOKENS
+   Importado una única vez en main.jsx.
+   Todos los módulos CSS consumen estas variables via var().
+   ============================================================ */
+
+:root {
+  /* --- Fondos y superficies --- */
+  --color-bg: #080810;
+  --color-surface: #12121e;
+  --color-surface-2: #1a1a2e;
+  --color-surface-hover: #1f1f35;
+
+  /* --- Marca --- */
+  --color-brand: #6c63ff;
+  --color-brand-hover: #5a52e0;
+  --color-brand-2: #00d4ff;
+  --color-brand-2-hover: #00b8e0;
+  --gradient-brand: linear-gradient(135deg, #6c63ff 0%, #00d4ff 100%);
+  --gradient-brand-subtle: linear-gradient(135deg, rgba(108, 99, 255, 0.15) 0%, rgba(0, 212, 255, 0.15) 100%);
+
+  /* --- Texto --- */
+  --color-text: #f0f0ff;
+  --color-text-muted: #8b8b9e;
+  --color-text-subtle: #55556a;
+
+  /* --- Estado --- */
+  --color-success: #00d68f;
+  --color-success-bg: rgba(0, 214, 143, 0.1);
+  --color-warning: #ffd166;
+  --color-warning-bg: rgba(255, 209, 102, 0.1);
+  --color-error: #ef4765;
+  --color-error-bg: rgba(239, 71, 101, 0.1);
+
+  /* --- Bordes --- */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.16);
+  --color-border-brand: rgba(108, 99, 255, 0.4);
+
+  /* --- Tipografía --- */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* --- Espaciado (escala 4px) --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* --- Radios --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* --- Sombras --- */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-brand: 0 0 24px rgba(108, 99, 255, 0.3);
+  --shadow-brand-2: 0 0 24px rgba(0, 212, 255, 0.2);
+
+  /* --- Transiciones --- */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* --- Layout --- */
+  --sidebar-width: 240px;
+  --topbar-height: 64px;
+  --content-max-width: 1200px;
+  --chat-widget-size: 56px;
+}
