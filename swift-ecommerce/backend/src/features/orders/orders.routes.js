@@ -8,6 +8,14 @@ const createOrderLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'Too many orders created, please try again later' },
 })
+
+const listOrdersLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many list requests, please try again later' },
+})
 const {
   createOrder,
   listOrders,
@@ -63,7 +71,7 @@ const router = Router()
  *         description: No autenticado
  */
 router.post('/', authenticate, createOrderLimiter, validate(CreateOrderSchema), createOrder)
-router.get('/', authenticate, listOrders)
+router.get('/', authenticate, listOrdersLimiter, listOrders)
 
 /**
  * @openapi

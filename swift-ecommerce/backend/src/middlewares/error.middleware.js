@@ -21,7 +21,7 @@ function errorHandler(err, req, res, next) {
   }
 
   const status = err.status || err.statusCode || 500
-  const message = err.message || 'Internal server error'
+  const message = status >= 500 ? 'Internal server error' : (err.message || 'Internal server error')
 
   if (status >= 500) {
     console.error(`[500] ${req.method} ${req.path}`, err)

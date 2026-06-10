@@ -26,7 +26,7 @@ function detectPromptInjection(req, res, next) {
     if (pattern.test(message)) {
       // Log del intento — solo metadatos, nunca el contenido completo del mensaje
       console.warn(
-        `[SECURITY] Posible prompt injection — userId: ${req.user?.id} | length: ${message.length} | pattern: ${pattern}`
+        `[SECURITY] Posible prompt injection — userId: ${req.user?.id} | length: ${message.length} | ruleIndex: ${INJECTION_PATTERNS.indexOf(pattern)}`
       )
       return res.status(400).json({ error: 'Mensaje rechazado por política de seguridad.' })
     }

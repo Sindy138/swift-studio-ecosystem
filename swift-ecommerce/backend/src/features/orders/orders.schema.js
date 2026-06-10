@@ -13,7 +13,9 @@ const UpdateOrderStatusSchema = z.object({
 
 const CreateDeliverableSchema = z.object({
   label: z.string().min(1, { message: 'Label is required' }),
-  url: z.string().url({ message: 'A valid URL is required' }),
+  url: z.string()
+    .url({ message: 'A valid URL is required' })
+    .refine((url) => url.startsWith('https://'), { message: 'URL must use HTTPS' }),
 })
 
 module.exports = { CreateOrderSchema, UpdateOrderStatusSchema, CreateDeliverableSchema }

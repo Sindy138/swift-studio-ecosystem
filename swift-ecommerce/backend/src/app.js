@@ -23,12 +23,17 @@ const globalLimiter = rateLimit({
   message: { error: "Too many requests, please try again later" },
 });
 
+const allowedOrigin = process.env.CORS_ORIGIN
+if (!allowedOrigin && process.env.NODE_ENV === 'production') {
+  throw new Error('[STARTUP] CORS_ORIGIN env var must be set in production')
+}
+
 app.use(helmet());
 app.use(globalLimiter);
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*",
+    origin: allowedOrigin || 'http://localhost:5173',
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
@@ -41,8 +46,10 @@ app.use("/api/services", servicesRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/chat", chatRoutes);
 
-app.get("/api/docs/swagger.json", (req, res) => res.json(spec));
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(spec));
+if (process.env.NODE_ENV !== 'production') {
+  app.get("/api/docs/swagger.json", (req, res) => res.json(spec));
+  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(spec));
+}
 
 app.use(express.static(path.join(__dirname, "../public")));
 

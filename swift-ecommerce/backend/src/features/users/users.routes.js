@@ -1,8 +1,17 @@
 const { Router } = require('express')
+const rateLimit = require('express-rate-limit')
 const { listUsers, getUser, updateUser, deleteUser } = require('./users.controller')
 const { UpdateUserSchema } = require('./users.schema')
 const { validate } = require('../../middlewares/validate.middleware')
 const { authenticate, isAdmin } = require('../../middlewares/auth.middleware')
+
+const adminListLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many list requests, please try again later' },
+})
 
 const router = Router()
 
@@ -22,7 +31,7 @@ const router = Router()
  *       403:
  *         description: Solo administradores
  */
-router.get('/', authenticate, isAdmin, listUsers)
+router.get('/', authenticate, isAdmin, adminListLimiter, listUsers)
 
 /**
  * @openapi
