@@ -2,6 +2,105 @@
 
 ---
 
+## 2026-06-10 — Documentación: architecture.md (ADR)
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** El proyecto tenía tres READMEs técnicos pero ningún documento que explicara el *por qué* de las decisiones de arquitectura. Se solicitó crear un ADR (Architecture Decision Records) en la raíz del proyecto.
+- **Prompt usado:** "el architecture.md me sirve con las decisiones técnicas importantes y el por qué de cada una (ADRs — Architecture Decision Records). Crealo en la carpeta raiz swift-ecommerce."
+- **Qué obtuvo:**
+  - `architecture.md` con 12 ADRs en formato Contexto → Decisión → Por qué → Consecuencias.
+  - ADR-001: Node.js + Express v5 en lugar de Python + FastAPI.
+  - ADR-002: Arquitectura feature-based en lugar de MVC por capas.
+  - ADR-003: JWT en localStorage en lugar de httpOnly cookies — riesgo documentado y aceptado.
+  - ADR-004: TTL del JWT reducido de 7 días a 1 hora sin refresh token.
+  - ADR-005: `isAdmin()` consulta BD en cada petición en lugar de leer el rol del token.
+  - ADR-006: Soft delete para servicios — integridad referencial con pedidos históricos.
+  - ADR-007: PostgreSQL para historial de conversaciones en lugar de Redis.
+  - ADR-008: `createReactAgent` de LangGraph en lugar de una cadena LCEL personalizada.
+  - ADR-009: Groq + LLaMA 3.1 8B en lugar de OpenAI o Anthropic — tier gratuito + latencia baja.
+  - ADR-010: Validación de la respuesta del LLM con Zod (OWASP API10).
+  - ADR-011: Backend sirve el frontend estático en producción — único despliegue en Render.
+  - ADR-012: CSS Modules + CSS Custom Properties en lugar de Tailwind.
+- **Qué modificó o descartó:** Se valoró crear un `docs/` folder, pero al ser 12 decisiones en un único archivo la raíz es suficiente para el alcance del proyecto.
+- **Tiempo con IA:** ~10 min | **Tiempo sin IA (estimado):** ~1.5h
+- **Aprendizaje:** Un ADR no documenta cómo funciona el código sino *por qué* se tomó esa decisión y qué trade-offs se asumieron conscientemente. Es el documento que evita que un nuevo desarrollador (o uno mismo en 6 meses) deshaga una decisión meditada por parecerle "extraña".
+
+---
+
+## 2026-06-10 — Documentación: README raíz del proyecto
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** El proyecto tenía READMEs técnicos por capa (backend y frontend) pero ningún documento de entrada que describiera el producto completo, los flujos de usuario y la visión de conjunto.
+- **Prompt usado:** "Ahora necesito que crees un README.md en la carpeta raiz de swift-ecommerce, debe ser un readme completo describiendo la ecommerce, flujo de usuario, logins, etc mas el backend."
+- **Qué obtuvo:**
+  - `README.md` raíz con enfoque product-first: descripción del producto, arquitectura completa, flujos de usuario y tabla de verificación end-to-end.
+  - 6 diagramas Mermaid: `graph LR` arquitectura full-stack, `sequenceDiagram` flujo del usuario (registro → catálogo → compra → seguimiento), `sequenceDiagram` flujo del administrador (login → gestionar pedido → añadir entregable → DONE), `stateDiagram-v2` ciclo de vida del pedido, `sequenceDiagram` flujo del chatbot IA con LangFuse y feedback, `flowchart TD` mapa de navegación con colores por rol (coral=auth, malva=admin, verde=chat).
+  - Stack tecnológico resumido (FE + BE + IA), modelo de datos ER completo, tabla de seguridad y sección de documentación con links a todos los recursos.
+- **Qué modificó o descartó:** Decidido no duplicar detalles de implementación ya presentes en backend/README.md y frontend/README.md — el raíz enlaza a ellos.
+- **Tiempo con IA:** ~15 min | **Tiempo sin IA (estimado):** ~2h
+- **Aprendizaje:** Un README raíz efectivo es un documento de producto, no de implementación. Debe responder "¿qué hace esto y para quién?" antes de entrar en detalles técnicos. Los diagramas Mermaid de flujo de usuario son más útiles para un evaluador que una lista de endpoints.
+
+---
+
+## 2026-06-10 — Documentación: README backend y README frontend
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Los READMEs de backend y frontend eran técnicamente correctos pero incompletos. El backend omitía toda la capa de IA (LangGraph, ChromaDB, LangFuse). El frontend estaba vacío (1 línea). Se solicitó reescribir ambos de forma profesional, enfatizando stack, seguridad y diagramas Mermaid.
+- **Prompts usados:** "actualiza el README.md del backend, poniendo enfasis en las staks tecnologico, API rest, la seguridad y lo que tu consideres relevante" / "en el README.md del backend, haz obviado la informacion del LLM, LangGraph, añade eso y todo lo que se te haya podido pasar" / "Actualiza el readme.md del frontend [...] Usa mermaid. IMPORTANTE!, el readme es solo del frontend."
+- **Qué obtuvo (backend):**
+  - Sección IA separada: tabla de stack (LangGraph, Groq, LangChain, ChromaDB, LangFuse).
+  - `flowchart LR` del ciclo completo del agente ReAct: validación → historial → tool decision → ChromaDB/PostgreSQL → LLM → Zod → LangFuse → respuesta.
+  - `sequenceDiagram` de observabilidad LangFuse: trace → generation → flush → feedback score.
+  - `erDiagram` actualizado con `ConversationMessage` (faltaba en la versión anterior).
+  - Tabla de variables de entorno con columna de requerimiento (prod / IA / obs).
+  - `graph LR` de arquitectura actualizado con todos los servicios externos.
+- **Qué obtuvo (frontend):**
+  - README creado desde cero: `graph LR` arquitectura frontend, `sequenceDiagram` flujo de autenticación, `sequenceDiagram` flujo de compra, `sequenceDiagram` flujo del chatbot.
+  - Tabla de páginas con rutas, acceso y descripción; design system completo (tokens, tipografías, transiciones); componentes UI documentados con variantes; sección de seguridad frontend.
+- **Qué modificó o descartó:** Se eliminó el bloque CORS obsoleto (tenía `|| "*"` ya corregido). Se actualizó la referencia de JWT de "7 días" a "1 hora". Tests actualizados de 10 a 14 (la suite real tiene 14).
+- **Tiempo con IA:** ~30 min | **Tiempo sin IA (estimado):** ~4h
+- **Aprendizaje:** Un README de backend de calidad debe documentar tanto la API como la capa de IA cuando esta existe — son dos sistemas con contratos y comportamientos independientes. Estudiar el código real antes de escribir el README es imprescindible para que los diagramas reflejen la implementación real y no una versión idealizada.
+
+---
+
+## 2026-06-10 — Seguridad: mejoras adicionales (JWT TTL + API4)
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Tras resolver los bloqueantes del pre-despliegue, se identificaron dos mejoras de seguridad adicionales: reducir el TTL del JWT de 7 días a 1 hora y resolver completamente la vulnerabilidad OWASP API4 (Unrestricted Resource Consumption) con rate limiters específicos en rutas de listado masivo.
+- **Prompts usados:** "reduce el TTL del JWT a 1h como compromiso" / "resuelve la vulnerabilidad Unrestricted Resource Consumption"
+- **Qué obtuvo:**
+  - `auth.controller.js` — `expiresIn: '7d'` → `'1h'`.
+  - `users.routes.js` — `adminListLimiter` (30 req/15min) aplicado a `GET /users`.
+  - `orders.routes.js` — `listOrdersLimiter` (60 req/15min) aplicado a `GET /orders`.
+  - 14/14 tests pasando tras los cambios.
+  - Sección 5 de `auditoria-seguridad.md` actualizada: API2 de 🔴 a ⚠️ (TTL reducido + rol desde BD), API4 de ⚠️ a ✅.
+- **Qué modificó o descartó:** Se descartó implementar refresh token (fuera del alcance del proyecto). Sin revocación activa en logout: la ventana de exposición con TTL 1h es el compromiso documentado en el ADR-004.
+- **Tiempo con IA:** ~10 min | **Tiempo sin IA (estimado):** ~30 min
+- **Aprendizaje:** El `globalLimiter` cubre todos los endpoints pero no distingue entre una petición ligera y una que devuelve toda la tabla de usuarios. Los limiters específicos en rutas de alto volumen de datos son una segunda capa que protege contra scraping y DoS incluso desde cuentas autenticadas comprometidas.
+
+---
+
+## 2026-06-10 — Seguridad: auditoría pre-despliegue y fixes bloqueantes
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Antes del despliegue se solicitó una auditoría de seguridad completa usando los documentos de `documents/` (OWASP API Top 10, vulnerabilidades comunes, seguridad IA, seguridad de prompts) y el código fuente del backend y frontend.
+- **Prompts usados:** "antes del despliegue haz una auditoria de seguridad, usa la documentacion relacionada con seguridad que esta en la carpeta documents [...] crea un archivo nombrandolo como corresponda." / "Resuelve las acciones bloqueantes de la check list de Pre-Despliegue."
+- **Qué obtuvo (auditoría):**
+  - `documents/auditoria-seguridad.md` — auditoría completa: 3 hallazgos ALTA, 6 MEDIA, 5 BAJA, 3 INFO, 12 controles correctos. Checklist pre-despliegue, tabla OWASP API Top 10 con estado por ítem, tabla de variables de entorno para producción.
+- **Qué obtuvo (fixes bloqueantes — 8 cambios):**
+  - `app.js` — CORS: elimina `|| "*"`, lanza error en startup si `CORS_ORIGIN` no definida en producción. Swagger envuelto en `if (NODE_ENV !== 'production')`. Morgan cambiado a `"combined"` en producción.
+  - `auth.middleware.js` — `isAdmin()` convertido a async con `prisma.user.findUnique()` — el rol se verifica desde BD en cada petición.
+  - `error.middleware.js` — errores 5xx devuelven `"Internal server error"` genérico, nunca `err.message`.
+  - `orders.schema.js` — `CreateDeliverableSchema` añade `.refine(url => url.startsWith('https://'))`.
+  - `promptSecurity.middleware.js` — log cambia de `pattern.toString()` a `ruleIndex` (no expone las reglas).
+  - Verificado: `globalLimiter` ya estaba antes del router (sin cambios necesarios).
+  - 14/14 tests pasando tras todos los cambios.
+- **Qué modificó o descartó:** Las acciones recomendadas (CSP, CAPTCHA, revocación de token) se dejaron como mejoras futuras documentadas en la auditoría.
+- **Tiempo con IA:** ~40 min | **Tiempo sin IA (estimado):** ~4h
+- **Aprendizaje:** Una auditoría de seguridad efectiva requiere leer el código real, no solo declarar intenciones. Los hallazgos más impactantes de esta auditoría (`isAdmin` leyendo el rol del token en lugar de la BD, CORS con wildcard fallback) eran invisibles sin inspeccionar el código. El formato ALTA/MEDIA/BAJA con remediación concreta por hallazgo es más accionable que una lista genérica de "buenas prácticas".
+
+---
+
 ## 2026-06-10 — Frontend Fase 8: Polish, Accesibilidad y QA
 
 - **Herramienta:** Claude Sonnet 4.6 (Claude Code)
