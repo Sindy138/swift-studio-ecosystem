@@ -82,17 +82,17 @@ Los CTAs de las service pages apuntan al hub de e-commerce (`swift-ecommerce`). 
 
 ---
 
-## INTEGRACIÓN N8N (FORMULARIO DE LEADS)
+## INTEGRACIÓN N8N + RESEND (FORMULARIO DE LEADS) — FASE 7
 
-El formulario de contacto/leads es la **única integración externa** de este repo. Funciona así:
+El formulario de contacto/leads es la **única integración externa** de este repo. Flujo completo:
 
-1. El usuario rellena el formulario en `/contacto` (o en secciones de la web)
+1. El usuario rellena el formulario en `/contacto`
 2. El frontend valida los datos en cliente
 3. Se hace un `fetch` POST al webhook de n8n con los datos del lead
-4. n8n procesa el lead (email, CRM, notificaciones, etc.)
+4. **n8n procesa el lead y usa Resend para enviar los emails**
 5. El frontend muestra confirmación o error al usuario
 
-**Variables de entorno necesarias:**
+**Variables de entorno de este repo (`.env`):**
 ```
 VITE_N8N_WEBHOOK_URL=https://tu-instancia-n8n.com/webhook/leads
 ```
@@ -100,6 +100,27 @@ VITE_N8N_WEBHOOK_URL=https://tu-instancia-n8n.com/webhook/leads
 El prefijo `VITE_` es obligatorio para que Vite exponga la variable al frontend.
 
 **IMPORTANTE:** Nunca guardar la URL del webhook de n8n directamente en el código. Siempre desde `import.meta.env.VITE_N8N_WEBHOOK_URL`.
+
+### Resend — dónde va la API key
+
+**La API key de Resend NO va en el `.env` de este repo.** Va en n8n como credencial, porque Resend es llamado por n8n en el servidor, nunca por el frontend (exponerla en el cliente sería una vulnerabilidad grave).
+
+Pasos para configurarla en n8n:
+1. En n8n → Credentials → New Credential → buscar "Resend"
+2. Pegar la API key (`re_xxxxxxxxx`)
+3. Referenciar esa credencial en el nodo de Resend dentro del workflow de leads
+
+### Workflow n8n a construir en Fase 7
+
+> **PENDIENTE: Generar guía paso a paso al iniciar la Fase 7.**
+
+El workflow tendrá esta lógica general:
+- **Trigger:** Webhook POST (recibe el formulario del frontend)
+- **Validación:** Nodo IF para verificar campos obligatorios
+- **Email al equipo:** Nodo Resend — notificación interna con los datos del lead
+- **Email al lead:** Nodo Resend — confirmación automática al usuario
+- **CRM (opcional):** Guardar el lead en Notion, Airtable o Google Sheets
+- **Respuesta:** HTTP 200 de vuelta al frontend para mostrar el estado al usuario
 
 ---
 

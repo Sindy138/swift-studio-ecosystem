@@ -413,31 +413,73 @@ Responsive:
 
 ---
 
-## FASE 7 — Formulario de Contacto + n8n
+## FASE 7 — Formulario de Contacto + n8n + Resend
 
-> Captura de leads funcionando y enviando a n8n
+> Captura de leads con envío automático de email personalizado al lead según el tema seleccionado
 
-**Tareas:**
+### Campos del formulario
 
-- [ ] `/contacto`: formulario de leads
-  - Campos: nombre, email, empresa (opcional), servicio de interés (select), mensaje
+| Campo | Tipo | Requerido |
+|---|---|---|
+| Nombre | text | Sí |
+| Email | email | Sí |
+| Empresa | text | No (opcional) |
+| ¿En qué podemos ayudarte? | select / radio | Sí |
+
+**Opciones del selector de tema:**
+- Solicitar presupuesto
+- Reservar una cita
+- Información detallada de servicios
+
+### Tareas del frontend
+
+- [ ] `/contacto`: implementar el formulario con los campos anteriores
   - Validación cliente: longitud, formato email, caracteres permitidos, requeridos
   - Inputs: label flotante animada (CSS puro)
   - Estado carga: spinner en botón (icono react-icons `Loader2` animado)
   - Estado éxito: confirmación con `CheckCircle` de react-icons + animación
   - Estado error: mensaje amigable + opción reintentar
 - [ ] Integración n8n: `fetch` POST a `import.meta.env.VITE_N8N_WEBHOOK_URL`
+  - Body: `{ nombre, email, empresa, tema }`
 - [ ] Honeypot field (campo oculto anti-bots, sin CAPTCHA externo)
 - [ ] Iconos en labels: react-icons (no emojis)
 - [ ] Responsive completo
 
-**Seguridad:**
+### Workflow n8n (construir al iniciar esta fase)
+
+> **PENDIENTE: generar guía paso a paso detallada al comenzar la Fase 7.**
+
+Lógica del workflow:
+
+1. **Trigger — Webhook POST** recibe `{ nombre, email, empresa, tema }`
+2. **Nodo IF / Switch** ramifica según el valor de `tema`:
+   - `"presupuesto"` → email con asunto y contenido de solicitud de presupuesto
+   - `"cita"` → email con asunto y contenido de reserva de cita
+   - `"info"` → email con asunto y contenido de información de servicios
+3. **Nodo Resend** (× 3 ramas o con plantilla dinámica) envía el email al lead:
+   - `to`: el email introducido por el usuario
+   - `from`: dirección verificada en Resend (ej. `hola@swiftstudio.com`)
+   - `subject` y `html`: personalizados según el tema
+4. **Nodo Resend** (notificación interna): avisa al equipo con los datos del lead
+5. **Respuesta HTTP 200** al frontend para mostrar el estado al usuario
+
+### Resend — configuración
+
+- La API key de Resend **NO va en el `.env` de este repo** — va en n8n como credencial
+- En n8n: Credentials → New → "Resend" → pegar `re_xxxxxxxxx`
+- Variables de entorno de este repo (solo esta):
+
+```
+VITE_N8N_WEBHOOK_URL=https://tu-instancia-n8n.com/webhook/leads
+```
+
+### Seguridad
 
 - Inputs sanitizados antes del envío (trim, no HTML)
-- URL webhook solo desde variable de entorno
-- Sin datos sensibles en código
+- URL webhook solo desde variable de entorno, nunca hardcodeada
+- Sin datos sensibles en el código del frontend
 
-**Entregable:** formulario funcional con n8n, feedback visual completo, sin emojis.
+**Entregable:** formulario funcional, email automático al lead según tema, notificación interna al equipo.
 
 ---
 
