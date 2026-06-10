@@ -419,17 +419,22 @@ Responsive:
 
 ### Campos del formulario
 
-| Campo | Tipo | Requerido |
-|---|---|---|
-| Nombre | text | Sí |
-| Email | email | Sí |
-| Empresa | text | No (opcional) |
-| ¿En qué podemos ayudarte? | select / radio | Sí |
+| Campo                     | Tipo           | Requerido     |
+| ------------------------- | -------------- | ------------- |
+| Nombre                    | text           | Sí            |
+| Email                     | email          | Sí            |
+| Empresa                   | text           | No (opcional) |
+| ¿En qué podemos ayudarte? | select / radio | Sí            |
 
-**Opciones del selector de tema:**
+**Opciones del selector de tema:** (No tiene que ser éste el orden)
+
 - Solicitar presupuesto
 - Reservar una cita
-- Información detallada de servicios
+- SEO
+- Automatizaciones
+- Fotografía
+- Contenido
+- Branding
 
 ### Tareas del frontend
 
