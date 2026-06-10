@@ -410,3 +410,11 @@ npm create vite@latest frontend -- --template react
 cd frontend
 npm install react-router-dom axios
 ```
+
+## BACKLOGS
+
+- **rutas restringidas**, no tiene por que ser funcionalidad real, panel de admin mocks, si adivina la contraseña.
+- **descarga de documentos**, ya sean json (integrarlo) o pdf.
+- **restringir modificar email a usuarios**
+- **permitir que admin modifique email de usuarios**
+- **mejorar respuestas chatbot**, como acceso a presios de servicios, informacion sobre pedido (con seguridad)
