@@ -2,6 +2,92 @@
 
 ---
 
+## 2026-06-10 — Frontend Fase 8: Polish, Accesibilidad y QA
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Phase final de polish: ErrorBoundary, ARIA fixes, RegisterPage rediseño a light mode, robots.txt, limpieza de meta tags.
+- **Prompt usado:** "ok, fase 8"
+- **Qué obtuvo:**
+  - `ErrorBoundary.jsx` — class component con `getDerivedStateFromError` + botones "Recargar" y "Intentar de nuevo". Montado en `App.jsx` envolviendo `<AuthProvider>` + `<RouterProvider>`.
+  - `RegisterPage.module.css` — reescrito completo: eliminados `rgba(18,18,30,0.75)`, `rgba(0,212,255,...)` del modo oscuro anterior. Nuevo fondo `var(--color-bg)` con orbs coral+malva, card blanca con borde, logo con `filter: brightness(0)` para fondo claro.
+  - `public/robots.txt` — `Disallow: /` (plataforma privada, no indexable).
+  - `Modal.jsx` ARIA fix: `role="dialog" aria-modal="true"` movido del overlay al `.dialog`; añadido `aria-labelledby="modal-title"` + `id="modal-title"` en el `<h3>` del título.
+  - `index.html` — `theme-color` corregido de `#080810` (dark) a `#f4f4f9` (light). `meta robots="noindex,nofollow"` ya estaba.
+  - Auditoría `console.log` — ninguno encontrado en toda la carpeta `src/`.
+  - Build final: ✓ 149 módulos, 2.29s, cero errores.
+- **Qué modificó o descartó:** Se valoraron loading skeletons para listas (Spinner ya implementado cumple el requisito). Se descartó añadir `aria-live` a todas las páginas ya que los mensajes de error críticos ya tienen `role="alert"` y los formularios tienen `aria-live="polite"` en el password strength.
+- **Tiempo con IA:** ~15 min | **Tiempo sin IA (estimado):** ~1.5h
+- **Aprendizaje:** `role="dialog"` debe ir en el elemento focusable del modal (`.dialog`), no en el overlay — el overlay es decorativo y debe llevar `aria-hidden`. Sin `aria-labelledby`, los screen readers no anuncian el título del modal al enfocar.
+
+---
+
+## 2026-06-10 — Frontend Fase 7: Panel de Administración
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Panel admin completo: dashboard con stats, gestión de pedidos con cambio de estado y entregables, tabla de usuarios con borrado, CRUD de servicios.
+- **Prompt usado:** "sí" (aprobación tras propuesta de Fase 7)
+- **Qué obtuvo:**
+  - `AdminDashboardPage.jsx` — 6 stat cards (usuarios, pedidos totales, por estado, facturación), quick links a sub-secciones, tabla de 6 pedidos recientes.
+  - `AdminOrdersPage.jsx` — tabla de todos los pedidos con join por `userId→email` (fetch paralelo users+orders), filtros por estado como pills, `<select>` inline para cambiar estado (llamada `updateOrderStatus` en cada cambio), modal para añadir entregable (label + URL).
+  - `AdminUsersPage.jsx` — tabla de usuarios con buscador, delete con Modal de confirmación, auto-bloqueo si intenta eliminarse a sí mismo.
+  - `AdminServicesPage.jsx` — listado de servicios + Modal crear/editar (nombre, descripción, precio, categoría, formConfig como textarea JSON), delete con Modal.
+  - Sidebar actualizado: 4 links admin (Resumen, Pedidos, Usuarios, Servicios).
+  - Router actualizado: nueva ruta `/admin/orders`.
+  - Build verificado: ✓ 147 módulos, sin errores.
+- **Qué modificó o descartó:** Se valoró un AdminOrderDetailPage por pedido, pero se mantuvo la gestión inline en la tabla para mayor agilidad en la demo. El join userId→email en frontend es suficiente para el demo (no se añadió `include: { user }` al backend para no modificarlo).
+- **Tiempo con IA:** ~30 min | **Tiempo sin IA (estimado):** ~4h
+- **Aprendizaje:** Para el join frontend de `userId → email`, `useMemo` con un `Map` construido desde `getUsers()` en `useEffect` es más eficiente que buscar en array por cada fila. El `Promise.all([getOrders(), getUsers()])` paralelo reduce el tiempo de carga de dos peticiones secuenciales a una sola espera.
+
+---
+
+## 2026-06-10 — Frontend Fase 6: Chat Widget IA
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Construcción del chat widget flotante completo: FAB + panel + mensajes + input + feedback, conectado a `POST /api/chat` del agente LangGraph.
+- **Prompt usado:** "Continua con la fase 6 del plan del frontend"
+- **Qué obtuvo:**
+  - `useChat.js` — hook de estado: mensajes[], conversationId (sessionStorage), sending, send(), submitFeedback(), clearConversation(). Mensaje optimista del usuario + rollback si falla. Rate limit → ERRORS.rateLimit.
+  - `ChatWidget.jsx` — FAB 56px fijo bottom-right, panel 380×520px con animación spring (cubic-bezier(0.34, 1.56)), header gradient animado, Escape para cerrar, unread dot coral cuando hay mensajes sin ver, lazy-loaded desde AppShell.
+  - `ChatMessage.jsx` — burbuja USER (derecha, malva) vs ASSISTANT (izquierda, surface con borde), white-space pre-wrap, source pills con gradient brand-subtle, botones 👍/👎 que deshabilitan tras votar.
+  - `ChatInput.jsx` — textarea auto-resize (max 120px), throttle 1.5s con `useRef`, detección de prompt injection antes del envío (sin llamada al backend), counter visible al 80% del límite, Enter envía / Shift+Enter salto de línea.
+  - Typing indicator: 3 puntos con animación bounce escalonada (delays 0/0.18/0.36s).
+  - `AppShell.jsx` actualizado: `<ChatWidget />` lazy dentro de `<Suspense fallback={null}>` — no bloquea carga inicial.
+- **Qué modificó o descartó:** Se valoró `dangerouslySetInnerHTML` + DOMPurify pero se optó por render de texto plano con `white-space: pre-wrap` (el agente devuelve texto, no HTML). El sanitizeHtml del util queda disponible si en el futuro el agente devuelve markdown renderizado.
+- **Tiempo con IA:** ~20 min | **Tiempo sin IA (estimado):** ~2.5h
+- **Aprendizaje:** `cubic-bezier(0.34, 1.56, 0.64, 1)` — curva spring que supera el valor 1 momentáneamente, crea efecto "pop" sin librería de animación. `position: fixed` en el panel dentro de un root `position: fixed` en mobile requiere sobreescribir las coordenadas con `left/right/bottom` explícitos, ya que el panel no puede ser relativo al botón en pantallas pequeñas.
+
+---
+
+## 2026-06-10 — Frontend Fase 5: Perfil de Usuario
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Página de perfil con edición inline, avatar generado y sincronización del email con AuthContext.
+- **Prompt usado:** "si" (aprobación tras propuesta de Fase 5)
+- **Qué obtuvo:**
+  - `ProfilePage.jsx` — layout two-col: aside sticky (avatar gradient, nombre, rol badge, fecha alta) + formCard (2 fieldRows con 4 inputs).
+  - `isDirty = JSON.stringify(form) !== JSON.stringify(original)` — evita falsas detecciones de cambio.
+  - Botón Guardar deshabilitado si `!isDirty`. Botón "Descartar cambios" solo visible cuando hay cambios.
+  - Si el email cambia, llama a `login({ ...user, email: data.email }, token)` para sincronizar AuthContext sin re-login.
+  - Build verificado: ✓ 132 módulos, sin errores.
+- **Tiempo con IA:** ~15 min | **Tiempo sin IA (estimado):** ~1.5h
+- **Aprendizaje:** `JSON.stringify` como dirty-check es simple y fiable para objetos planos de formulario, evita comparar campo por campo. El patrón `login(updatedUser, token)` para actualizar el contexto sin disparar un nuevo JWT es más limpio que invalidar y re-autenticar.
+
+---
+
+## 2026-06-10 — Frontend Fase 4: Panel de Pedidos
+
+- **Herramienta:** Claude Sonnet 4.6 (Claude Code)
+- **Contexto:** Lista de pedidos con badges animados y detalle con stepper visual de estado.
+- **Prompt usado:** "sí" (aprobación tras propuesta de Fase 4)
+- **Qué obtuvo:**
+  - `OrdersPage.jsx` — lista de pedidos con category pills, status Badge (warning/info/success + pulse en PROGRESS), banner de éxito cuando viene de checkout (`location.state?.success`).
+  - `OrderDetailPage.jsx` — stepper 3 pasos (PENDING/PROGRESS/DONE) con nodos circulares y líneas conectoras; stepDone (verde + checkmark), stepActive (malva + glow), default (gris). Grid de configData con `formatConfigKey` (camelCase → legible). Deliverables como `<a target="_blank">` con hover brand.
+  - Build verificado: ✓ sin errores.
+- **Tiempo con IA:** ~15 min | **Tiempo sin IA (estimado):** ~2h
+- **Aprendizaje:** El stepper con líneas conectoras requiere `position: relative` en el wrapper y `position: absolute; left: 50%; width: 100%` en la línea para que conecte el nodo actual con el siguiente sin depender del ancho real del contenedor.
+
+---
+
 ## 2026-06-09 — Backend: Tests módulo chat (integración)
 
 - **Herramienta:** Claude Code (claude-sonnet-4-6)
@@ -140,3 +226,95 @@
 - **Qué modificó o descartó:** Se decidió no crear un archivo central `limiters.js` (KISS/YAGNI — solo 3 limiters en 3 archivos distintos, no justifica la abstracción). Los endpoints de admin no recibieron limiter específico porque ya están bloqueados por `isAdmin`.
 - **Tiempo con IA:** ~10 min | **Tiempo sin IA (estimado):** ~30 min
 - **Aprendizaje:** El `rateLimit()` es una función fábrica — cada vez que la llamas crea un middleware independiente con su propio contador. Por eso `loginLimiter` y `registerLimiter` son instancias separadas aunque vengan del mismo `require`. El global en `app.use()` actúa antes de cualquier ruta.
+
+---
+
+## 2026-06-09 — Frontend Fase 0: Setup y Scaffolding
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El frontend era un scaffold vacío de Vite + React. Había que construir toda la infraestructura base antes de implementar páginas: sistema de tokens, capa API, contexto de auth, router con lazy loading y utilidades.
+- **Prompt usado:** "Actúa como un Ingeniero de Software Frontend Senior y Master UX/UI Designer. Analiza el backend, docs de seguridad y logo, y construye el frontend premium B2B por fases pidiendo permiso antes de cada una."
+- **Qué obtuvo:**
+  - `vite.config.js` — alias `@` + proxy `/api → localhost:3000` (evita CORS en dev)
+  - `index.html` — lang="es", Google Fonts (Space Grotesk, Inter, JetBrains Mono), noindex/nofollow
+  - `src/styles/tokens.css` — sistema de design tokens completo (colores, tipografía, espaciado, radios, sombras, transiciones)
+  - `src/styles/global.css` — reset CSS, tipografía base, scrollbar custom, `.sr-only`
+  - `src/config/content.js` — arquitectura White-Label: todo el texto de marca en un único archivo
+  - `src/api/client.js` — Axios con interceptores: inyecta JWT en cada request, redirige a `/login` en 401
+  - `src/api/` — 5 módulos API (auth, services, orders, users, chat)
+  - `src/context/AuthContext.jsx` — estado global auth con verificación de expiración JWT via `atob`
+  - `src/router.jsx` — `createBrowserRouter` con lazy loading en todas las páginas
+  - `src/utils/` — validators, formatters (Intl EUR), sanitize (DOMPurify + 7 patrones prompt injection)
+- **Qué modificó o descartó:** Se rechazó la primera propuesta de estructura (estilos globales) y se adoptó CSS Modules co-localizados con cada componente — más fácil de mantener y editar diseño por componente. Se eligió Axios sobre fetch nativo por sus interceptores (JWT automático + redirect 401).
+- **Tiempo con IA:** ~40 min | **Tiempo sin IA (estimado):** ~4 horas
+- **Aprendizaje:** El proxy de Vite (`server.proxy`) oculta el origen del backend y elimina CORS completamente en desarrollo sin tocar el servidor. La arquitectura White-Label con `content.js` centralizado permite reutilizar toda la plataforma para otro cliente editando un solo archivo.
+
+---
+
+## 2026-06-09 — Frontend Fase 1: Autenticación (Login + Register + Context)
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** Con el scaffolding listo, había que implementar el flujo completo de autenticación: páginas de login y registro funcionales conectadas al backend JWT, componentes UI base reutilizables y guards de ruta.
+- **Prompt usado:** "si" (aprobación de continuar con Fase 1 del plan)
+- **Qué obtuvo:**
+  - `LoginPage.jsx` — formulario con validación cliente, llamada a `POST /api/auth/login`, manejo de error 401
+  - `RegisterPage.jsx` — mismo patrón + confirmación de contraseña + indicador de fortaleza (3 niveles con CSS)
+  - Componentes UI base: `Button` (shimmer gradient en hover), `Input` (glow en focus), `Card`, `Badge` (pulse en PROGRESS), `Spinner`, `EmptyState`
+  - `AuthContext` — `login()`, `logout()`, `isAuthenticated`, `isAdmin`, persistencia en localStorage
+  - `ProtectedRoute` — guard de auth + guard de admin (redirect a `/dashboard` si no es admin)
+- **Qué modificó o descartó:** El diseño inicial (frosted glass dark) fue rechazado en una sesión posterior y sustituido por light mode (ver entrada de Rediseño Visual).
+- **Tiempo con IA:** ~30 min | **Tiempo sin IA (estimado):** ~3 horas
+- **Aprendizaje:** El componente `PasswordStrength` puede implementarse puramente con CSS usando clases condicionales y `--delay` como CSS custom property para animar cada barra de forma escalonada sin JavaScript adicional.
+
+---
+
+## 2026-06-09 — Frontend Fase 2: Layout del Dashboard
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** Las páginas de auth funcionaban. Había que construir el shell de la aplicación autenticada: layout persistente con sidebar, topbar y área de contenido, más el dashboard con datos reales del backend.
+- **Prompt usado:** "si" (aprobación de continuar con Fase 2 del plan)
+- **Qué obtuvo:**
+  - `AppShell.jsx` — layout flex con sidebar fijo + área principal (topbar + `<Outlet />`), overlay de backdrop en móvil
+  - `Sidebar.jsx` — NavLinks con estado activo via gradient, iconos SVG inline, sección admin condicional, avatar con iniciales, logout
+  - `Topbar.jsx` — sticky con glassmorphism, títulos dinámicos por ruta via mapa `ROUTE_TITLES`, botón hamburger en móvil
+  - `DashboardPage.jsx` — 3 StatCards (total/activos/completados), lista de 5 pedidos recientes, CTA vacío, animaciones escalonadas con `--delay`
+  - `useOrders.js` + `useServices.js` — hooks custom con loading/error/data/refetch
+  - Build verificado: ✓ 707ms, cero errores
+- **Qué modificó o descartó:** Stubs de páginas pendientes creados (`return null`) para que el router no crashee mientras se implementan las fases siguientes.
+- **Tiempo con IA:** ~35 min | **Tiempo sin IA (estimado):** ~4 horas
+- **Aprendizaje:** El patrón `style={{ '--delay': '${i * 60}ms' }}` para animaciones escalonadas en CSS es más limpio que JS: el CSS Module lo lee como custom property y lo usa en `animation-delay`, sin un solo `setTimeout`.
+
+---
+
+## 2026-06-10 — Frontend: Rediseño Visual (light mode coral/malva)
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** El diseño dark mode (fondo #080810, brand purple+cyan) no convenció. El usuario aportó un `token.css` de referencia (light mode, coral #FE8C7C + malva #8A52F7) y un componente `auth.jsx` de referencia como guía visual para la página de login.
+- **Prompt usado:** "Te paso los archivos token.css con la paleta y fuentes que quiero, y te paso el auth para que lo adecues al nuestro. Procura adecuar lo nuevo a la estructura actual, sin dañar nada."
+- **Qué obtuvo:**
+  - `tokens.css` — paleta completa reemplazada a light mode manteniendo los mismos nombres de variables (`--color-bg`, `--color-brand`, etc.) para no romper ningún componente existente
+  - 5 fixes de rgba hardcodeados que no heredaban del token: Topbar fondo dark, Sidebar navLink activo, Input focus glow, Button shadow primary
+  - `LoginPage` — rediseñada con split-panel: brand panel izquierdo (gradient coral-malva, orbs decorativos, stats de agencia) + form panel derecho (fondo blanco, form centrado). Mobile: panel brand oculto, solo form
+  - `global.css` — ::selection actualizado a malva
+- **Qué modificó o descartó:** Se mantuvo el naming de variables CSS exactamente igual (solo cambiaron los valores) para que todos los componentes ya construidos heredaran el nuevo diseño sin editar ningún archivo de componente. Esto validó la arquitectura de tokens.
+- **Tiempo con IA:** ~20 min | **Tiempo sin IA (estimado):** ~2 horas
+- **Aprendizaje:** Mantener nombres de variables CSS estables y cambiar solo los valores es la técnica correcta para un rediseño de paleta sin rotura. Los rgba hardcodeados son la única deuda técnica de un sistema de tokens: hay que auditarlos antes de dar un diseño por cerrado.
+
+---
+
+## 2026-06-10 — Frontend Fase 3: Catálogo de Servicios + Checkout
+
+- **Herramienta:** Claude Code (claude-sonnet-4-6)
+- **Contexto:** Con el shell y las páginas de auth funcionando, había que implementar el flujo de compra completo: catálogo de los 8 servicios del backend con filtro por categoría, detalle de cada servicio con formulario dinámico generado desde `formConfig.fields`, y creación de pedido con confirmación modal.
+- **Prompt usado:** "SÍ, continuamos con Fase 3"
+- **Qué obtuvo:**
+  - `Modal.jsx` + `.module.css` — portal React con `createPortal`, overlay con `backdrop-filter: blur`, cierre con Escape/clic-fuera/botón X, animación `scaleIn`
+  - `DynamicServiceForm.jsx` + `.module.css` — renderiza `formConfig.fields` del backend; soporta type `text`, `number`, `textarea` y `select` (con flecha SVG custom en CSS); valida campos required; select con `appearance: none` + background-image SVG inline para cross-browser
+  - `ServicesPage.jsx` + `.module.css` — grid responsive 4→3→2→1 cols, filtro por categoría con pills (gradient activo), `ServiceCard` con stripe de color por categoría, tilt 3D CSS via `perspective(700px) rotateX(2deg) rotateY(-3deg)` en hover, badge de categoría con color propio
+  - `ServiceDetailPage.jsx` + `.module.css` — two-col layout (info sticky + form card), precio con gradient-text, lista de highlights con checkmarks, modal de confirmación que muestra nombre + precio antes de hacer el POST
+  - Flujo completo: rellenar form → "Revisar pedido" → modal con resumen → "Confirmar y contratar" → `POST /api/orders` → redirect a `/orders`
+  - Error 409: mensaje `ERRORS.duplicateOrder` sin romper la UI
+  - Build verificado: ✓ 128 módulos, 1.16s, sin errores
+- **Qué modificó o descartó:** El tilt 3D es CSS puro (dirección fija), no JS con `mousemove` — suficiente para el efecto visual deseado y sin complejidad. La confirmación modal muestra solo nombre y precio (no todo el configData) para mantener el modal limpio.
+- **Tiempo con IA:** ~45 min | **Tiempo sin IA (estimado):** ~5 horas
+- **Aprendizaje:** `createPortal(children, document.body)` para modales es esencial: evita problemas de `z-index` y `overflow: hidden` en componentes padre. El `select` nativo con `appearance: none` + SVG como `background-image` en CSS es la forma más robusta de estilizarlo sin librerías externas — funciona en todos los navegadores modernos.

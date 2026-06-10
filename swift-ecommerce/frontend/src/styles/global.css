@@ -110,7 +110,7 @@ ul, ol {
 
 /* Selection */
 ::selection {
-  background: rgba(108, 99, 255, 0.3);
+  background: rgba(138, 82, 247, 0.18);
   color: var(--color-text);
 }
 

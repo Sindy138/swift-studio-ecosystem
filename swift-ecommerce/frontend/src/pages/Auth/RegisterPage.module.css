@@ -1,58 +1,78 @@
-/* Misma estructura base que LoginPage */
+/* Light mode — misma estructura que LoginPage centrada */
 .page {
   min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-6);
+  padding: var(--space-8) var(--space-6);
   position: relative;
   overflow: hidden;
+  background: var(--color-bg);
 }
 
+/* Soft gradient orbs — paleta coral + malva */
 .bg {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 80% 10%, rgba(0, 212, 255, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 20% 80%, rgba(108, 99, 255, 0.14) 0%, transparent 60%),
-    var(--color-bg);
+    radial-gradient(ellipse 60% 40% at 75% 10%, rgba(254, 140, 124, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 85%, rgba(138, 82, 247, 0.12) 0%, transparent 60%);
   z-index: 0;
+  pointer-events: none;
 }
 
 .container {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-8);
-  animation: fadeUp 0.5s ease both;
+  gap: var(--space-6);
+  animation: fadeUp 0.45s ease both;
 }
 
 .logoWrapper { display: flex; justify-content: center; }
-.logo { height: 40px; width: auto; filter: brightness(0) invert(1); }
+
+/* Light background → logo must be dark */
+.logo {
+  height: 38px;
+  width: auto;
+  filter: brightness(0);
+}
 
 .card {
   width: 100%;
-  background: rgba(18, 18, 30, 0.75);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-10) var(--space-8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow:
-    0 0 0 1px rgba(0, 212, 255, 0.06),
-    var(--shadow-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
 }
 
-.header { text-align: center; display: flex; flex-direction: column; gap: var(--space-2); }
-.title { font-size: var(--text-2xl); font-family: var(--font-heading); }
-.subtitle { font-size: var(--text-sm); color: var(--color-text-muted); }
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-family: var(--font-heading);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
 
 .form { display: flex; flex-direction: column; gap: var(--space-5); }
 
@@ -74,7 +94,7 @@
   height: 3px;
   border-radius: var(--radius-full);
   background: var(--color-border);
-  transition: background var(--transition-base);
+  transition: background 250ms ease;
 }
 
 .score1 { background: var(--color-error); }
@@ -83,25 +103,18 @@
 
 .strengthHints {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-4);
   flex-wrap: wrap;
 }
 
-.hintOk {
-  font-size: var(--text-xs);
-  color: var(--color-success);
-}
-
-.hintPending {
-  font-size: var(--text-xs);
-  color: var(--color-text-subtle);
-}
+.hintOk     { font-size: var(--text-xs); color: var(--color-success); }
+.hintPending { font-size: var(--text-xs); color: var(--color-text-subtle); }
 
 .apiError {
   font-size: var(--text-sm);
   color: var(--color-error);
   background: var(--color-error-bg);
-  border: 1px solid rgba(239, 71, 101, 0.25);
+  border: 1px solid rgba(239, 71, 101, 0.2);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
   text-align: center;
@@ -114,12 +127,12 @@
 }
 
 .link {
-  color: var(--color-brand-2);
+  color: var(--color-brand);
   font-weight: var(--font-medium);
   transition: color var(--transition-fast);
 }
 
-.link:hover { color: var(--color-brand); }
+.link:hover { color: var(--color-brand-hover); }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }

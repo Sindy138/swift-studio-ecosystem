@@ -44,9 +44,10 @@ const userNavLinks = [
 ]
 
 const adminNavLinks = [
-  { to: '/admin',          label: NAV.admin,     Icon: IconAdmin    },
-  { to: '/admin/users',    label: 'Usuarios',    Icon: IconProfile  },
-  { to: '/admin/services', label: 'Servicios',   Icon: IconServices },
+  { to: '/admin',          label: 'Resumen',    Icon: IconAdmin    },
+  { to: '/admin/orders',   label: 'Pedidos',    Icon: IconOrders   },
+  { to: '/admin/users',    label: 'Usuarios',   Icon: IconProfile  },
+  { to: '/admin/services', label: 'Servicios',  Icon: IconServices },
 ]
 
 export default function Sidebar({ isOpen, onClose }) {

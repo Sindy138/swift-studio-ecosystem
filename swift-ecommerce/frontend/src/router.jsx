@@ -19,8 +19,9 @@ const ProfilePage = lazy(() => import('@/pages/Profile/ProfilePage'))
 
 // Admin pages
 const AdminDashboardPage = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
-const AdminUsersPage = lazy(() => import('@/pages/Admin/AdminUsersPage'))
-const AdminServicesPage = lazy(() => import('@/pages/Admin/AdminServicesPage'))
+const AdminOrdersPage    = lazy(() => import('@/pages/Admin/AdminOrdersPage'))
+const AdminUsersPage     = lazy(() => import('@/pages/Admin/AdminUsersPage'))
+const AdminServicesPage  = lazy(() => import('@/pages/Admin/AdminServicesPage'))
 
 const Loading = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100dvh' }}>
@@ -63,8 +64,9 @@ const router = createBrowserRouter([
       {
         element: withSuspense(<AppShell />),
         children: [
-          { path: '/admin', element: withSuspense(<AdminDashboardPage />) },
-          { path: '/admin/users', element: withSuspense(<AdminUsersPage />) },
+          { path: '/admin',          element: withSuspense(<AdminDashboardPage />) },
+          { path: '/admin/orders',   element: withSuspense(<AdminOrdersPage />) },
+          { path: '/admin/users',    element: withSuspense(<AdminUsersPage />) },
           { path: '/admin/services', element: withSuspense(<AdminServicesPage />) },
         ],
       },

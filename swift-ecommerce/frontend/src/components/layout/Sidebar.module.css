@@ -25,7 +25,7 @@
 .logo {
   height: 28px;
   width: auto;
-  filter: brightness(0) invert(1);
+  filter: brightness(0);
 }
 
 .closeBtn {
@@ -89,11 +89,11 @@
 .navLink.active {
   background: var(--gradient-brand-subtle);
   color: var(--color-brand);
-  border: 1px solid rgba(108, 99, 255, 0.2);
+  border: 1px solid rgba(138, 82, 247, 0.2);
 }
 
 .navLink.active svg {
-  filter: drop-shadow(0 0 4px rgba(108, 99, 255, 0.5));
+  filter: drop-shadow(0 0 4px rgba(138, 82, 247, 0.45));
 }
 
 /* Footer */

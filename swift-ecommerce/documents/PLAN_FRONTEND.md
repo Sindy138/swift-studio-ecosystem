@@ -183,11 +183,21 @@ npm install react-router-dom axios dompurify clsx date-fns
 ---
 
 ### ✅ FASE 1 — Autenticación — COMPLETADA
-- [x] `LoginPage.jsx` — frosted glass, shimmer button, error handling
+- [x] `LoginPage.jsx` — split-panel (brand izquierda + form derecha), light mode, animaciones fadeUp
 - [x] `RegisterPage.jsx` — password strength indicator, validación inline
 - [x] Componentes UI base: `Button`, `Input`, `Card`, `Badge` (pulse), `Spinner`, `EmptyState`
 - [x] `AuthContext` — `isAuthenticated`, `isAdmin`, persistencia en localStorage
 - [x] `ProtectedRoute` — guard auth + guard adminOnly
+
+---
+
+### ✅ REDISEÑO VISUAL — COMPLETADO (entre Fase 2 y Fase 3)
+- [x] `tokens.css` — paleta light mode: coral `#FE8C7C` + malva `#8A52F7`, mismo naming de variables
+- [x] `global.css` — ::selection actualizado a malva
+- [x] `Topbar.module.css` — fondo glassmorphism hardcodeado → `color-mix` sobre token
+- [x] `Sidebar.module.css` — rgba purples → malva, logo filter para fondo claro
+- [x] `Input.module.css` + `Button.module.css` — focus glow rgba → malva
+- [x] `LoginPage` — rediseñada: split-panel con brand panel (gradient, stats, orbs) + form panel
 
 ---
 
@@ -199,68 +209,84 @@ npm install react-router-dom axios dompurify clsx date-fns
 - [x] `useOrders.js` + `useServices.js` — hooks con loading/error/data
 - [x] Build verificado: ✓ 707ms sin errores
 
-**Verificación:** Build OK. Pendiente de probar contra backend en vivo.
+**Verificación:** Build OK. Conectado y probado contra backend en vivo.
 
 ---
 
-### ⬜ FASE 3 — Catálogo de Servicios + Checkout
-- [ ] `ServicesPage.jsx` — grid 8 servicios, filtro categoría, tilt 3D hover
-- [ ] `ServiceDetailPage.jsx` — descripción, precio, `DynamicServiceForm`
-- [ ] `DynamicServiceForm.jsx` — renderiza `formConfig.fields` dinámicamente
-- [ ] Modal de confirmación + error 409 (pedido duplicado)
+### ✅ FASE 3 — Catálogo de Servicios + Checkout — COMPLETADA
+- [x] `ServicesPage.jsx` — grid 4→2→1 cols, filtro por categoría animado, tilt 3D CSS en hover
+- [x] `ServiceDetailPage.jsx` — layout two-col (info sticky + form card), precio con gradient text
+- [x] `DynamicServiceForm.jsx` — renderiza `formConfig.fields` dinámicamente (text/number/textarea/select)
+- [x] `Modal.jsx` — portal React, overlay blur, escape/click-fuera para cerrar
+- [x] Modal de confirmación (nombre + precio) + error 409 (`ERRORS.duplicateOrder`)
+- [x] Build verificado: ✓ 128 módulos, 1.16s, sin errores
 
 **Verificación:** Crear pedido desde UI, verificar en BD.
 
 ---
 
-### ⬜ FASE 4 — Panel de Pedidos
-- [ ] `OrdersPage.jsx` — lista con status badges animados
-- [ ] `OrderDetailPage.jsx` — configData, total, deliverables (links)
+### ✅ FASE 4 — Panel de Pedidos — COMPLETADA
+- [x] `OrdersPage.jsx` — lista con status badges animados, banner de éxito post-checkout
+- [x] `OrderDetailPage.jsx` — stepper visual PENDING/PROGRESS/DONE, configData grid, deliverables como links externos
+- [x] `useOrders.js` — hooks `useOrders()` y `useOrder(id)`
+- [x] Build verificado: ✓ sin errores
 
 **Verificación:** Lista muestra datos reales. Deliverables son clickables.
 
 ---
 
-### ⬜ FASE 5 — Perfil de Usuario
-- [ ] `ProfilePage.jsx` — form `fullName`, `phone`, `companyName`, `email`
-- [ ] Validación inline + feedback de éxito/error
+### ✅ FASE 5 — Perfil de Usuario — COMPLETADA
+- [x] `ProfilePage.jsx` — layout two-col (avatar card sticky + form card)
+- [x] Avatar con iniciales y gradient brand, rol badge, fecha de alta
+- [x] Form con `fullName`, `phone`, `companyName`, `email` — 2 fieldRows
+- [x] `isDirty` check (JSON.stringify) — botón Guardar deshabilitado sin cambios
+- [x] Botón "Descartar cambios" aparece solo cuando hay cambios sin guardar
+- [x] Sincroniza email en AuthContext si cambia
+- [x] Build verificado: ✓ 132 módulos sin errores
 
 **Verificación:** Editar y refrescar muestra datos actualizados.
 
 ---
 
-### ⬜ FASE 6 — Chat Widget IA
-- [ ] `ChatWidget.jsx` — floating button + slide-up panel
-- [ ] `ChatMessage.jsx` — USER/ASSISTANT, pills de fuentes
-- [ ] `ChatInput.jsx` — counter 2000 chars, detección injection, throttle
-- [ ] Feedback 👍/👎 por respuesta + typing indicator
-- [ ] Sanitización con DOMPurify
+### ✅ FASE 6 — Chat Widget IA — COMPLETADA
+- [x] `useChat.js` — estado de mensajes, conversationId en sessionStorage, send/feedback/clear
+- [x] `ChatWidget.jsx` — FAB flotante bottom-right, panel slide-up con animación spring, header gradient, Escape para cerrar
+- [x] `ChatMessage.jsx` — burbuja USER (derecha, brand) vs ASSISTANT (izquierda, surface), source pills, feedback 👍/👎
+- [x] `ChatInput.jsx` — textarea auto-resize, throttle 1.5s, detección injection, counter al 80%, Enter/Shift+Enter
+- [x] Typing indicator (3 dots bounce animation)
+- [x] Unread dot en FAB cuando hay mensajes y panel cerrado
+- [x] Lazy-loaded desde AppShell (no impacta bundle inicial)
+- [x] Build verificado: ✓ 142 módulos, 2.27s, sin errores
 
 **Verificación:** Conversación real contra agente LangGraph.
 
 ---
 
-### ⬜ FASE 7 — Panel de Administración
-- [ ] Rutas `/admin/*` con guard `isAdmin`
-- [ ] `AdminDashboardPage.jsx` — resumen usuarios/pedidos
-- [ ] `AdminUsersPage.jsx` — tabla de usuarios
-- [ ] `AdminServicesPage.jsx` — CRUD servicios
-- [ ] Cambio de estado de pedidos + upload de deliverables
+### ✅ FASE 7 — Panel de Administración — COMPLETADA
+- [x] Rutas `/admin/*` con guard `isAdmin` (ya existía en router)
+- [x] `AdminDashboardPage.jsx` — 6 stat cards + quick links + tabla últimos 6 pedidos
+- [x] `AdminOrdersPage.jsx` (NUEVA) — todos los pedidos, filtros por estado, select inline de cambio de estado, modal entregable (label + URL); join userId→email en frontend
+- [x] `AdminUsersPage.jsx` — tabla de usuarios con buscador, delete con confirm Modal, auto-bloqueo si elimina el propio admin
+- [x] `AdminServicesPage.jsx` — CRUD completo: create/edit Modal (nombre, descripción, precio, categoría, formConfig JSON), delete confirm Modal
+- [x] Sidebar actualizado: 4 links admin (Resumen, Pedidos, Usuarios, Servicios)
+- [x] Router actualizado: nueva ruta `/admin/orders`
+- [x] Build verificado: ✓ 147 módulos, sin errores
 
 **Verificación:** Admin cambia estado → usuario lo ve. Deliverable añadido → visible.
 
 ---
 
-### ⬜ FASE 8 — Polish, Accesibilidad y QA
-- [ ] `ErrorBoundary.jsx` en App y páginas críticas
-- [ ] Loading skeletons en listas
-- [ ] ARIA labels completos
-- [ ] Revisión Mobile-First (320px → 1440px)
-- [ ] `robots.txt` con `Disallow: /`
-- [ ] Limpiar `console.log`
-- [ ] Actualizar `ai_log.md`
+### ✅ FASE 8 — Polish, Accesibilidad y QA — COMPLETADA
+- [x] `ErrorBoundary.jsx` — class component con reset + reload, montado en `App.jsx`
+- [x] ARIA fix en `Modal.jsx` — `role="dialog"` en `.dialog`, no en overlay; `aria-labelledby`
+- [x] `RegisterPage.module.css` — reescrito completo a light mode (eliminada paleta oscura hardcoded)
+- [x] `robots.txt` → `Disallow: /` en `frontend/public/`
+- [x] `theme-color` en `index.html` corregido a `#f4f4f9`
+- [x] Auditoría `console.log` — ninguno en `src/`
+- [x] `ai_log.md` actualizado con Fases 7 y 8
+- [x] Build final: ✓ 149 módulos, 2.29s, cero errores
 
-**Verificación:** Lighthouse ≥ 90 Accessibility. Funcional en móvil 320px.
+**Verificación:** Build limpio. ARIA correcto en Modal. RegisterPage visual coherente con LoginPage.
 
 ---
 

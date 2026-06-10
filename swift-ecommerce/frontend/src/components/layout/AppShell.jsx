@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
 import styles from './AppShell.module.css'
+
+const ChatWidget = lazy(() => import('@/components/chat/ChatWidget'))
 
 export default function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -26,6 +28,10 @@ export default function AppShell() {
           <Outlet />
         </main>
       </div>
+
+      <Suspense fallback={null}>
+        <ChatWidget />
+      </Suspense>
     </div>
   )
 }
