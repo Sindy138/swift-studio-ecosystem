@@ -1,95 +1,170 @@
 /* ============================================
-   FOOTER STYLES
+   FOOTER
    ============================================ */
 
 .footer {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  background-color: #202020;
   color: white;
-  padding: 3rem 0 1rem;
-  margin-top: 4rem;
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 5rem 2rem 4rem 8rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
 }
 
-.footer-section h4 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  color: #ecf0f1;
+/* ============================================
+   BRAND — logo + tagline + social
+   ============================================ */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.footer-section p {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
+.footer-logo {
+  display: block;
+  line-height: 0;
 }
 
-.footer-section ul {
+.footer-logo img {
+  width: clamp(120px, 15vw, 200px);
+  height: auto;
+}
+
+.footer-tagline {
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.65;
+  max-width: 320px;
+}
+
+/* Social icons — siempre en fila horizontal */
+.social-icons {
+  display: flex;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.social-icons a {
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 0;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #aa73fa;
+}
+
+/* ============================================
+   NAV COLUMNS
+   ============================================ */
+.footer-heading {
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.25rem;
+}
+
+.footer-nav ul {
   list-style: none;
   padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
-.footer-section ul li {
-  margin-bottom: 0.75rem;
-}
-
-.footer-section a {
-  color: rgba(255, 255, 255, 0.7);
+.footer-nav a {
+  color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+  position: relative;
   transition: color 0.3s ease;
-  font-size: 0.95rem;
 }
 
-.footer-section a:hover {
-  color: #ff6b6b;
+.footer-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #ffae8e, #ff7da2, #aa73fa);
+  transition: width 0.3s ease;
 }
 
+.footer-nav a:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footer-nav a:hover::after {
+  width: 100%;
+}
+
+/* ============================================
+   BOTTOM BAR
+   ============================================ */
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 2rem;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-bottom-inner {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.footer-bottom-inner p {
+  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.hub-link {
+  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.hub-link:hover {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
-
-@media (max-width: 768px) {
+@media (max-width: 780px) {
   .footer-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    padding: 4rem 1.25rem 3rem;
   }
 
-  .footer {
-    padding: 2rem 0 1rem;
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom-inner {
+    padding: 1.25rem 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
   }
 }
 
 @media (max-width: 480px) {
   .footer-container {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .footer-section h4 {
-    font-size: 1rem;
-  }
-
-  .footer-section a,
-  .footer-section p {
-    font-size: 0.9rem;
-  }
-
-  .footer {
-    padding: 1.5rem 0 1rem;
   }
 }

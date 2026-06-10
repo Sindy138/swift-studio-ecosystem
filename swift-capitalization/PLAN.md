@@ -8,21 +8,23 @@ Objetivo dual: **máximo posicionamiento en Google** + **diseño de vanguardia**
 ## IDENTIDAD VISUAL (conservar siempre)
 
 ### Paleta de colores — NO modificar
+
 ```css
 /* Gradiente de marca — usar en CTAs, hovers, acentos */
 --gradient-brand: linear-gradient(90deg, #ffae8e, #ff7da2, #aa73fa);
 
 /* Colores base */
---color-base: #202020;          /* fondo dark (testimonials, engine) */
---color-dark: #2c3e50;          /* azul oscuro (engine background) */
---color-primary: #ff6b6b;       /* coral/rojo */
---color-secondary: #4ecdc4;     /* turquesa */
---color-accent: #ffe66d;        /* amarillo */
---color-purple: #7d7aff;        /* violeta (nombres de autores) */
---color-bg: #ffffff;            /* fondo general */
+--color-base: #202020; /* fondo dark (testimonials, engine) */
+--color-dark: #2c3e50; /* azul oscuro (engine background) */
+--color-primary: #ff6b6b; /* coral/rojo */
+--color-secondary: #4ecdc4; /* turquesa */
+--color-accent: #ffe66d; /* amarillo */
+--color-purple: #7d7aff; /* violeta (nombres de autores) */
+--color-bg: #ffffff; /* fondo general */
 ```
 
 ### Tipografía — NO modificar
+
 ```css
 --font-heading: "Inter", system-ui, -apple-system, sans-serif;
 --font-family-sans: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -33,11 +35,13 @@ h2: clamp(1.5rem, 3.5vw, 2.5rem) — font-weight 700 — letter-spacing -0.02em
 ```
 
 ### Efectos de diseño existentes — mantener y extender
+
 - **Glassmorphism**: `background: rgba(255,255,255,0.11)` + `backdrop-filter: blur()` — usar en secciones dark
 - **Dotted pattern**: `radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)` — fondo de secciones dark
 - **Gradiente de marca en hover**: todos los elementos interactivos usan el gradiente `#ffae8e → #ff7da2 → #aa73fa`
 
 ### Iconos — REGLA FIJA
+
 - **Solo react-icons o Lucide React** — instalar si no está disponible
 - **Cero emojis** en el código (ni en JSX ni en CSS ni en content.js)
 - Reemplazar todos los ❌ ✅ 📊 🔗 etc. existentes por iconos de react-icons
@@ -47,7 +51,9 @@ h2: clamp(1.5rem, 3.5vw, 2.5rem) — font-weight 700 — letter-spacing -0.02em
 ## REGLAS GLOBALES DE DESARROLLO (aplicar siempre, en todas las fases)
 
 ### 1. Coherencia de diseño entre páginas
+
 Todas las páginas del sitio (Quiénes Somos, Servicios, Blog, Contacto) deben seguir el mismo lenguaje visual que la Home:
+
 - Misma paleta de colores y gradiente de marca
 - Misma tipografía (Inter / Segoe UI) y escalas con `clamp()`
 - Mismos efectos: glassmorphism en secciones dark, dotted pattern, hover en gradiente de marca
@@ -58,17 +64,21 @@ Todas las páginas del sitio (Quiénes Somos, Servicios, Blog, Contacto) deben s
 Antes de empezar cualquier página nueva, revisar cómo luce la Home y asegurarse de que la nueva página se siente parte del mismo sistema. Los componentes compartidos (NavBar, Footer, botones, cards) son los mismos en todas partes.
 
 ### 2. Tipografía y medidas fluidas — regla de clamp()
+
 `clamp()` se aplica **únicamente** a:
+
 - `font-size` — siempre
 - `gap` — siempre
 - Tamaño del **logo** — única excepción de elemento visual con clamp
 
 Todo lo demás usa valores fijos:
+
 ```
 VALORES FIJOS (no usar clamp): border-radius, margin, padding, width/height de imágenes, tamaño de iconos, min-height, max-width, line-height
 ```
 
 Ejemplos de aplicación correcta:
+
 ```css
 /* OBLIGATORIO con clamp */
 font-size: clamp(1rem, 2.5vw, 1.25rem);
@@ -100,6 +110,7 @@ max-width: 1200px;
 ## MICROANIMACIONES (incluir durante cada fase — NO al final)
 
 ### A implementar con CSS puro (IntersectionObserver + clases CSS)
+
 - Aparición en viewport: `opacity: 0 → 1` + `translateY(30px → 0)` en stagger
 - Hover en botones: `translateY(-2px)` + sombra
 - Hover en cards: elevación + `scale(1.01)`
@@ -107,6 +118,7 @@ max-width: 1200px;
 - Inputs: `border-color` transition + label flotante
 
 ### Animaciones complejas — BACKLOG (no bloquean MVP)
+
 - Scroll-triggered con GSAP ScrollTrigger (parallax, pin sections)
 - Page transitions con Framer Motion `AnimatePresence`
 - Split-text / typewriter en hero headline
@@ -125,6 +137,7 @@ max-width: 1200px;
 El responsive **no está implementado correctamente** actualmente. Aplicar en cada componente que se toque:
 
 ### Breakpoints
+
 ```css
 /* Mobile: hasta 480px */
 /* Tablet: 481px — 768px */
@@ -132,12 +145,14 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 ```
 
 ### Navbar mobile — pendiente de implementar
+
 - El navbar actual en mobile hace wrap del menú (no es válido para producción)
 - Implementar hamburger menu: botón + menú desplegable overlay
 - Animación de apertura: `translateY` + `opacity`
 - Cerrar al hacer click en un link
 
 ### Reglas generales responsive por sección
+
 - Grids de N columnas → 2 columnas en tablet → 1 columna en mobile
 - Tipografía con `clamp()` — ya definida en index.css, asegurarse de usarla
 - CTAs en mobile: `width: 100%` o al menos `min-width: 280px`
@@ -148,9 +163,11 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 ---
 
 ## FASE 0 — Setup y limpieza base
+
 > Objetivo: dejar el proyecto en estado limpio y preparado para construir encima
 
 **Tareas:**
+
 - [ ] Instalar `react-icons` (o Lucide React) si no están disponibles
 - [ ] Auditar y limpiar imports huérfanos en componentes existentes
 - [ ] Configurar React Router v7 con todas las rutas (aunque páginas estén vacías)
@@ -165,9 +182,11 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 ---
 
 ## FASE 1 — NavBar (conservar estética + añadir hamburger mobile)
+
 > NavBar actual está bien en desktop — CONSERVAR diseño, solo añadir responsive mobile
 
 **Desktop — conservar:**
+
 - Glassmorphism actual (`rgba(255,255,255,0.65)` + `backdrop-filter: blur(10px)`)
 - Logo SVG
 - Links con hover en gradiente de marca
@@ -175,6 +194,7 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 - Sticky
 
 **Mobile — implementar hamburger menu (actualmente no existe):**
+
 - [ ] Botón hamburger visible en `≤ 768px`: tres líneas → X animado con CSS
 - [ ] Menú como overlay full-width o sidebar que aparece desde arriba con `translateY`
 - [ ] Links del menú: tamaño grande, espaciado generoso, fáciles de tapear
@@ -187,12 +207,15 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 ---
 
 ## FASE 2 — Home (sub-fases, una por una)
+
 > Hacer cada sub-fase por separado. No pasar a la siguiente hasta que la anterior esté completa y verificada en el navegador.
 
 ---
 
 ### FASE 2.1 — HeroSection
+
 **Cambios concretos sobre el código actual:**
+
 - [ ] Centrar el texto: `text-align: center` + `align-items: center` en `.hero-content`
 - [ ] Eliminar el botón secundario "Ver demo" (solo dejar CTA primario)
 - [ ] Scroll indicator: eliminar el texto "Scroll para explorar" — mantener solo el icono
@@ -202,6 +225,7 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 - [ ] Responsive: CTA a `width: 100%` en mobile (≤ 480px)
 
 **Conservar:**
+
 - Background dinámico (image/video) y overlay
 - Gradiente de marca en el CTA
 - Lógica `backgroundType` de `content.js`
@@ -209,7 +233,9 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 ---
 
 ### FASE 2.2 — SocialProof: Infinite Ticker de logos
+
 **Cambios concretos sobre el código actual:**
+
 - [ ] Eliminar el `.logos-grid` actual (CSS grid)
 - [ ] Implementar Infinite Ticker: `overflow: hidden` + lista de logos duplicada + `@keyframes ticker` con `translateX(-50%)` en loop continuo
 - [ ] Velocidad: `animation-duration: 30s` en desktop, `20s` en mobile
@@ -220,43 +246,52 @@ El responsive **no está implementado correctamente** actualmente. Aplicar en ca
 ---
 
 ### FASE 2.3 — SocialProof: Testimonials
+
 **Cambios concretos sobre el código actual:**
 
 Cards:
-- [ ] Eliminar `border-radius` de `.testimonial-card` → `border-radius: 0`
+
+- [ ] Suavizar `border-radius` de `.testimonial-section` y `.testimonial-card` → `border-radius: 3px`
 - [ ] Añadir avatar circular al lado del autor: `<img>` con `border-radius: 50%`, tamaño fijo `44px × 44px`
 - [ ] `.testimonial-author`: `display: flex`, `align-items: center`, `gap` entre avatar y bloque nombre+rol
 - [ ] Añadir campo `avatar` en los testimonials de `content.js` (usar placeholder si no hay foto real)
 - [ ] `font-size` de quote y nombre con `clamp()`
 
 Navegación (reemplazar ← →):
+
 - [ ] Eliminar caracteres `←` `→` de los botones
 - [ ] Añadir `ChevronLeft` / `ChevronRight` de react-icons dentro de los botones
 - [ ] Botones: `border-radius: 0`, `border: 1px solid rgba(255,255,255,0.2)`, fondo transparente, hover con gradiente de marca
 
 Estrellas:
+
 - [ ] Reemplazar el emoji ⭐ por icono `FaStar` de `react-icons/fa` con `color: #ffe66d`
 
 **Conservar:**
+
 - Fondo `#202020`, glassmorphism, dotted pattern
 - Lógica de carousel (prev/next, índice, slice)
 - Color `#7d7aff` en nombre del autor
 
 Responsive:
+
 - [ ] Grid de testimonials → 2 cols en tablet → 1 col en mobile
 - [ ] Botones de navegación visibles y con tamaño de tap adecuado en mobile (mínimo 44px)
 
 ---
 
 ### FASE 2.4 — ServiceGrid
+
 > **NO TOCAR. Cero cambios. Pasar directamente a 2.5.**
 
 ---
 
 ### FASE 2.5 — EngineSection
+
 > Actualmente: emojis como íconos, tabla comparativa básica, sección dark correcta
 
 **Cambios concretos sobre el código actual:**
+
 - [ ] `content.js`: reemplazar emojis en `advantage.icon` por claves de nombre de icono (ej: `"TrendingUp"`) y crear un mapa en el componente que resuelve `nombre → componente react-icons`
 - [ ] `.advantage-card`: `text-align: left`, icono grande (fijo, ej: 32px) arriba-izquierda con `background: var(--gradient-brand)` en `background-clip: text`
 - [ ] `font-size` de título y descripción de la card con `clamp()`
@@ -266,28 +301,32 @@ Responsive:
 - [ ] Responsive: 4 cards → grid 2×2 en tablet → 1 col en mobile; comparación 2 cols → 1 col en mobile
 
 **Conservar:**
+
 - Fondo dark `#2c3e50`, glassmorphism, dotted SVG pattern
 
 ---
 
 ### FASE 2.6 — SEOAuthority
+
 > Actualmente: stat cards blancas con borde superior coloreado, bloque de texto con caja, CTA básico
 
 **Cambios concretos:**
-- [ ] Stat cards: `background: transparent`, `border-left: 4px solid` (color único por card: marca, secondary, accent, purple), eliminar borde superior
-- [ ] `.stat-metric`: `font-size: clamp(3rem, 6vw, 5rem)`, texto con gradiente de marca via `background-clip: text; -webkit-text-fill-color: transparent`
-- [ ] `.stat-label`: `text-transform: uppercase`, `letter-spacing: clamp(0.05em, 0.2vw, 0.12em)`, `color: #7d7aff`
-- [ ] Authority content: eliminar la caja blanca con borde izquierdo → texto centrado, `font-size: clamp(1rem, 2vw, 1.25rem)`, `max-width: clamp(280px, 80%, 720px)`, `margin: 0 auto`
-- [ ] CTA section: eliminar la caja bordeada actual → sección con más espaciado vertical, botón centrado, subtexto debajo
-- [ ] Responsive: 4 stats → 2×2 en tablet y mobile
+
+- [ ] Centrar título y subtítulo + `margin-bottom: 4rem` para separarlo de los elementos de abajo
+- [ ] Eliminar stat cards completamente → métricas en plano: flex row centrado, sin fondo/borde/sombra. `.stat-metric` con gradiente de marca (`background-clip: text`), `.stat-label` uppercase
+- [ ] Authority content: quitar background, border y border-radius → texto centrado en plano, `font-size: clamp(1rem, 2vw, 1.25rem)`, `max-width: 720px`, `margin: 0 auto`
+- [ ] CTA: igual al CTA de ServiceGrid — subtle gradient bg, h3, botón con gradiente de marca, `border-radius: 3px`
+- [ ] Mismo sistema de márgenes y padding vertical que el resto: `max-width: 1500px; padding: 5rem 2rem` — mobile `1.25rem`
 - [ ] JSON-LD: conservar exactamente tal cual, mover a `<Helmet>` solo en Fase 8
 
 ---
 
 ## FASE 3 — Footer — rediseño vanguardista
+
 > Actualmente: footer simple con grid de 4 columnas de links
 
 **Cambios concretos:**
+
 - [ ] Fondo: mantener dark pero usar `#202020` en lugar del degradado `#2c3e50 → #34495e` para coherencia con la sección de testimonials
 - [ ] Layout superior: logo + tagline a la izquierda, links de navegación agrupados a la derecha
 - [ ] Añadir iconos de redes sociales de react-icons (`FaInstagram`, `FaLinkedin`, `FaFacebook`) en lugar de texto plano — con hover en gradiente de marca
@@ -299,9 +338,11 @@ Responsive:
 ---
 
 ## FASE 4 — The Origin (Quiénes somos)
+
 > Página narrativa que construye autoridad y confianza
 
 **Estructura de la página:**
+
 - [ ] Hero: headline narrativo con tipografía editorial grande + imagen o elemento visual
 - [ ] Historia / origen: texto con énfasis tipográfico, sin bloques de texto planos
 - [ ] Perfil híbrido Marketing + FullStack: visualización de habilidades o enfoque diferencial
@@ -317,9 +358,11 @@ Responsive:
 ---
 
 ## FASE 5 — Service Pages
+
 > Página template por servicio con flujo de conversión claro
 
 **Servicios (un slug por servicio):**
+
 - `seo-posicionamiento`
 - `social-media-community`
 - `fotografia-profesional`
@@ -327,6 +370,7 @@ Responsive:
 - `automatizacion-n8n`
 
 **Estructura de cada página (template único):**
+
 - [ ] Hero: nombre del servicio + problema que resuelve (tipografía grande, sin emojis)
 - [ ] Sección Problema: pain points del cliente (iconos react-icons)
 - [ ] Sección Solución: qué ofrece Swift Studio
@@ -343,11 +387,13 @@ Responsive:
 ---
 
 ## FASE 6 — Blog SEO Engine
+
 > Sistema de blog categorizado para posicionamiento orgánico
 
 **Verticales:** Estrategia · Visual · Automate
 
 **Tareas:**
+
 - [ ] `/blog`: grid de artículos con filtro por vertical
   - Cards: sin emojis, iconos de categoría con react-icons, diseño editorial
   - Filtros con transición animada (fade + scale)
@@ -368,9 +414,11 @@ Responsive:
 ---
 
 ## FASE 7 — Formulario de Contacto + n8n
+
 > Captura de leads funcionando y enviando a n8n
 
 **Tareas:**
+
 - [ ] `/contacto`: formulario de leads
   - Campos: nombre, email, empresa (opcional), servicio de interés (select), mensaje
   - Validación cliente: longitud, formato email, caracteres permitidos, requeridos
@@ -384,6 +432,7 @@ Responsive:
 - [ ] Responsive completo
 
 **Seguridad:**
+
 - Inputs sanitizados antes del envío (trim, no HTML)
 - URL webhook solo desde variable de entorno
 - Sin datos sensibles en código
@@ -393,9 +442,11 @@ Responsive:
 ---
 
 ## FASE 8 — SEO Global y Optimización
+
 > Toda la web optimizada para indexación en Google
 
 **Tareas:**
+
 - [ ] Instalar y configurar `react-helmet-async`
 - [ ] Meta tags únicos en cada página: title, description, canonical
 - [ ] Open Graph por página: og:title, og:description, og:image, og:url
@@ -411,9 +462,11 @@ Responsive:
 ---
 
 ## FASE 9 — Despliegue
+
 > Web en producción
 
 **Tareas:**
+
 - [ ] Elegir plataforma: Netlify o Vercel
 - [ ] Variables de entorno en panel de la plataforma (no en archivos)
 - [ ] `_redirects` (Netlify) o `vercel.json`: redirigir todas las rutas a `index.html`
@@ -433,38 +486,38 @@ Responsive:
 
 No bloquean el proyecto. Se añaden cuando todo lo anterior esté completo y el tiempo lo permita.
 
-| Tarea | Tecnología sugerida | Impacto visual |
-|---|---|---|
-| Scroll-triggered (parallax, pin) | GSAP ScrollTrigger | Alto |
-| Transiciones de página | Framer Motion `AnimatePresence` | Alto |
-| Split-text / typewriter en hero | GSAP SplitText o CSS | Medio |
-| Contadores animados en KPI stats | GSAP o CountUp.js | Medio |
-| SVG animados en proceso/servicios | GSAP DrawSVG | Alto |
-| Mesh gradient animado en hero | CSS Houdini o Three.js | Alto |
-| Cursor personalizado | JS puro | Medio |
-| Fondo de partículas interactivo | tsParticles o Three.js | Alto |
-| Lottie animations en iconos | Lottie + React | Medio |
-| Morphing entre secciones | GSAP MorphSVG | Alto |
+| Tarea                             | Tecnología sugerida             | Impacto visual |
+| --------------------------------- | ------------------------------- | -------------- |
+| Scroll-triggered (parallax, pin)  | GSAP ScrollTrigger              | Alto           |
+| Transiciones de página            | Framer Motion `AnimatePresence` | Alto           |
+| Split-text / typewriter en hero   | GSAP SplitText o CSS            | Medio          |
+| Contadores animados en KPI stats  | GSAP o CountUp.js               | Medio          |
+| SVG animados en proceso/servicios | GSAP DrawSVG                    | Alto           |
+| Mesh gradient animado en hero     | CSS Houdini o Three.js          | Alto           |
+| Cursor personalizado              | JS puro                         | Medio          |
+| Fondo de partículas interactivo   | tsParticles o Three.js          | Alto           |
+| Lottie animations en iconos       | Lottie + React                  | Medio          |
+| Morphing entre secciones          | GSAP MorphSVG                   | Alto           |
 
 ---
 
 ## RESUMEN DE FASES
 
-| Fase | Descripción | Estado |
-|---|---|---|
-| 0 | Setup y limpieza base | Completada |
-| 1 | NavBar: conservar desktop + hamburger mobile | Completada |
-| 2.1 | Home — HeroSection | Pendiente |
-| 2.2 | Home — SocialProof: Infinite Ticker logos | Pendiente |
-| 2.3 | Home — SocialProof: Testimonials | Pendiente |
-| 2.4 | Home — ServiceGrid (NO TOCAR) | — |
-| 2.5 | Home — EngineSection | Pendiente |
-| 2.6 | Home — SEOAuthority | Pendiente |
-| 3 | Footer: rediseño vanguardista | Pendiente |
-| 4 | The Origin (Quiénes somos) | Pendiente |
-| 5 | Service Pages (template × 5) | Pendiente |
-| 6 | Blog SEO Engine | Pendiente |
-| 7 | Formulario + n8n | Pendiente |
-| 8 | SEO Global y optimización | Pendiente |
-| 9 | Despliegue | Pendiente |
-| — | Backlog animaciones complejas | Extra |
+| Fase | Descripción                                  | Estado     |
+| ---- | -------------------------------------------- | ---------- |
+| 0    | Setup y limpieza base                        | Completada |
+| 1    | NavBar: conservar desktop + hamburger mobile | Completada |
+| 2.1  | Home — HeroSection                           | Pendiente  |
+| 2.2  | Home — SocialProof: Infinite Ticker logos    | Pendiente  |
+| 2.3  | Home — SocialProof: Testimonials             | Pendiente  |
+| 2.4  | Home — ServiceGrid (NO TOCAR)                | —          |
+| 2.5  | Home — EngineSection                         | Pendiente  |
+| 2.6  | Home — SEOAuthority                          | Pendiente  |
+| 3    | Footer: rediseño vanguardista                | Pendiente  |
+| 4    | The Origin (Quiénes somos)                   | Pendiente  |
+| 5    | Service Pages (template × 5)                 | Pendiente  |
+| 6    | Blog SEO Engine                              | Pendiente  |
+| 7    | Formulario + n8n                             | Pendiente  |
+| 8    | SEO Global y optimización                    | Pendiente  |
+| 9    | Despliegue                                   | Pendiente  |
+| —    | Backlog animaciones complejas                | Extra      |

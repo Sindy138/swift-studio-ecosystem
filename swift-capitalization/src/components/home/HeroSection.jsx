@@ -1,72 +1,39 @@
-import React from "react";
+import { Link } from "react-router-dom";
+import { RiBookOpenLine } from "react-icons/ri";
 import SECTOR_CONFIG from "../../config/content";
 import styles from "./styles/HeroSection.module.css";
 
-/**
- * HERO SECTION - Propuesta de valor + CTA principal
- * Componente reutilizable: Recibe config de contenido
- * Escalable: Cambiar SECTOR_CONFIG para otros sectores
- */
 const HeroSection = ({ config = SECTOR_CONFIG.hero }) => {
   const { valueProp, cta, backgroundType, backgroundUrl } = config;
 
   return (
-    <section className={styles["hero-section"]} id="hero">
-      {/* Background dinámico */}
+    <section className={styles.heroSection} id="hero">
       {backgroundType === "video" && (
-        <video className={styles["hero-background"]} autoPlay muted loop>
+        <video className={styles.heroBg} autoPlay muted loop playsInline>
           <source src={backgroundUrl} type="video/mp4" />
         </video>
       )}
       {backgroundType === "image" && (
-        <img
-          src={backgroundUrl}
-          alt="Background"
-          className={styles["hero-background"]}
-        />
+        <img src={backgroundUrl} alt="" className={styles.heroBg} />
       )}
 
-      {/* Overlay para mejor legibilidad */}
-      <div className={styles["hero-overlay"]}></div>
+      <div className={styles.heroOverlay} />
 
-      {/* Contenido principal */}
-      <div className={styles["hero-content"]}>
-        <div className={styles["hero-container"]}>
-          <h1 className={styles["hero-headline"]}>{valueProp.headline}</h1>
-          <p className={styles["hero-subheadline"]}>{valueProp.subheadline}</p>
-          <p className={styles["hero-description"]}>{valueProp.description}</p>
+      <div className={styles.heroContent}>
+        <div className={styles.heroContainer}>
+          <h1 className={styles.heroHeadline}>{valueProp.headline}</h1>
+          <p className={styles.heroSubheadline}>{valueProp.subheadline}</p>
 
-          {/* CTA Buttons */}
-          <div className={styles["hero-cta-group"]}>
-            <a
-              href={cta.primary.link}
-              className={`${styles.btn} ${styles["btn-primary"]} ${styles["btn-lg"]}`}
-            >
+          <div className={styles.heroCtaGroup}>
+            <Link to={cta.primary.link} className={styles.btnPrimary}>
               {cta.primary.text}
-            </a>
-            <a
-              href={cta.secondary.link}
-              className={`${styles.btn} ${styles["btn-secondary"]} ${styles["btn-lg"]}`}
-            >
-              {cta.secondary.text}
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Indicador de scroll */}
-      <div className={styles["scroll-indicator"]}>
-        <span className={styles["scroll-text"]}>Scroll para explorar</span>
-        <svg
-          className={styles["scroll-arrow"]}
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
+      <div className={styles.scrollIndicator} aria-hidden="true">
+        <RiBookOpenLine size={22} />
       </div>
     </section>
   );

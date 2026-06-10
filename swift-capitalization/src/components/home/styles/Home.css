@@ -83,7 +83,7 @@ section {
 }
 
 .section-title {
-  font-size: var(--font-size-4xl);
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
   font-weight: 700;
   color: var(--color-dark);
   margin-bottom: var(--spacing-md);

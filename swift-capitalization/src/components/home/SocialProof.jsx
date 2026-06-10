@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import SECTOR_CONFIG from "../../config/content";
 import styles from "./styles/SocialProof.module.css";
 
-/**
- * SOCIAL PROOF - Logos de clientes + Testimonios
- * Componente con carrusel de testimonios
- * Datos vienen de config centralizada
- */
 const VISIBLE_COUNT = 3;
 
 const SocialProof = ({ config = SECTOR_CONFIG.socialProof }) => {
@@ -37,15 +33,16 @@ const SocialProof = ({ config = SECTOR_CONFIG.socialProof }) => {
           <p className={styles["section-subtitle"]}>{subtitle}</p>
         </div>
 
-        {/* Logos Grid */}
+        {/* Logos Infinite Ticker */}
         <div className={styles["logos-section"]}>
-          {/*<h3 className={styles["logos-title"]}>Clientes y Partners</h3>*/}
-          <div className={styles["logos-grid"]}>
-            {logos.map((logo) => (
-              <div key={logo.id} className={styles["logo-item"]}>
-                <img src={logo.image} alt={logo.alt} loading="lazy" />
-              </div>
-            ))}
+          <div className={styles["ticker-wrapper"]}>
+            <div className={styles["ticker-track"]}>
+              {[...logos, ...logos].map((logo, i) => (
+                <div key={`${logo.id}-${i}`} className={styles["logo-item"]}>
+                  <img src={logo.image} alt={logo.alt} loading="lazy" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -58,21 +55,25 @@ const SocialProof = ({ config = SECTOR_CONFIG.socialProof }) => {
           <div className={styles["testimonial-carousel"]}>
             <div className={styles["testimonials-grid"]}>
               {visibleTestimonials.map((testimonial) => (
-                <div
-                  key={testimonial.id}
-                  className={styles["testimonial-card"]}
-                >
+                <div key={testimonial.id} className={styles["testimonial-card"]}>
                   <div className={styles.stars}>
-                    {Array(testimonial.rating).fill("⭐").join("")}
+                    {Array(testimonial.rating).fill(null).map((_, i) => (
+                      <FaStar key={i} color="#ffe66d" />
+                    ))}
                   </div>
                   <blockquote className={styles["testimonial-quote"]}>
                     "{testimonial.quote}"
                   </blockquote>
                   <div className={styles["testimonial-author"]}>
-                    <p className={styles["author-name"]}>
-                      {testimonial.author}
-                    </p>
-                    <p className={styles["author-role"]}>{testimonial.role}</p>
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.author}
+                      className={styles["author-avatar"]}
+                    />
+                    <div className={styles["author-info"]}>
+                      <p className={styles["author-name"]}>{testimonial.author}</p>
+                      <p className={styles["author-role"]}>{testimonial.role}</p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -82,19 +83,18 @@ const SocialProof = ({ config = SECTOR_CONFIG.socialProof }) => {
           {/* Navigation */}
           <div className={styles["carousel-controls"]}>
             <button
-              className={`${styles["carousel-btn"]} ${styles.prev}`}
+              className={styles["carousel-btn"]}
               onClick={prevTestimonial}
               aria-label="Testimonial anterior"
             >
-              ←
+              <FaChevronLeft size={13} />
             </button>
-
             <button
-              className={`${styles["carousel-btn"]} ${styles.next}`}
+              className={styles["carousel-btn"]}
               onClick={nextTestimonial}
               aria-label="Siguiente testimonial"
             >
-              →
+              <FaChevronRight size={13} />
             </button>
           </div>
         </div>

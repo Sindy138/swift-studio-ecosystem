@@ -1,0 +1,254 @@
+/* ============================================
+   BLOG LISTING — sistema visual idéntico a Home
+   ============================================ */
+
+.fadeIn {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.fadeIn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fadeIn.delay1 { transition-delay: 0.1s; }
+.fadeIn.delay2 { transition-delay: 0.2s; }
+.fadeIn.delay3 { transition-delay: 0.3s; }
+
+/* ============================================
+   HERO — dark editorial
+   ============================================ */
+.hero {
+  background-color: #202020;
+  color: white;
+  min-height: 45vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 16px 16px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroContainer {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.heroLabel {
+  display: inline-block;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(170, 115, 250, 0.85);
+  margin-bottom: 1.25rem;
+}
+
+.heroHeadline {
+  font-size: clamp(1.75rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.heroSubheadline {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   FILTROS — category tabs
+   ============================================ */
+.filtersSection {
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 72px;
+  z-index: 10;
+}
+
+.filtersContainer {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filtersContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.filterBtn {
+  flex-shrink: 0;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+  font-weight: 500;
+  color: var(--color-text-light);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
+  white-space: nowrap;
+}
+
+.filterBtn:hover {
+  color: var(--color-dark);
+}
+
+.filterBtnActive {
+  color: var(--color-dark);
+  font-weight: 700;
+  border-bottom-color: #aa73fa;
+}
+
+/* ============================================
+   CARDS GRID
+   ============================================ */
+.cardsSection {
+  background: #ffffff;
+}
+
+.cardsContainer {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+}
+
+.cardsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.card {
+  flex: 0 1 360px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 3px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.1);
+}
+
+.cardBody {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  flex: 1;
+}
+
+.cardCategory {
+  font-size: clamp(0.7rem, 1.1vw, 0.8rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.cardTitle {
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  font-weight: 700;
+  color: var(--color-dark);
+  line-height: 1.35;
+}
+
+.cardExcerpt {
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  color: var(--color-text-light);
+  line-height: 1.65;
+  flex: 1;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.cardMetaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.cardCta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: clamp(0.8rem, 1.3vw, 0.9rem);
+  font-weight: 600;
+  color: #aa73fa;
+  margin-top: 0.5rem;
+  transition: gap 0.3s ease;
+}
+
+.card:hover .cardCta {
+  gap: 0.75rem;
+}
+
+/* Estado vacío */
+.emptyState {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--color-text-light);
+  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+  width: 100%;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 780px) {
+  .heroContainer,
+  .cardsContainer {
+    padding: 5rem 1.25rem;
+  }
+
+  .filtersContainer {
+    padding: 0 1.25rem;
+  }
+
+  .filtersSection {
+    top: 64px;
+  }
+
+  .card {
+    flex: 0 1 100%;
+  }
+}
