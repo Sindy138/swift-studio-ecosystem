@@ -85,6 +85,7 @@ export const SECTOR_CONFIG = {
         author: "Juan Pérez",
         role: "CEO, TechCorp",
         rating: 5,
+        avatar: "https://i.pravatar.cc/150?img=11",
       },
       {
         id: "testimonial-2",
@@ -93,6 +94,7 @@ export const SECTOR_CONFIG = {
         author: "María García",
         role: "Marketing Manager, RetailPro",
         rating: 5,
+        avatar: "https://i.pravatar.cc/150?img=47",
       },
       {
         id: "testimonial-3",
@@ -100,6 +102,7 @@ export const SECTOR_CONFIG = {
         author: "Carlos López",
         role: "Founder, StartupX",
         rating: 5,
+        avatar: "https://i.pravatar.cc/150?img=32",
       },
       {
         id: "testimonial-4",
@@ -108,6 +111,7 @@ export const SECTOR_CONFIG = {
         author: "Ana Martínez",
         role: "Directora de Marketing, EduTech Solutions",
         rating: 5,
+        avatar: "https://i.pravatar.cc/150?img=56",
       },
     ],
   },
@@ -226,34 +230,32 @@ export const SECTOR_CONFIG = {
 
     advantages: [
       {
-        id: "advantage-4",
-        title: "Equipo Especializado",
-        description:
-          "SEO Experts, Fotógrafos, Content Writers y Automation Engineers. Todo integrado.",
-        visual: "/engine/engine.gif",
-      },
-      /*
-      {
         id: "advantage-1",
         title: "Dashboard Propio",
         description:
           "Panel centralizado para monitorear todos tus servicios en tiempo real. ROI visible.",
-        icon: "📈",
+        iconName: "TrendingUp",
       },
-      */
       {
         id: "advantage-2",
         title: "Integraciones n8n",
         description:
           "Conecta todos tus sistemas. CRM, Email, Analytics, Social. Sin duplicar trabajo.",
-        visual: "/engine/engine.gif",
+        iconName: "GitMerge",
       },
       {
         id: "advantage-3",
         title: "Optimización Continua",
         description:
           "Machine learning y análisis de datos para mejora permanente. No solo ejecución.",
-        visual: "/engine/engine.gif",
+        iconName: "BarChart2",
+      },
+      {
+        id: "advantage-4",
+        title: "Equipo Especializado",
+        description:
+          "SEO Experts, Fotógrafos, Content Writers y Automation Engineers. Todo integrado.",
+        iconName: "Users",
       },
     ],
 
