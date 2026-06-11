@@ -245,37 +245,37 @@ flowchart TD
 
 ### Backend
 
-| Capa | Tecnología |
-|---|---|
-| Framework | Express.js v5 · Node.js v18+ (CommonJS) |
-| Base de datos | PostgreSQL · Prisma ORM v7 |
-| Autenticación | JWT HS256 · TTL 1h · bcryptjs salt 10 |
-| Validación | Zod (inputs + respuesta del LLM) |
-| Seguridad | Helmet · CORS estricto · express-rate-limit (6 limiters) |
-| Testing | Vitest · Supertest · 14 tests de integración |
+| Capa          | Tecnología                                               |
+| ------------- | -------------------------------------------------------- |
+| Framework     | Express.js v5 · Node.js v18+ (CommonJS)                  |
+| Base de datos | PostgreSQL · Prisma ORM v7                               |
+| Autenticación | JWT HS256 · TTL 1h · bcryptjs salt 10                    |
+| Validación    | Zod (inputs + respuesta del LLM)                         |
+| Seguridad     | Helmet · CORS estricto · express-rate-limit (6 limiters) |
+| Testing       | Vitest · Supertest · 14 tests de integración             |
 
 ### Frontend
 
-| Capa | Tecnología |
-|---|---|
-| UI | React 19 · Vite 8 |
-| Routing | React Router DOM v7 · lazy loading + Suspense |
-| Estado global | Context API (AuthContext) |
-| HTTP | Axios · interceptor JWT · redirect 401 automático |
-| Estilos | CSS Modules + CSS Custom Properties (design tokens) |
-| Seguridad | DOMPurify · ErrorBoundary · robots.txt `Disallow: /` |
+| Capa          | Tecnología                                           |
+| ------------- | ---------------------------------------------------- |
+| UI            | React 19 · Vite 8                                    |
+| Routing       | React Router DOM v7 · lazy loading + Suspense        |
+| Estado global | Context API (AuthContext)                            |
+| HTTP          | Axios · interceptor JWT · redirect 401 automático    |
+| Estilos       | CSS Modules + CSS Custom Properties (design tokens)  |
+| Seguridad     | DOMPurify · ErrorBoundary · robots.txt `Disallow: /` |
 
 ### Inteligencia Artificial
 
-| Componente | Tecnología | Rol |
-|---|---|---|
-| Orquestación | LangGraph `createReactAgent` | Ciclo razonamiento → herramienta → respuesta |
-| LLM | Groq API · LLaMA 3.1 8B Instant | Generación de texto · temp 0.3 |
-| RAG | ChromaDB · DefaultEmbeddingFunction | Recuperación de documentación interna |
-| Tool 1 | `search_agency_docs` | Consulta ChromaDB — agencia, FAQs, portfolio |
-| Tool 2 | `search_services` | Consulta PostgreSQL — servicios y precios en vivo |
-| Memoria | PostgreSQL (`ConversationMessage`) | Historial persistente entre sesiones |
-| Observabilidad | LangFuse | Trazas · tokens · coste · feedback 👍/👎 |
+| Componente     | Tecnología                          | Rol                                               |
+| -------------- | ----------------------------------- | ------------------------------------------------- |
+| Orquestación   | LangGraph `createReactAgent`        | Ciclo razonamiento → herramienta → respuesta      |
+| LLM            | Groq API · LLaMA 3.1 8B Instant     | Generación de texto · temp 0.3                    |
+| RAG            | ChromaDB · DefaultEmbeddingFunction | Recuperación de documentación interna             |
+| Tool 1         | `search_agency_docs`                | Consulta ChromaDB — agencia, FAQs, portfolio      |
+| Tool 2         | `search_services`                   | Consulta PostgreSQL — servicios y precios en vivo |
+| Memoria        | PostgreSQL (`ConversationMessage`)  | Historial persistente entre sesiones              |
+| Observabilidad | LangFuse                            | Trazas · tokens · coste · feedback 👍/👎          |
 
 ---
 
@@ -341,19 +341,19 @@ erDiagram
 
 ## Seguridad — puntos clave
 
-| Control | Implementación |
-|---|---|
-| Autenticación | JWT HS256 · TTL 1h · bcrypt salt 10 |
-| RBAC | `isAdmin()` consulta BD en cada petición — sin caché de rol |
-| Ownership | Orders, deliverables y chat verifican `userId === req.user.id` |
-| Inputs | Zod en todos los endpoints · también valida respuesta del LLM (OWASP API10) |
-| XSS | `dangerouslySetInnerHTML` prohibido · DOMPurify disponible · JSX escapa automáticamente |
-| Prompt injection | 14 patrones regex backend + detección frontend + system prompt anti-jailbreak |
-| CORS | Sin wildcard · `CORS_ORIGIN` obligatoria en producción · falla en startup si falta |
-| Rate limiting | 6 limiters: global · login · register · chat · orders · users |
-| Headers | Helmet (X-Frame-Options, HSTS, nosniff, Referrer-Policy) |
-| Privacidad | `robots.txt Disallow: /` · `noindex, nofollow` · Swagger deshabilitado en producción |
-| Errores | 5xx genéricos al cliente · detalles solo en logs de servidor |
+| Control          | Implementación                                                                          |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| Autenticación    | JWT HS256 · TTL 1h · bcrypt salt 10                                                     |
+| RBAC             | `isAdmin()` consulta BD en cada petición — sin caché de rol                             |
+| Ownership        | Orders, deliverables y chat verifican `userId === req.user.id`                          |
+| Inputs           | Zod en todos los endpoints · también valida respuesta del LLM (OWASP API10)             |
+| XSS              | `dangerouslySetInnerHTML` prohibido · DOMPurify disponible · JSX escapa automáticamente |
+| Prompt injection | 14 patrones regex backend + detección frontend + system prompt anti-jailbreak           |
+| CORS             | Sin wildcard · `CORS_ORIGIN` obligatoria en producción · falla en startup si falta      |
+| Rate limiting    | 6 limiters: global · login · register · chat · orders · users                           |
+| Headers          | Helmet (X-Frame-Options, HSTS, nosniff, Referrer-Policy)                                |
+| Privacidad       | `robots.txt Disallow: /` · `noindex, nofollow` · Swagger deshabilitado en producción    |
+| Errores          | 5xx genéricos al cliente · detalles solo en logs de servidor                            |
 
 ---
 
@@ -385,16 +385,16 @@ El proxy de Vite redirige `/api/*` al backend automáticamente — no se necesit
 
 ### 3 — Verificación end-to-end
 
-| Paso | Acción | Resultado esperado |
-|---|---|---|
-| 1 | Acceder a `localhost:5173` | Redirect a `/login` |
-| 2 | Registrar cuenta | Token JWT · redirect a `/dashboard` |
-| 3 | Navegar a `/services` | 8 servicios del catálogo |
-| 4 | Contratar un servicio | Pedido en `/orders` · estado PENDING |
-| 5 | Abrir chat · preguntar por servicios | Respuesta del agente con fuentes citadas |
-| 6 | Login como ADMIN → `/admin/orders` | Ver todos los pedidos · cambiar estado |
-| 7 | Añadir entregable · poner estado DONE | Cliente ve entregable en `/orders/:id` |
-| 8 | Logout | Token eliminado · redirect a `/login` |
+| Paso | Acción                                | Resultado esperado                       |
+| ---- | ------------------------------------- | ---------------------------------------- |
+| 1    | Acceder a `localhost:5173`            | Redirect a `/login`                      |
+| 2    | Registrar cuenta                      | Token JWT · redirect a `/dashboard`      |
+| 3    | Navegar a `/services`                 | 8 servicios del catálogo                 |
+| 4    | Contratar un servicio                 | Pedido en `/orders` · estado PENDING     |
+| 5    | Abrir chat · preguntar por servicios  | Respuesta del agente con fuentes citadas |
+| 6    | Login como ADMIN → `/admin/orders`    | Ver todos los pedidos · cambiar estado   |
+| 7    | Añadir entregable · poner estado DONE | Cliente ve entregable en `/orders/:id`   |
+| 8    | Logout                                | Token eliminado · redirect a `/login`    |
 
 ---
 
@@ -425,13 +425,19 @@ swift-ecommerce/
 
 ---
 
+## Despliegue
+
+**Render** Ver: [Demo](https://swift-studio-ecosystem.onrender.com)
+
+---
+
 ## Documentación
 
-| Recurso | Ubicación |
-|---|---|
-| README Backend (técnico) | [backend/README.md](backend/README.md) |
-| README Frontend (técnico) | [frontend/README.md](frontend/README.md) |
-| Auditoría de seguridad | [documents/auditoria-seguridad.md](documents/auditoria-seguridad.md) |
-| API Swagger (desarrollo) | `http://localhost:3000/api/docs` |
-| Observabilidad LLM | `https://cloud.langfuse.com` |
-| Log de uso de IA | [ai_log.md](ai_log.md) |
+| Recurso                   | Ubicación                                                            |
+| ------------------------- | -------------------------------------------------------------------- |
+| README Backend (técnico)  | [backend/README.md](backend/README.md)                               |
+| README Frontend (técnico) | [frontend/README.md](frontend/README.md)                             |
+| Auditoría de seguridad    | [documents/auditoria-seguridad.md](documents/auditoria-seguridad.md) |
+| API Swagger (desarrollo)  | `http://localhost:3000/api/docs`                                     |
+| Observabilidad LLM        | `https://cloud.langfuse.com`                                         |
+| Log de uso de IA          | [ai_log.md](ai_log.md)                                               |

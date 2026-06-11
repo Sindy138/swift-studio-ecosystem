@@ -20,17 +20,17 @@ graph LR
 
 ## Stack Técnico
 
-| Tecnología | Versión | Rol |
-|---|---|---|
-| React | 19.x | Framework principal |
-| React Router | 7.x | Routing SPA |
-| Vite | 8.x | Build tool + dev server |
-| react-helmet-async | latest | Meta tags y JSON-LD en `<head>` |
-| react-icons | latest | Sistema de iconos (Feather Icons) |
-| marked | 18.x | Markdown → HTML para el blog |
-| dompurify | 3.x | Sanitización de HTML renderizado |
-| n8n | externo | Procesamiento de leads vía webhook |
-| Resend | externo | Envío de emails transaccionales |
+| Tecnología         | Versión | Rol                                |
+| ------------------ | ------- | ---------------------------------- |
+| React              | 19.x    | Framework principal                |
+| React Router       | 7.x     | Routing SPA                        |
+| Vite               | 8.x     | Build tool + dev server            |
+| react-helmet-async | latest  | Meta tags y JSON-LD en `<head>`    |
+| react-icons        | latest  | Sistema de iconos (Feather Icons)  |
+| marked             | 18.x    | Markdown → HTML para el blog       |
+| dompurify          | 3.x     | Sanitización de HTML renderizado   |
+| n8n                | externo | Procesamiento de leads vía webhook |
+| Resend             | externo | Envío de emails transaccionales    |
 
 ---
 
@@ -108,15 +108,15 @@ swift-capitalization/
 
 ## Páginas implementadas
 
-| Ruta | Página | Estado |
-|---|---|---|
-| `/` | Home | Completada |
-| `/quienes-somos` | The Origin | Completada |
-| `/servicios` | Listado de servicios | Completada |
+| Ruta               | Página                   | Estado     |
+| ------------------ | ------------------------ | ---------- |
+| `/`                | Home                     | Completada |
+| `/quienes-somos`   | The Origin               | Completada |
+| `/servicios`       | Listado de servicios     | Completada |
 | `/servicios/:slug` | Detalle de servicio (×5) | Completada |
-| `/blog` | Blog SEO Engine | Completada |
-| `/blog/:slug` | Artículo individual | Completada |
-| `/contacto` | Formulario de leads | Completada |
+| `/blog`            | Blog SEO Engine          | Completada |
+| `/blog/:slug`      | Artículo individual      | Completada |
+| `/contacto`        | Formulario de leads      | Completada |
 
 ---
 
@@ -129,9 +129,9 @@ swift-capitalization/
 --gradient-brand: linear-gradient(90deg, #ffae8e, #ff7da2, #aa73fa);
 
 /* Bases */
---color-base:    #202020;   /* fondo dark (secciones oscuras) */
---color-dark:    #2c3e50;   /* azul oscuro */
---color-bg:      #ffffff;   /* fondo general */
+--color-base: #202020; /* fondo dark (secciones oscuras) */
+--color-dark: #2c3e50; /* azul oscuro */
+--color-bg: #ffffff; /* fondo general */
 ```
 
 ### Regla de `clamp()`
@@ -141,23 +141,23 @@ swift-capitalization/
 ```css
 /* OBLIGATORIO con clamp */
 font-size: clamp(1rem, 2.5vw, 1.25rem);
-gap:       clamp(1rem, 3vw, 2rem);
-width:     clamp(150px, 20vw, 280px);   /* solo logo */
+gap: clamp(1rem, 3vw, 2rem);
+width: clamp(150px, 20vw, 280px); /* solo logo */
 
 /* TODO LO DEMÁS — valores fijos */
-padding:       1.5rem 2rem;
+padding: 1.5rem 2rem;
 border-radius: 3px;
-max-width:     1500px;
+max-width: 1500px;
 ```
 
 ### Efectos visuales
 
-| Efecto | Implementación |
-|---|---|
-| Glassmorphism | `background: rgba(255,255,255,0.11)` + `backdrop-filter: blur(1px)` |
-| Dotted pattern | `radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)` en `::before` |
+| Efecto             | Implementación                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------ |
+| Glassmorphism      | `background: rgba(255,255,255,0.11)` + `backdrop-filter: blur(1px)`                  |
+| Dotted pattern     | `radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)` en `::before`          |
 | Gradiente en texto | `background: var(--gradient-brand)` + `background-clip: text` + `color: transparent` |
-| Microanimaciones | `opacity: 0 → 1` + `translateY(24px → 0)` via `IntersectionObserver` |
+| Microanimaciones   | `opacity: 0 → 1` + `translateY(24px → 0)` via `IntersectionObserver`                 |
 
 ### Hook `useInView`
 
@@ -206,7 +206,9 @@ graph LR
 ```jsx
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return null;
 };
 ```
@@ -259,9 +261,15 @@ author: Swift Studio
 Para aplicar estilos al HTML generado por `marked` dentro de un CSS Module, se usa `:global()`:
 
 ```css
-.articleBody :global(h2) { font-size: clamp(1.25rem, 2.2vw, 1.75rem); }
-.articleBody :global(p)  { line-height: 1.8; }
-.articleBody :global(a)  { color: #aa73fa; }
+.articleBody :global(h2) {
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+}
+.articleBody :global(p) {
+  line-height: 1.8;
+}
+.articleBody :global(a) {
+  color: #aa73fa;
+}
 ```
 
 ---
@@ -295,7 +303,8 @@ sequenceDiagram
 
 ```js
 // Email RFC 5322
-const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+const EMAIL_RE =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
 
 // Nombre — solo letras, espacios, tildes, guiones
 const NOMBRE_RE = /^[a-zA-ZÀ-ÿ\s'\-]+$/;
@@ -304,18 +313,21 @@ const NOMBRE_RE = /^[a-zA-ZÀ-ÿ\s'\-]+$/;
 const ALLOWED_TEMAS = new Set(TEMAS.map((t) => t.value));
 ```
 
-| Campo | Regla |
-|---|---|
-| Nombre | Regex letras + tildes, 2–100 chars |
-| Email | Regex RFC-compliant, máx 254 chars |
-| Empresa | Opcional, máx 100 chars |
-| Tema | Whitelist con `Set`, rechaza valores no registrados |
+| Campo   | Regla                                               |
+| ------- | --------------------------------------------------- |
+| Nombre  | Regex letras + tildes, 2–100 chars                  |
+| Email   | Regex RFC-compliant, máx 254 chars                  |
+| Empresa | Opcional, máx 100 chars                             |
+| Tema    | Whitelist con `Set`, rechaza valores no registrados |
 
 #### Sanitización antes del envío
 
 ```js
 const sanitize = (str) =>
-  str.trim().replace(/[<>"'`]/g, "").slice(0, 500);
+  str
+    .trim()
+    .replace(/[<>"'`]/g, "")
+    .slice(0, 500);
 ```
 
 #### Honeypot anti-bot
@@ -368,6 +380,7 @@ graph TD
 ```
 
 **Puntos críticos de configuración:**
+
 - La condición del Switch usa `{{ $json.body.tema }}` — el body del webhook llega anidado bajo `.body`
 - El campo Subject del nodo Resend se deja vacío cuando se usa template — Resend usa el del template
 - Variables en plantilla Resend con triple llave: `{{{nombre}}}` (Handlebars sin escapar HTML)
@@ -430,23 +443,23 @@ const SEO = ({ title, description, canonical, ogType = "website", jsonLd }) => {
 
 ### Structured Data JSON-LD por página
 
-| Página | Schema.org Type | Campos clave |
-|---|---|---|
-| Home | `LocalBusiness` | name, description, url, address, aggregateRating |
-| Quiénes Somos | `AboutPage` | name, description, url |
-| Servicio detail | `Service` | name, description, provider, url |
-| Blog post | `BlogPosting` | headline, description, author, datePublished, publisher |
+| Página          | Schema.org Type | Campos clave                                            |
+| --------------- | --------------- | ------------------------------------------------------- |
+| Home            | `LocalBusiness` | name, description, url, address, aggregateRating        |
+| Quiénes Somos   | `AboutPage`     | name, description, url                                  |
+| Servicio detail | `Service`       | name, description, provider, url                        |
+| Blog post       | `BlogPosting`   | headline, description, author, datePublished, publisher |
 
 ### Sitemap y Robots
 
 **`public/sitemap.xml`** — 13 URLs con `priority` y `changefreq` diferenciados:
 
-| Tipo | Priority | Changefreq |
-|---|---|---|
-| Home | 1.0 | weekly |
-| Servicios listing, Blog | 0.9 | monthly / weekly |
-| Service pages, Quiénes Somos | 0.8 | monthly |
-| Blog posts, Contacto | 0.7 | monthly |
+| Tipo                         | Priority | Changefreq       |
+| ---------------------------- | -------- | ---------------- |
+| Home                         | 1.0      | weekly           |
+| Servicios listing, Blog      | 0.9      | monthly / weekly |
+| Service pages, Quiénes Somos | 0.8      | monthly          |
+| Blog posts, Contacto         | 0.7      | monthly          |
 
 **`public/robots.txt`:**
 
@@ -484,14 +497,9 @@ npm run lint     # ESLint
 
 ## Despliegue
 
-Plataforma objetivo: **Netlify o Vercel** (frontend estático).
+Plataforma objetivo: **Vercel** (frontend estático).
 
 ### Redirects SPA requeridos
-
-```
-# Netlify — public/_redirects
-/*  /index.html  200
-```
 
 ```json
 // Vercel — vercel.json
@@ -500,17 +508,9 @@ Plataforma objetivo: **Netlify o Vercel** (frontend estático).
 }
 ```
 
-### Headers de seguridad
+### URL Deploy
 
-```toml
-# netlify.toml
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-```
+- [Demo](https://swift-studio-ecosystem.vercel.app/)
 
 ---
 

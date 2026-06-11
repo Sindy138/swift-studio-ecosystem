@@ -74,6 +74,6 @@ El proyecto sigue las directrices del OWASP API Top 10 para mitigar vulnerabilid
 
 El repositorio está organizado siguiendo una estructura de monorepo para facilitar la gestión de ambos entornos.
 
-1.  **Backend:** `npm install` en `/backend`, configuración de `.env` y despliegue en Render.
-2.  **Frontend (Hub 360):** `npm install` en `/frontend`, configuración de API endpoint y despliegue en Vercel/Netlify.
-3.  **Frontend (Marketing):** Despliegue independiente enfocado en rendim
+1.  **Backend:** `npm install` en `/backend`, configuración de `.env` y despliegue en Render. [Demo](https://swift-studio-ecosystem.onrender.com)
+2.  **Frontend (Hub 360):** `npm install` en `/frontend`, configuración de API endpoint y despliegue en Vercel [Demo](https://swift-studio-ecosystem-ecommerce-at6yyw0od-sindy138s-projects.vercel.app/)
+3.  **Frontend (Marketing):** Despliegue independiente enfocado en Vercel [Demo](https://swift-studio-ecosystem.vercel.app/)
