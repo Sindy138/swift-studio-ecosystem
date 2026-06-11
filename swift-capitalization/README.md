@@ -1,428 +1,551 @@
-# 🚀 Swift Studio - Web de Captación Modular
+# Swift Studio — Plataforma de Capitalización y SEO
 
-## 📌 Resumen Ejecutivo
-
-Plantilla maestra escalable para captación de leads con **5 módulos independientes** que se adapta a cualquier sector en minutos.
-
-✅ **Propuesta de Valor:** Transforma marketing en un sistema automatizado y medible  
-✅ **Arquitectura:** Data-driven (config centralizada) + componentes modulares reutilizables  
-✅ **Escalabilidad:** Cambia un archivo de config → obtén web completamente diferente (Inmobiliaria, Fintech, etc.)  
-✅ **Responsividad:** Diseño perfectamente adaptado a desktop, tablet y mobile  
-✅ **SEO-First:** Structured data JSON-LD + KPIs visuales + autoridad local
+Web de marketing 100% pública construida en **React 19 + Vite 8**. Motor de captación de leads del ecosistema Swift Studio: optimizada para Core Web Vitals, posicionamiento orgánico y conversión.
 
 ---
 
-## ⚡ Empezar en 3 Pasos
+## Ecosistema
 
-```bash
-# 1. Instalar dependencias
-npm install
-
-# 2. Iniciar servidor (http://localhost:5173/)
-npm run dev
-
-# 3. Abre en navegador
-# http://localhost:5173/
+```mermaid
+graph LR
+    A["swift-capitalization<br/>Este repo<br/>React · SEO · Leads"] -->|"CTAs → hub"| B["swift-ecommerce<br/>Repo privado<br/>Fullstack · IA · Auth · RAG"]
+    C["Usuario público<br/>Google / Redes"] -->|"tráfico orgánico"| A
+    A -->|"webhook POST"| D["n8n<br/>Procesamiento de leads"]
+    D -->|"API Resend"| E["Email al lead<br/>+ notificación interna"]
 ```
 
-✅ Deberías ver el Home con **5 secciones funcionales**.
+> `swift-capitalization` es exclusivamente frontend estático. No contiene backend, autenticación, base de datos ni lógica de e-commerce.
 
 ---
 
-## 📋 Requisitos Previos
+## Stack Técnico
 
-- **Node.js** v16+ ([descargar](https://nodejs.org/))
-- **npm** (incluido con Node.js)
-
-Verifica:
-
-```bash
-node --version
-npm --version
-```
-
----
-
-## 📦 Instalación Completa
-
-### Opción A: Primer Uso (Setup Inicial)
-
-```bash
-# 1. Navega al proyecto
-cd c:/Users/sindy/desktop/ironhack-class/proyecto-SwiftStudio/swift-web
-
-# 2. Instala dependencias
-npm install
-
-# 3. Inicia dev server
-npm run dev
-
-# 4. Abre http://localhost:5173en el navegador
-```
-
-### Opción B: Siguientes Sesiones (Ya Instalado)
-
-```bash
-# Solo iniciar servidor
-npm run dev
-
-# Servidor listo en http://localhost:5173/
-```
-
-### Stack Técnico
-
-| Tecnología       | Versión | Propósito               |
-| ---------------- | ------- | ----------------------- |
-| **React**        | 19.2.5  | Framework principal     |
-| **React Router** | 7.15.0  | Routing (subpáginas)    |
-| **Vite**         | 8.0.10  | Build tool + dev server |
-| **Node.js**      | 16+     | Runtime                 |
-| **npm**          | -       | Gestor de dependencias  |
+| Tecnología | Versión | Rol |
+|---|---|---|
+| React | 19.x | Framework principal |
+| React Router | 7.x | Routing SPA |
+| Vite | 8.x | Build tool + dev server |
+| react-helmet-async | latest | Meta tags y JSON-LD en `<head>` |
+| react-icons | latest | Sistema de iconos (Feather Icons) |
+| marked | 18.x | Markdown → HTML para el blog |
+| dompurify | 3.x | Sanitización de HTML renderizado |
+| n8n | externo | Procesamiento de leads vía webhook |
+| Resend | externo | Envío de emails transaccionales |
 
 ---
 
-## 📂 Estructura del Proyecto
+## Arquitectura
+
+### Principio data-driven
+
+Todo el contenido textual vive en un único archivo de configuración. Los componentes son agnósticos al sector y reciben datos por props.
+
+```mermaid
+graph TD
+    A["src/config/content.js<br/>FUENTE DE VERDAD"] --> B["Componentes Home"]
+    A --> C["ServicioDetailPage"]
+    A --> D["QuienesSomosPage"]
+    A --> E["ServiciosPage"]
+    F["src/content/blog/*.md<br/>Artículos en Markdown"] --> G["src/utils/blog.js<br/>Parser + Renderer"]
+    G --> H["BlogPage"]
+    G --> I["BlogPostPage"]
+```
+
+Cambiar `content.js` cambia toda la web. La arquitectura está diseñada para que una segunda instancia (ej. Inmobiliaria) requiera únicamente cambiar ese archivo.
+
+### Estructura de carpetas
 
 ```
-src/
-├── config/
-│   ├── content.js          🔑 CORAZÓN: Toda la data de Swift Studio
-│   └── TEMPLATE.js         📋 Template para nuevos sectores
-│
-├── components/
-│   ├── home/
-│   │   ├── Home.jsx               🏠 Ensamblador principal
-│   │   ├── HeroSection.jsx        1️⃣ Propuesta de valor + CTA
-│   │   ├── SocialProof.jsx        2️⃣ Logos + Testimonios
-│   │   ├── ServiceGrid.jsx        3️⃣ The Core (5 servicios)
-│   │   ├── EngineSection.jsx      4️⃣ Engine (diferenciación)
-│   │   ├── SEOAuthority.jsx       5️⃣ Autoridad + SEO
-│   │   ├── ARCHITECTURE.md        📚 Documentación técnica
-│   │   └── styles/
-│   │       ├── Home.css
-│   │       ├── HeroSection.css
-│   │       ├── SocialProof.css
-│   │       ├── ServiceGrid.css
-│   │       ├── EngineSection.css
-│   │       └── SEOAuthority.css
-│   │
-│   └── layout/
-│       ├── NavBar.jsx
-│       └── Footer.jsx
-│
-└── App.jsx (✅ importa Home)
+swift-capitalization/
+├── public/
+│   ├── sitemap.xml
+│   ├── robots.txt
+│   ├── favicon.svg
+│   └── logos/
+├── src/
+│   ├── components/
+│   │   ├── SEO.jsx              ← Componente SEO global
+│   │   ├── ScrollToTop.jsx      ← Reset de scroll en navegación SPA
+│   │   ├── home/
+│   │   │   ├── Home.jsx
+│   │   │   ├── HeroSection.jsx
+│   │   │   ├── SocialProof.jsx
+│   │   │   ├── ServiceGrid.jsx
+│   │   │   ├── EngineSection.jsx
+│   │   │   └── SEOAuthority.jsx
+│   │   └── layout/
+│   │       ├── NavBar.jsx
+│   │       └── Footer.jsx
+│   ├── config/
+│   │   ├── content.js           ← Config maestra del sector
+│   │   └── TEMPLATE.js          ← Plantilla para nuevos sectores
+│   ├── content/
+│   │   └── blog/
+│   │       ├── seo-tecnico-guia-2025.md
+│   │       ├── fotografia-producto-ecommerce.md
+│   │       └── flujos-automatizacion-n8n.md
+│   ├── hooks/
+│   │   └── useInView.js         ← IntersectionObserver para animaciones
+│   ├── pages/
+│   │   ├── HomePage.jsx
+│   │   ├── QuienesSomosPage.jsx
+│   │   ├── ServiciosPage.jsx
+│   │   ├── ServicioDetailPage.jsx
+│   │   ├── BlogPage.jsx
+│   │   ├── BlogPostPage.jsx
+│   │   ├── ContactoPage.jsx
+│   │   └── styles/              ← CSS Modules por página
+│   ├── utils/
+│   │   └── blog.js              ← Carga y parseo de artículos markdown
+│   ├── App.jsx
+│   └── main.jsx                 ← HelmetProvider root
+├── .env                         ← Variables de entorno (no en git)
+├── .env.example
+└── index.html
 ```
 
 ---
 
-## 🎯 Los 5 Módulos Implementados
+## Páginas implementadas
 
-### 1️⃣ **Hero Section** - Propuesta de Valor
-
-- Headline impactante + subheadline
-- Background dinámico (video/imagen)
-- 2 CTAs (primaria + secundaria)
-- Scroll indicator animado
-
-### 2️⃣ **Social Proof** - Autoridad Social
-
-- Grid de logos de clientes
-- Carrusel de testimonios interactivo
-- Rating stars (5 ⭐)
-- Navegación con dots y flechas
-
-### 3️⃣ **Service Grid** - The Core (5 Servicios)
-
-5 pilares de Swift Studio con cards interactivas:
-
-1. 📊 **SEO & Posicionamiento** - Domina Google
-2. 📱 **Social Media & Community** - Engagement + Audiencia
-3. 📸 **Fotografía Profesional** - Contenido visual
-4. ✍️ **Content & Blogs** - Contenido que convierte
-5. ⚙️ **Automatización con n8n** - 24/7 sin intervención
-
-Cada card: icono, descripción, 4 features, color accent, CTA link
-
-### 4️⃣ **Engine Section** - Diferenciación Tecnológica
-
-**4 Ventajas Clave:**
-
-- 📈 Dashboard Propio (ROI visible en tiempo real)
-- 🔗 Integraciones n8n (Automatización total)
-- 🤖 Optimización Continua (IA + Datos)
-- 👥 Equipo Especializado (5 disciplinas integradas)
-
-**Tabla Comparativa:** Agencia Tradicional ❌ vs Swift Studio ✅
-
-### 5️⃣ **SEO Authority** - Autoridad + Structured Data
-
-- **4 KPI Stats:** 150+ proyectos, 95% satisfacción, 6 meses, 300% ROI
-- **Authority Content:** Párrafo diferenciador
-- **JSON-LD Schema:** LocalBusiness para SEO local
+| Ruta | Página | Estado |
+|---|---|---|
+| `/` | Home | Completada |
+| `/quienes-somos` | The Origin | Completada |
+| `/servicios` | Listado de servicios | Completada |
+| `/servicios/:slug` | Detalle de servicio (×5) | Completada |
+| `/blog` | Blog SEO Engine | Completada |
+| `/blog/:slug` | Artículo individual | Completada |
+| `/contacto` | Formulario de leads | Completada |
 
 ---
 
-## 🎨 Sistema de Diseño
+## Sistema de Diseño
 
-### Colores Globales (Escalables)
+### Paleta de colores
 
 ```css
---color-primary: #ff6b6b /* Rojo accent */ --color-secondary: #4ecdc4
-  /* Turquesa */ --color-accent: #ffe66d /* Amarillo */ --color-dark: #2c3e50
-  /* Azul oscuro */ --color-light: #eceff1 /* Gris claro */;
+/* Gradiente de marca — CTAs, hovers, acentos */
+--gradient-brand: linear-gradient(90deg, #ffae8e, #ff7da2, #aa73fa);
+
+/* Bases */
+--color-base:    #202020;   /* fondo dark (secciones oscuras) */
+--color-dark:    #2c3e50;   /* azul oscuro */
+--color-bg:      #ffffff;   /* fondo general */
 ```
 
-### Responsive Breakpoints
+### Regla de `clamp()`
 
-- **Desktop:** 1200px+
-- **Tablet:** 768px - 1199px
-- **Mobile:** 480px - 767px
+`clamp()` se aplica **exclusivamente** a tres propiedades:
 
----
+```css
+/* OBLIGATORIO con clamp */
+font-size: clamp(1rem, 2.5vw, 1.25rem);
+gap:       clamp(1rem, 3vw, 2rem);
+width:     clamp(150px, 20vw, 280px);   /* solo logo */
 
-## ⚡ Personalización
-
-### Opción 1: Cambiar Contenido Swift Studio
-
-1. Abre `src/config/content.js`
-2. Edita valores de:
-   - `hero.valueProp.headline`
-   - `socialProof.logos[]` y `testimonials[]`
-   - `services.serviceCards[]` (5 servicios)
-   - `engine.advantages[]` (4 ventajas)
-   - `seoAuthority.keyStats[]` (4 KPIs)
-
-✅ Home se actualiza automáticamente
-
-### Opción 2: Cambiar Colores Globales
-
-1. Abre `src/components/home/styles/Home.css`
-2. Edita variables en `:root { }`
-3. Todos los componentes se actualizan
-
-### Opción 3: Crear Config para Otro Sector
-
-1. Copia `src/config/TEMPLATE.js` → `src/config/realestate.js`
-2. Reemplaza valores específicos del sector
-3. En `src/components/home/Home.jsx` importa la nueva config
-4. ¡Funciona! Web completamente diferente
-
-**Ejemplo Inmobiliaria (15 minutos):**
-
-```javascript
-// Cambias estos 5 servicios:
-✓ Fotografía de Propiedades
-✓ Tours Virtuales 3D
-✓ Posicionamiento Local
-✓ Publicidad Digital
-✓ CRM + Leads
-// Y todo lo demás es automático
+/* TODO LO DEMÁS — valores fijos */
+padding:       1.5rem 2rem;
+border-radius: 3px;
+max-width:     1500px;
 ```
 
----
+### Efectos visuales
 
-## 🏗️ Arquitectura Data-Driven
+| Efecto | Implementación |
+|---|---|
+| Glassmorphism | `background: rgba(255,255,255,0.11)` + `backdrop-filter: blur(1px)` |
+| Dotted pattern | `radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px)` en `::before` |
+| Gradiente en texto | `background: var(--gradient-brand)` + `background-clip: text` + `color: transparent` |
+| Microanimaciones | `opacity: 0 → 1` + `translateY(24px → 0)` via `IntersectionObserver` |
 
-```
-content.js (SECTOR_CONFIG)
-    ↓
-    ├─→ Home.jsx (ensamblador)
-    │   ├─→ HeroSection (prop: config.hero)
-    │   ├─→ SocialProof (prop: config.socialProof)
-    │   ├─→ ServiceGrid (prop: config.services)
-    │   ├─→ EngineSection (prop: config.engine)
-    │   └─→ SEOAuthority (prop: config.seoAuthority)
-    │
-    └─→ Componentes renderean datos + estilos únicos
-```
+### Hook `useInView`
 
-**Ventaja:** Cambias un archivo = cambia todo el sitio (content + estructura)
+```js
+const useInView = (options) => {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
 
-### Responsive Design por Breakpoint
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setInView(true);
+        observer.disconnect(); // dispara una sola vez
+      }
+    }, options);
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
 
-```
-Desktop (1200px+)    →   Tablet (768px)        →   Mobile (480px)
-─────────────────       ────────────────           ──────────────
-Hero (full)             Hero (ajustado)           Hero (mobile)
-Logos (4/row)           Logos (2/row)            Logos (1/row)
-Services (3/row)        Services (2/row)         Services (1/row)
-Engine (1x4)            Engine (2x2)             Engine (1x4)
-Stats (4/row)           Stats (2x2)              Stats (1/row)
+  return [ref, inView];
+};
 ```
 
 ---
 
-## ✅ Verificación Post-Instalación
+## Routing y Navegación
 
-Después de `npm install` y `npm run dev`, verifica:
-
+```mermaid
+graph LR
+    A["main.jsx<br/>HelmetProvider"] --> B["App.jsx<br/>BrowserRouter"]
+    B --> C["ScrollToTop"]
+    B --> D["NavBar"]
+    B --> E["Routes"]
+    B --> F["Footer"]
+    E --> G["/"]
+    E --> H["/quienes-somos"]
+    E --> I["/servicios"]
+    E --> J["/servicios/:slug"]
+    E --> K["/blog"]
+    E --> L["/blog/:slug"]
+    E --> M["/contacto"]
 ```
-✅ npm install completó sin errores
-✅ npm run dev inicia en http://localhost:5173
-✅ Home carga con 5 secciones visibles
-✅ Responsive en mobile (F12 → DevTools)
-✅ Sin errores rojos en console (F12)
-✅ Animations funcionan suave
-✅ Carrusel de testimonios navega
-✅ Hover effects en service cards
+
+**`ScrollToTop`** resuelve el problema inherente de React Router donde el scroll no se resetea al navegar entre páginas en una SPA:
+
+```jsx
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+};
 ```
 
 ---
 
-## 🚀 Comandos Disponibles
+## Blog SEO Engine
 
-| Comando           | Función                      |
-| ----------------- | ---------------------------- |
-| `npm run dev`     | 🟢 Iniciar dev server (5173) |
-| `npm run build`   | 🏗️ Build para producción     |
-| `npm run preview` | 👁️ Preview versión compilada |
-| `npm run lint`    | ✔️ Validar código con ESLint |
+### Carga de artículos con Vite
 
-**Ejemplos:**
+Los artículos son archivos `.md` en `src/content/blog/`. Vite los carga en tiempo de build como strings raw:
+
+```js
+const RAW_FILES = import.meta.glob("/src/content/blog/*.md", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
+```
+
+> `as: 'raw'` está deprecado en Vite 5+. La sintaxis correcta es `query: '?raw', import: 'default'`.
+
+### Pipeline de procesamiento
+
+```mermaid
+graph LR
+    A[".md file"] --> B["import.meta.glob<br/>eager + raw"]
+    B --> C["parseFrontmatter()<br/>Custom YAML parser"]
+    C --> D["marked.parse()<br/>MD a HTML"]
+    D --> E["DOMPurify.sanitize()<br/>XSS prevention"]
+    E --> F["dangerouslySetInnerHTML<br/>seguro"]
+```
+
+### Frontmatter de artículos
+
+```markdown
+---
+title: "Título del artículo"
+slug: slug-del-articulo
+category: Estrategia | Visual | Automate
+date: 2025-03-10
+excerpt: "Resumen para listado y meta description"
+readTime: 8
+author: Swift Studio
+---
+```
+
+### Estilos de prosa con CSS Modules
+
+Para aplicar estilos al HTML generado por `marked` dentro de un CSS Module, se usa `:global()`:
+
+```css
+.articleBody :global(h2) { font-size: clamp(1.25rem, 2.2vw, 1.75rem); }
+.articleBody :global(p)  { line-height: 1.8; }
+.articleBody :global(a)  { color: #aa73fa; }
+```
+
+---
+
+## Formulario de Contacto y Automatización
+
+### Flujo completo
+
+```mermaid
+sequenceDiagram
+    participant U as Usuario
+    participant F as Frontend React
+    participant N as n8n Webhook
+    participant S as Switch Node
+    participant R as Resend API
+
+    U->>F: Rellena y envía formulario
+    F->>F: Validación cliente + honeypot check
+    F->>N: POST /webhook/leads { nombre, email, empresa, tema }
+    N->>S: Enruta por $json.body.tema
+    S->>R: Send con plantilla del tema
+    R-->>U: Email de confirmación personalizado
+    R-->>N: Email al equipo (notificación interna)
+    N-->>F: HTTP 200
+    F-->>U: Estado de éxito
+```
+
+### Seguridad del formulario
+
+#### Validación en cliente
+
+```js
+// Email RFC 5322
+const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+
+// Nombre — solo letras, espacios, tildes, guiones
+const NOMBRE_RE = /^[a-zA-ZÀ-ÿ\s'\-]+$/;
+
+// Whitelist de temas — previene valores manipulados desde DevTools
+const ALLOWED_TEMAS = new Set(TEMAS.map((t) => t.value));
+```
+
+| Campo | Regla |
+|---|---|
+| Nombre | Regex letras + tildes, 2–100 chars |
+| Email | Regex RFC-compliant, máx 254 chars |
+| Empresa | Opcional, máx 100 chars |
+| Tema | Whitelist con `Set`, rechaza valores no registrados |
+
+#### Sanitización antes del envío
+
+```js
+const sanitize = (str) =>
+  str.trim().replace(/[<>"'`]/g, "").slice(0, 500);
+```
+
+#### Honeypot anti-bot
+
+```jsx
+<div className={styles.honeypot} aria-hidden="true">
+  <input type="text" name="website" tabIndex="-1" autoComplete="off" />
+</div>
+```
+
+```css
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+```
+
+Si el campo `website` tiene valor → bot detectado → se finge éxito sin enviar al webhook.
+
+#### Protección doble envío
+
+```js
+const submitRef = useRef(false);
+
+const handleSubmit = async (e) => {
+  if (submitRef.current) return;
+  submitRef.current = true;
+  // se resetea solo en caso de error de red
+};
+```
+
+`useRef` en lugar de `useState` para evitar re-renders durante el submit.
+
+### Configuración n8n
+
+#### Estructura del workflow
+
+```mermaid
+graph TD
+    A["Webhook Trigger<br/>POST /webhook/leads"] --> B["Switch<br/>$json.body.tema"]
+    B -->|"presupuesto"| C["Resend — Presupuesto"]
+    B -->|"cita"| D["Resend — Cita"]
+    B -->|"seo"| E["Resend — SEO"]
+    B -->|"automatizaciones"| F["Resend — Automatizaciones"]
+    B -->|"fotografia"| G["Resend — Fotografía"]
+    B -->|"contenido"| H["Resend — Contenido"]
+    C & D & E & F & G & H --> I["HTTP 200"]
+```
+
+**Puntos críticos de configuración:**
+- La condición del Switch usa `{{ $json.body.tema }}` — el body del webhook llega anidado bajo `.body`
+- El campo Subject del nodo Resend se deja vacío cuando se usa template — Resend usa el del template
+- Variables en plantilla Resend con triple llave: `{{{nombre}}}` (Handlebars sin escapar HTML)
+- Template Variables en n8n: clave `nombre` → valor `{{ $json.body.nombre }}`
+
+#### API key de Resend
+
+La API key **no va en el `.env` de este repo**. Va en n8n como credencial de servidor:
+
+```
+n8n → Credentials → New → "Resend" → pegar re_xxxxxxxxx
+```
+
+Exponerla con prefijo `VITE_` la expondría al navegador — vulnerabilidad crítica.
+
+---
+
+## SEO — Implementación Técnica
+
+### Arquitectura de meta tags
+
+```mermaid
+graph TD
+    A["HelmetProvider<br/>main.jsx"] --> B["App"]
+    B --> C["Cada página"]
+    C --> D["SEO.jsx<br/>src/components/SEO.jsx"]
+    D --> E["title único"]
+    D --> F["meta description"]
+    D --> G["link canonical"]
+    D --> H["Open Graph 5 tags"]
+    D --> I["Twitter Card 3 tags"]
+    D --> J["JSON-LD structured data"]
+```
+
+### Componente SEO
+
+```jsx
+const SEO = ({ title, description, canonical, ogType = "website", jsonLd }) => {
+  const fullTitle = title ? `${title} | Swift Studio` : "Swift Studio — ...";
+  const url = canonical ? `${SITE}${canonical}` : SITE;
+
+  return (
+    <Helmet>
+      <title>{fullTitle}</title>
+      <meta name="description" content={description} />
+      <link rel="canonical" href={url} />
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={url} />
+      <meta property="og:type" content={ogType} />
+      <meta property="og:site_name" content="Swift Studio" />
+      <meta name="twitter:card" content="summary_large_image" />
+      {jsonLd && (
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      )}
+    </Helmet>
+  );
+};
+```
+
+### Structured Data JSON-LD por página
+
+| Página | Schema.org Type | Campos clave |
+|---|---|---|
+| Home | `LocalBusiness` | name, description, url, address, aggregateRating |
+| Quiénes Somos | `AboutPage` | name, description, url |
+| Servicio detail | `Service` | name, description, provider, url |
+| Blog post | `BlogPosting` | headline, description, author, datePublished, publisher |
+
+### Sitemap y Robots
+
+**`public/sitemap.xml`** — 13 URLs con `priority` y `changefreq` diferenciados:
+
+| Tipo | Priority | Changefreq |
+|---|---|---|
+| Home | 1.0 | weekly |
+| Servicios listing, Blog | 0.9 | monthly / weekly |
+| Service pages, Quiénes Somos | 0.8 | monthly |
+| Blog posts, Contacto | 0.7 | monthly |
+
+**`public/robots.txt`:**
+
+```
+User-agent: *
+Allow: /
+
+Sitemap: https://swiftstudio.com/sitemap.xml
+```
+
+---
+
+## Variables de Entorno
 
 ```bash
-# Desarrollo (con hot reload)
-npm run dev
-
-# Producción (archivos optimizados en /dist)
-npm run build
-
-# Ver preview antes de deploy
-npm run preview
-
-# Validar código
-npm run lint
+# .env — nunca subir al repositorio
+VITE_N8N_WEBHOOK_URL=https://tu-instancia-n8n.com/webhook/leads
+VITE_HUB_URL=https://ecommerce.swiftstudio.com
 ```
+
+El prefijo `VITE_` es obligatorio para que Vite exponga la variable al cliente. Se accede como `import.meta.env.VITE_*`.
 
 ---
 
-## 📱 Testing Responsive
-
-```
-1. Abre http://localhost:5173
-2. Presiona F12 (DevTools)
-3. Click icono de dispositivo (Ctrl+Shift+M)
-4. Prueba breakpoints:
-   • 375px (iPhone SE)
-   • 768px (iPad)
-   • 1200px (Desktop)
-5. Verifica que layout se adapta correctamente
-```
-
----
-
-## 🐛 Troubleshooting
-
-### ❌ "npm: command not found"
+## Comandos
 
 ```bash
-# Node.js no está instalado
-# Descarga desde https://nodejs.org/
-node --version
-npm --version
-```
-
-### ❌ "Port 5173 already in use"
-
-```bash
-# Usa otro puerto
-npm run dev -- --port 3000
-```
-
-### ❌ "Cannot find module 'react'"
-
-```bash
-# Dependencias no instaladas
-npm install
-```
-
-### ❌ "Home no aparece / estilos rotos"
-
-```bash
-# Limpia cache del navegador
-Ctrl+Shift+R (Windows)
-Cmd+Shift+R (Mac)
-
-# O fuerza refresh del servidor
-npm run dev
-```
-
-### ❌ "Carrusel no funciona"
-
-```bash
-# Revisa console (F12) por errores
-# Verifica que testimonials[] no esté vacío en content.js
+npm run dev      # Dev server en http://localhost:5173
+npm run build    # Build de producción → /dist
+npm run preview  # Preview del build
+npm run lint     # ESLint
 ```
 
 ---
 
-## 🎯 Siguientes Pasos
+## Despliegue
 
-### Fase 1: Refinamiento Inicial
+Plataforma objetivo: **Netlify o Vercel** (frontend estático).
 
-- [ ] Validar contenido de content.js para Swift Studio
-- [ ] Revisar enlaces internos/externos
-- [ ] Testing en mobile (DevTools)
+### Redirects SPA requeridos
 
-### Fase 2: Subpáginas
+```
+# Netlify — public/_redirects
+/*  /index.html  200
+```
 
-- [ ] `/servicios` - Grid de servicios
-- [ ] `/servicios/[servicio]` - Detail pages
-- [ ] `/blog` - Blog posts
-- [ ] `/contacto` - Contact form
+```json
+// Vercel — vercel.json
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
+```
 
-### Fase 3: Integración Ecommerce
+### Headers de seguridad
 
-- [ ] Links → Dashboard (ecommerce.swiftstudio.com)
-- [ ] Google Analytics
-- [ ] Lead tracking
-
-### Fase 4: Escalabilidad
-
-- [ ] Crear configs para otros sectores
-- [ ] Admin dashboard (CMS)
-- [ ] Deployment (Vercel/Netlify)
-
----
-
-## 📚 Archivos Importantes
-
-| Archivo                               | Propósito                       |
-| ------------------------------------- | ------------------------------- |
-| `src/config/content.js`               | 🔑 Contenido (edita aquí)       |
-| `src/components/home/Home.jsx`        | 🏠 Componente principal         |
-| `src/components/home/styles/Home.css` | 🎨 Variables globales           |
-| `src/config/TEMPLATE.js`              | 📋 Template para otros sectores |
-| `src/components/home/ARCHITECTURE.md` | 📖 Guía técnica completa        |
+```toml
+# netlify.toml
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+```
 
 ---
 
-## 🌍 Escalabilidad: Swift Studio → Otros Sectores
+## Fases del Proyecto
 
-Para crear web completamente diferente (ej. Inmobiliaria):
-
-1. **Copia:** `src/config/TEMPLATE.js` → `src/config/realestate.js`
-2. **Edita:** Reemplaza valores en la nueva config
-3. **Importa:** En `Home.jsx` cambia import a `REAL_ESTATE_CONFIG`
-4. **¡Listo!** Web funcionando con diseño, estructura y contenido diferente
-
-Tiempo: ~15 minutos | Cambios de código: 0
+```mermaid
+gantt
+    title Roadmap de implementación
+    dateFormat X
+    axisFormat %s
+    section Setup
+    Fase 0 Setup y estructura        :done, 0, 1
+    Fase 1 NavBar responsive          :done, 1, 2
+    section Home
+    Fase 2.1 HeroSection              :done, 2, 3
+    Fase 2.2 SocialProof Ticker       :done, 3, 4
+    Fase 2.3 Testimonials             :done, 4, 5
+    Fase 2.5 EngineSection            :done, 5, 6
+    Fase 2.6 SEOAuthority             :done, 6, 7
+    section Páginas internas
+    Fase 3 Footer                     :done, 7, 8
+    Fase 4 Quiénes Somos              :done, 8, 9
+    Fase 5 Service Pages x5           :done, 9, 11
+    Fase 6 Blog SEO Engine            :done, 11, 13
+    section Integración y SEO
+    Fase 7 Contacto + n8n + Resend    :done, 13, 15
+    Fase 8 SEO Global                 :done, 15, 16
+    section Despliegue
+    Fase 9 Deploy Netlify/Vercel      :active, 16, 17
+```
 
 ---
 
-## ✨ Características
+## Documentación de IA
 
-- ✅ 5 componentes modulares (Hero, Social, Services, Engine, SEO)
-- ✅ Data-driven (config centralizada)
-- ✅ 100% Responsive (3 breakpoints)
-- ✅ Animaciones suaves y transiciones
-- ✅ Carrusel de testimonios
-- ✅ Hover effects interactivos
-- ✅ Structured data JSON-LD
-- ✅ SEO-optimizado
-- ✅ Escalable a otros sectores
-- ✅ Cero hardcoding de contenido
+Este proyecto documenta el uso de IA en el desarrollo según los requisitos del bootcamp. El registro completo de sesiones, prompts, adaptaciones y aprendizajes está en [`ai_log.md`](./ai_log.md).
 
----
-
-**¿Listo para empezar?** Ejecuta `npm install` y `npm run dev` 🚀
+Herramienta utilizada: **Claude Code** (`claude-sonnet-4-6`) — CLI de Anthropic con acceso a herramientas de lectura, edición y ejecución de comandos en el entorno de desarrollo local.

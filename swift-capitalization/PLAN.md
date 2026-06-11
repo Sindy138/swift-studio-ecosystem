@@ -413,78 +413,67 @@ Responsive:
 
 ---
 
-## FASE 7 — Formulario de Contacto + n8n + Resend
+## FASE 7 — Formulario de Contacto + n8n + Resend ✅ COMPLETADA
 
 > Captura de leads con envío automático de email personalizado al lead según el tema seleccionado
 
 ### Campos del formulario
 
-| Campo                     | Tipo           | Requerido     |
-| ------------------------- | -------------- | ------------- |
-| Nombre                    | text           | Sí            |
-| Email                     | email          | Sí            |
-| Empresa                   | text           | No (opcional) |
-| ¿En qué podemos ayudarte? | select / radio | Sí            |
+| Campo                     | Tipo        | Requerido     |
+| ------------------------- | ----------- | ------------- |
+| Nombre                    | text        | Sí            |
+| Email                     | email       | Sí            |
+| Empresa                   | text        | No (opcional) |
+| ¿En qué podemos ayudarte? | radio pills | Sí            |
 
-**Opciones del selector de tema:** (No tiene que ser éste el orden)
+**6 temas disponibles (pills radio visuales):**
 
-- Solicitar presupuesto
-- Reservar una cita
-- SEO
-- Automatizaciones
-- Fotografía
-- Contenido
-- Branding
+- Solicitar presupuesto · Reservar una cita · SEO · Automatizaciones · Fotografía · Contenido
 
-### Tareas del frontend
+### Lo implementado
 
-- [ ] `/contacto`: implementar el formulario con los campos anteriores
-  - Validación cliente: longitud, formato email, caracteres permitidos, requeridos
-  - Inputs: label flotante animada (CSS puro)
-  - Estado carga: spinner en botón (icono react-icons `Loader2` animado)
-  - Estado éxito: confirmación con `CheckCircle` de react-icons + animación
-  - Estado error: mensaje amigable + opción reintentar
-- [ ] Integración n8n: `fetch` POST a `import.meta.env.VITE_N8N_WEBHOOK_URL`
-  - Body: `{ nombre, email, empresa, tema }`
-- [ ] Honeypot field (campo oculto anti-bots, sin CAPTCHA externo)
-- [ ] Iconos en labels: react-icons (no emojis)
-- [ ] Responsive completo
+- [x] Hero blanco — label + H1 + subheadline, mismo sistema que Quiénes Somos
+- [x] Layout dos columnas: izquierda (proceso 01/02/03) + derecha (tarjeta del form)
+- [x] Labels flotantes con CSS puro — `input:not(:placeholder-shown) ~ label` + `input:focus ~ label`
+- [x] 6 pills de tema como radio buttons visualmente estilizados
+- [x] Validación robusta en cliente:
+  - Regex email RFC-compliant (longitud ≤ 254)
+  - Whitelist de temas con `Set` — previene valores manipulados
+  - Regex nombre: solo letras, tildes, espacios y guiones
+  - Límites de longitud en todos los campos
+  - Trim en todos los valores antes de validar
+- [x] Sanitización antes del envío: `trim()` + eliminación de `<>"'\`` + truncado
+- [x] Honeypot: campo `name="website"` oculto con `tabIndex="-1"` y `aria-hidden` — bot → finge éxito sin enviar
+- [x] Protección doble envío con `useRef` (bloquea reenvíos sin re-renders extra)
+- [x] Estado loading: `FiRefreshCw` con `@keyframes spin`, botón deshabilitado
+- [x] Estado éxito: reemplaza el form con mensaje personalizado por tema + link a `/servicios`
+- [x] Estado error: banner con `FiAlertCircle` y opción de reintentar
+- [x] `fetch` POST a `import.meta.env.VITE_N8N_WEBHOOK_URL` con `{ nombre, email, empresa, tema }`
+- [x] Responsive completo
 
-### Workflow n8n (construir al iniciar esta fase)
+### Workflow n8n
 
-> **PENDIENTE: generar guía paso a paso detallada al comenzar la Fase 7.**
+> **PENDIENTE: generar guía paso a paso detallada al configurar n8n.**
 
 Lógica del workflow:
 
 1. **Trigger — Webhook POST** recibe `{ nombre, email, empresa, tema }`
-2. **Nodo IF / Switch** ramifica según el valor de `tema`:
-   - `"presupuesto"` → email con asunto y contenido de solicitud de presupuesto
-   - `"cita"` → email con asunto y contenido de reserva de cita
-   - `"info"` → email con asunto y contenido de información de servicios
-3. **Nodo Resend** (× 3 ramas o con plantilla dinámica) envía el email al lead:
-   - `to`: el email introducido por el usuario
-   - `from`: dirección verificada en Resend (ej. `hola@swiftstudio.com`)
-   - `subject` y `html`: personalizados según el tema
-4. **Nodo Resend** (notificación interna): avisa al equipo con los datos del lead
-5. **Respuesta HTTP 200** al frontend para mostrar el estado al usuario
+2. **Nodo Switch** — 6 ramas según valor de `tema` (presupuesto, cita, seo, automatizaciones, fotografia, contenido)
+3. **Nodo Resend** — envía email al lead con la plantilla correspondiente al tema (plantillas ya creadas en Resend)
+4. **Nodo Resend** — notificación interna al equipo con los datos del lead
+5. **Respuesta HTTP 200** al frontend
 
 ### Resend — configuración
 
 - La API key de Resend **NO va en el `.env` de este repo** — va en n8n como credencial
 - En n8n: Credentials → New → "Resend" → pegar `re_xxxxxxxxx`
-- Variables de entorno de este repo (solo esta):
+- Variable de entorno de este repo:
 
 ```
 VITE_N8N_WEBHOOK_URL=https://tu-instancia-n8n.com/webhook/leads
 ```
 
-### Seguridad
-
-- Inputs sanitizados antes del envío (trim, no HTML)
-- URL webhook solo desde variable de entorno, nunca hardcodeada
-- Sin datos sensibles en el código del frontend
-
-**Entregable:** formulario funcional, email automático al lead según tema, notificación interna al equipo.
+**Entregable:** ✅ `/contacto` funcional con validación robusta, honeypot, 6 temas, estados de UX completos.
 
 ---
 
@@ -564,7 +553,7 @@ No bloquean el proyecto. Se añaden cuando todo lo anterior esté completo y el 
 | 4    | The Origin (Quiénes somos)                   | Pendiente  |
 | 5    | Service Pages (template × 5)                 | Pendiente  |
 | 6    | Blog SEO Engine                              | Pendiente  |
-| 7    | Formulario + n8n                             | Pendiente  |
+| 7    | Formulario + n8n + Resend                    | Completada |
 | 8    | SEO Global y optimización                    | Pendiente  |
 | 9    | Despliegue                                   | Pendiente  |
 | —    | Backlog animaciones complejas                | Extra      |

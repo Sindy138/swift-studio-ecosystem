@@ -31,34 +31,7 @@ const SEOAuthority = ({ config = SECTOR_CONFIG.seoAuthority }) => {
             {authorityContent.mainText}
           </p>
 
-          {/* JSON-LD (invisible — SEO) */}
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": authorityContent.schemaType,
-                name: SECTOR_CONFIG.companyName,
-                description: authorityContent.mainText,
-                url: typeof window !== "undefined" ? window.location.origin : "",
-                telephone: "+34-XXX-XXX-XXX",
-                email: "contact@swiftstudio.com",
-                address: {
-                  "@type": "PostalAddress",
-                  streetAddress: "Tu Dirección",
-                  addressLocality: "Tu Ciudad",
-                  postalCode: "XXXXX",
-                  addressCountry: "ES",
-                },
-                aggregateRating: {
-                  "@type": "AggregateRating",
-                  ratingValue: "4.9",
-                  ratingCount: "150",
-                },
-              }),
-            }}
-          />
-        </div>
+          </div>
 
         {/* CTA — igual que ServiceGrid */}
         <div className={styles["authority-cta-section"]}>

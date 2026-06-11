@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiTarget, FiCode, FiZap, FiGitMerge, FiTrendingUp } from "react-icons/fi";
 import SECTOR_CONFIG from "../config/content";
 import useInView from "../hooks/useInView";
+import SEO from "../components/SEO";
 import styles from "./styles/QuienesSomosPage.module.css";
 
 const ICON_MAP = {
@@ -127,17 +128,16 @@ const QuienesSomosPage = () => {
 
   return (
     <main>
-      {/* JSON-LD AboutPage */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "AboutPage",
-            name: "Quiénes Somos — Swift Studio",
-            description: hero.subheadline,
-            url: typeof window !== "undefined" ? `${window.location.origin}/quienes-somos` : "",
-          }),
+      <SEO
+        title="Quiénes Somos — Agencia Digital Híbrida"
+        description={hero.subheadline}
+        canonical="/quienes-somos"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          name: "Quiénes Somos — Swift Studio",
+          description: hero.subheadline,
+          url: "https://swiftstudio.com/quienes-somos",
         }}
       />
 

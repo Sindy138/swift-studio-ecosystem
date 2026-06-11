@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import SECTOR_CONFIG from "../config/content";
 import useInView from "../hooks/useInView";
+import SEO from "../components/SEO";
 import styles from "./styles/ServiciosPage.module.css";
 
 const SERVICE_ORDER = [
@@ -57,6 +58,11 @@ const ServiciosPage = () => {
 
   return (
     <main>
+      <SEO
+        title="Servicios de Marketing Digital"
+        description="SEO, Social Media, Fotografía profesional, Content Marketing y Automatización n8n. Un ecosistema completo de servicios para marcas que quieren resultados reales."
+        canonical="/servicios"
+      />
       <section className={styles.hero}>
         <div ref={heroRef} className={styles.heroContainer}>
           <span className={`${styles.heroLabel} ${styles.fadeIn} ${heroInView ? styles.visible : ""}`}>

@@ -6,6 +6,7 @@ import {
 } from "react-icons/fi";
 import SECTOR_CONFIG from "../config/content";
 import useInView from "../hooks/useInView";
+import SEO from "../components/SEO";
 import styles from "./styles/ServicioDetailPage.module.css";
 
 const ICON_MAP = {
@@ -253,17 +254,17 @@ const ServicioDetailPage = () => {
 
   return (
     <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Service",
-            name: meta.title,
-            description: meta.description,
-            provider: { "@type": "Organization", name: "Swift Studio" },
-            url: typeof window !== "undefined" ? window.location.href : "",
-          }),
+      <SEO
+        title={meta.title.replace(" — Swift Studio", "")}
+        description={meta.description}
+        canonical={`/servicios/${slug}`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: meta.title,
+          description: meta.description,
+          provider: { "@type": "Organization", name: "Swift Studio" },
+          url: `https://swiftstudio.com/servicios/${slug}`,
         }}
       />
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { getAllPosts, CATEGORIES, CATEGORY_COLORS, formatDate } from "../utils/blog";
 import useInView from "../hooks/useInView";
+import SEO from "../components/SEO";
 import styles from "./styles/BlogPage.module.css";
 
 const posts = getAllPosts();
@@ -45,6 +46,11 @@ const BlogPage = () => {
 
   return (
     <main>
+      <SEO
+        title="Blog de Marketing Digital — Estrategia, Visual y Automatización"
+        description="Artículos sobre SEO, marketing de contenidos, fotografía profesional y automatización n8n para empresas. Recursos prácticos del equipo de Swift Studio."
+        canonical="/blog"
+      />
       {/* Hero */}
       <section className={styles.hero}>
         <div ref={heroRef} className={styles.heroContainer}>

@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { getPostBySlug, CATEGORY_COLORS, formatDate } from "../utils/blog";
 import useInView from "../hooks/useInView";
+import SEO from "../components/SEO";
 import styles from "./styles/BlogPostPage.module.css";
 
 const HUB_URL = import.meta.env.VITE_HUB_URL || "https://hub.swiftstudio.com";
@@ -28,20 +29,20 @@ const BlogPostPage = () => {
 
   return (
     <main>
-      {/* JSON-LD BlogPosting */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.title,
-            description: post.excerpt,
-            author: { "@type": "Organization", name: post.author },
-            datePublished: post.date,
-            publisher: { "@type": "Organization", name: "Swift Studio" },
-            url: typeof window !== "undefined" ? window.location.href : "",
-          }),
+      <SEO
+        title={post.title}
+        description={post.excerpt}
+        canonical={`/blog/${post.slug}`}
+        ogType="article"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt,
+          author: { "@type": "Organization", name: post.author },
+          datePublished: post.date,
+          publisher: { "@type": "Organization", name: "Swift Studio" },
+          url: `https://swiftstudio.com/blog/${post.slug}`,
         }}
       />
 
