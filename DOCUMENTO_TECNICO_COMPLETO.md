@@ -9,10 +9,10 @@
 
 Swift Studio es una agencia de marketing digital y contenido audiovisual. Su ecosistema digital se compone de **dos aplicaciones complementarias** dentro del mismo repositorio monorepo:
 
-| App | Repositorio path | Dominio | Propósito |
-|---|---|---|---|
-| **swift-capitalization** | `swift-capitalization/` | swiftstudio.com | Web pública: SEO, captación de leads, marketing |
-| **swift-ecommerce** | `swift-ecommerce/` | swiftstudio360.com | Hub privado: contratación de servicios, dashboard, chatbot IA |
+| App                      | Repositorio path        | Dominio            | Propósito                                                     |
+| ------------------------ | ----------------------- | ------------------ | ------------------------------------------------------------- |
+| **swift-capitalization** | `swift-capitalization/` | swiftstudio.com    | Web pública: SEO, captación de leads, marketing               |
+| **swift-ecommerce**      | `swift-ecommerce/`      | swiftstudio360.com | Hub privado: contratación de servicios, dashboard, chatbot IA |
 
 ```mermaid
 graph LR
@@ -26,6 +26,10 @@ graph LR
         DB[("PostgreSQL 18<br/>(Render)")]
         CHROMA[("ChromaDB<br/>RAG")]
     end
+
+    %% NODO INVISIBLE DE ESPACIADO
+    SPACE1["<br/><br/><br/>"]
+    style SPACE1 fill:none,stroke:none
 
     subgraph EXTERNAL["☁️ Servicios Externos"]
         N8N["n8n<br/>Automatización leads"]
@@ -50,15 +54,15 @@ graph LR
 
 ### 2.1 Stack Técnico
 
-| Tecnología | Versión | Rol |
-|---|---|---|
-| React | 19.x | Framework UI |
-| React Router | 7.x | Routing SPA |
-| Vite | 8.x | Build tool + dev server |
-| react-helmet-async | 3.x | SEO meta tags por página |
-| DOMPurify | 3.x | Sanitización HTML (blog/CMS) |
-| marked | 18.x | Renderizado Markdown |
-| n8n | externo | Procesamiento formulario leads |
+| Tecnología         | Versión | Rol                            |
+| ------------------ | ------- | ------------------------------ |
+| React              | 19.x    | Framework UI                   |
+| React Router       | 7.x     | Routing SPA                    |
+| Vite               | 8.x     | Build tool + dev server        |
+| react-helmet-async | 3.x     | SEO meta tags por página       |
+| DOMPurify          | 3.x     | Sanitización HTML (blog/CMS)   |
+| marked             | 18.x    | Renderizado Markdown           |
+| n8n                | externo | Procesamiento formulario leads |
 
 ### 2.2 Arquitectura
 
@@ -129,36 +133,36 @@ Archivo de envío: `swift-capitalization/src/pages/Contacto/ContactoPage.jsx`
 
 #### Backend
 
-| Tecnología | Versión | Rol |
-|---|---|---|
-| Node.js | LTS | Runtime |
-| Express.js | v5 | Framework HTTP |
-| PostgreSQL | 18 | Base de datos relacional |
-| Prisma ORM | v7.8 | ORM + migraciones |
-| `@prisma/adapter-pg` | v7.8 | Driver adapter (Prisma 7) |
-| JWT (jsonwebtoken) | 9.x | Autenticación stateless (7d) |
-| bcryptjs | 3.x | Hash de contraseñas (salt 10) |
-| Zod | 4.x | Validación de inputs |
-| Helmet | 8.x | Headers de seguridad HTTP |
-| express-rate-limit | 8.x | Rate limiting global (100 req/15min) |
-| morgan | 1.x | HTTP request logger |
-| LangGraph | 1.3 | Orquestación del agente IA |
-| LangChain Groq | 1.2 | Integración LLM Groq |
-| ChromaDB | 3.4 | Vector DB para RAG |
-| LangFuse | 3.38 | Observabilidad LLM |
-| swagger-jsdoc + swagger-ui-express | — | Documentación API (solo dev) |
-| Vitest + Supertest | — | Tests de integración |
+| Tecnología                         | Versión | Rol                                  |
+| ---------------------------------- | ------- | ------------------------------------ |
+| Node.js                            | LTS     | Runtime                              |
+| Express.js                         | v5      | Framework HTTP                       |
+| PostgreSQL                         | 18      | Base de datos relacional             |
+| Prisma ORM                         | v7.8    | ORM + migraciones                    |
+| `@prisma/adapter-pg`               | v7.8    | Driver adapter (Prisma 7)            |
+| JWT (jsonwebtoken)                 | 9.x     | Autenticación stateless (7d)         |
+| bcryptjs                           | 3.x     | Hash de contraseñas (salt 10)        |
+| Zod                                | 4.x     | Validación de inputs                 |
+| Helmet                             | 8.x     | Headers de seguridad HTTP            |
+| express-rate-limit                 | 8.x     | Rate limiting global (100 req/15min) |
+| morgan                             | 1.x     | HTTP request logger                  |
+| LangGraph                          | 1.3     | Orquestación del agente IA           |
+| LangChain Groq                     | 1.2     | Integración LLM Groq                 |
+| ChromaDB                           | 3.4     | Vector DB para RAG                   |
+| LangFuse                           | 3.38    | Observabilidad LLM                   |
+| swagger-jsdoc + swagger-ui-express | —       | Documentación API (solo dev)         |
+| Vitest + Supertest                 | —       | Tests de integración                 |
 
 #### Frontend
 
-| Tecnología | Versión | Rol |
-|---|---|---|
-| React | 19.x | Framework UI |
-| React Router | 7.x | Routing + rutas protegidas |
-| Vite | 8.x | Build tool |
-| Axios | 1.x | Cliente HTTP con interceptores JWT |
-| DOMPurify | 3.x | Sanitización mensajes del chatbot |
-| Context API | — | Estado global de autenticación |
+| Tecnología   | Versión | Rol                                |
+| ------------ | ------- | ---------------------------------- |
+| React        | 19.x    | Framework UI                       |
+| React Router | 7.x     | Routing + rutas protegidas         |
+| Vite         | 8.x     | Build tool                         |
+| Axios        | 1.x     | Cliente HTTP con interceptores JWT |
+| DOMPurify    | 3.x     | Sanitización mensajes del chatbot  |
+| Context API  | —       | Estado global de autenticación     |
 
 ### 3.2 Arquitectura de Carpetas — Backend
 
@@ -263,6 +267,7 @@ erDiagram
 ```
 
 **Enums:**
+
 - `Role`: `USER` | `ADMIN`
 - `OrderStatus`: `PENDING` | `PROGRESS` | `DONE`
 - `MessageRole`: `USER` | `ASSISTANT`
@@ -272,24 +277,24 @@ erDiagram
 Base URL: `https://swift-studio-360-backend.onrender.com/api`  
 Autenticación: `Authorization: Bearer <JWT>`
 
-| Módulo | Método | Ruta | Acceso |
-|---|---|---|---|
-| Auth | POST | `/auth/register` | Pública |
-| Auth | POST | `/auth/login` | Pública |
-| Services | GET | `/services` | Pública |
-| Services | GET | `/services/:id` | Pública |
-| Services | POST/PUT/DELETE | `/services` | Admin |
-| Orders | POST | `/orders` | Auth |
-| Orders | GET | `/orders` | Auth (propias) / Admin (todas) |
-| Orders | GET | `/orders/:id` | Auth (owner) / Admin |
-| Orders | PUT | `/orders/:id/status` | Admin |
-| Deliverables | POST/GET | `/orders/:id/deliverables` | Admin / Owner |
-| Users | GET | `/users` | Admin |
-| Users | GET/PUT | `/users/:id` | Self / Admin |
-| Users | DELETE | `/users/:id` | Admin |
-| Chat | POST | `/chat` | Auth |
-| Chat | GET | `/chat/history/:conversationId` | Auth (owner) |
-| Chat | POST | `/chat/feedback/:traceId` | Auth |
+| Módulo       | Método          | Ruta                            | Acceso                         |
+| ------------ | --------------- | ------------------------------- | ------------------------------ |
+| Auth         | POST            | `/auth/register`                | Pública                        |
+| Auth         | POST            | `/auth/login`                   | Pública                        |
+| Services     | GET             | `/services`                     | Pública                        |
+| Services     | GET             | `/services/:id`                 | Pública                        |
+| Services     | POST/PUT/DELETE | `/services`                     | Admin                          |
+| Orders       | POST            | `/orders`                       | Auth                           |
+| Orders       | GET             | `/orders`                       | Auth (propias) / Admin (todas) |
+| Orders       | GET             | `/orders/:id`                   | Auth (owner) / Admin           |
+| Orders       | PUT             | `/orders/:id/status`            | Admin                          |
+| Deliverables | POST/GET        | `/orders/:id/deliverables`      | Admin / Owner                  |
+| Users        | GET             | `/users`                        | Admin                          |
+| Users        | GET/PUT         | `/users/:id`                    | Self / Admin                   |
+| Users        | DELETE          | `/users/:id`                    | Admin                          |
+| Chat         | POST            | `/chat`                         | Auth                           |
+| Chat         | GET             | `/chat/history/:conversationId` | Auth (owner)                   |
+| Chat         | POST            | `/chat/feedback/:traceId`       | Auth                           |
 
 ---
 
@@ -453,12 +458,12 @@ flowchart LR
 
 Inicialización lazy — si no hay claves configuradas, retorna `null` (no bloquea el servidor).
 
-| Evento trazado | Qué registra |
-|---|---|
-| `trace: 'chat-agent'` | userId, mensaje de entrada |
-| `generation: 'agent-invoke'` | model, input, output, tokens (input/output) |
-| `trace.update` | respuesta final + fuentes citadas |
-| `score: 'user-feedback'` | 👍 (1) / 👎 (0) por traceId desde el frontend |
+| Evento trazado               | Qué registra                                  |
+| ---------------------------- | --------------------------------------------- |
+| `trace: 'chat-agent'`        | userId, mensaje de entrada                    |
+| `generation: 'agent-invoke'` | model, input, output, tokens (input/output)   |
+| `trace.update`               | respuesta final + fuentes citadas             |
+| `score: 'user-feedback'`     | 👍 (1) / 👎 (0) por traceId desde el frontend |
 
 Dashboard: `cloud.langfuse.com`
 
@@ -475,12 +480,14 @@ Webhook → IF validación → Resend (email equipo) → Resend (email lead) →
 ```
 
 Variables involucradas:
+
 - `swift-capitalization/.env` → `VITE_N8N_WEBHOOK_URL`
 - Credencial Resend configurada en n8n (no expuesta al frontend)
 
 ### 6.2 Automatizaciones de Servicios (swift-ecommerce)
 
 Los servicios de automatización que ofrece la agencia usan n8n como motor:
+
 - **Integración CRM + Email Marketing** — sincronización de contactos entre plataformas
 - **Automatización de Facturación** — Stripe → software contable
 
@@ -514,40 +521,40 @@ graph TB
 
 ### 7.1 Build Commands
 
-| Servicio | Build Command | Start Command |
-|---|---|---|
-| swift-capitalization (Vercel) | `npm run build` | — |
-| swift-ecommerce frontend (Vercel) | `npm run build` | — |
-| swift-ecommerce backend (Render) | `npm install && npx prisma generate && npx prisma migrate deploy` | `npm start` |
+| Servicio                          | Build Command                                                     | Start Command |
+| --------------------------------- | ----------------------------------------------------------------- | ------------- |
+| swift-capitalization (Vercel)     | `npm run build`                                                   | —             |
+| swift-ecommerce frontend (Vercel) | `npm run build`                                                   | —             |
+| swift-ecommerce backend (Render)  | `npm install && npx prisma generate && npx prisma migrate deploy` | `npm start`   |
 
 ### 7.2 Variables de Entorno — Backend (Render)
 
-| Variable | Descripción |
-|---|---|
-| `DATABASE_URL` | Internal URL de PostgreSQL en Render |
-| `JWT_SECRET` | Mínimo 32 caracteres aleatorios |
-| `NODE_ENV` | `production` |
-| `CORS_ORIGIN` | URL del frontend ecommerce en Vercel |
-| `GROQ_API_KEY` | API key de console.groq.com |
-| `GROQ_MODEL` | `llama-3.1-8b-instant` |
-| `LANGFUSE_SECRET_KEY` | De cloud.langfuse.com |
-| `LANGFUSE_PUBLIC_KEY` | De cloud.langfuse.com |
-| `LANGFUSE_HOST` | `https://cloud.langfuse.com` |
-| `CHROMA_HOST` | Host de ChromaDB |
-| `CHROMA_PORT` | `8000` |
+| Variable              | Descripción                          |
+| --------------------- | ------------------------------------ |
+| `DATABASE_URL`        | Internal URL de PostgreSQL en Render |
+| `JWT_SECRET`          | Mínimo 32 caracteres aleatorios      |
+| `NODE_ENV`            | `production`                         |
+| `CORS_ORIGIN`         | URL del frontend ecommerce en Vercel |
+| `GROQ_API_KEY`        | API key de console.groq.com          |
+| `GROQ_MODEL`          | `llama-3.1-8b-instant`               |
+| `LANGFUSE_SECRET_KEY` | De cloud.langfuse.com                |
+| `LANGFUSE_PUBLIC_KEY` | De cloud.langfuse.com                |
+| `LANGFUSE_HOST`       | `https://cloud.langfuse.com`         |
+| `CHROMA_HOST`         | Host de ChromaDB                     |
+| `CHROMA_PORT`         | `8000`                               |
 
 ### 7.3 Variables de Entorno — Frontend Ecommerce (Vercel)
 
-| Variable | Descripción |
-|---|---|
+| Variable       | Descripción                                     |
+| -------------- | ----------------------------------------------- |
 | `VITE_API_URL` | URL del backend en Render (sin `/api` al final) |
 
 ### 7.4 Variables de Entorno — Capitalización (Vercel)
 
-| Variable | Descripción |
-|---|---|
+| Variable               | Descripción                    |
+| ---------------------- | ------------------------------ |
 | `VITE_N8N_WEBHOOK_URL` | URL del webhook n8n para leads |
-| `VITE_HUB_URL` | URL del frontend ecommerce |
+| `VITE_HUB_URL`         | URL del frontend ecommerce     |
 
 ---
 
@@ -568,7 +575,7 @@ graph TB
 - [x] Backend funcional con JWT + PostgreSQL
 - [x] LangGraph agent (2 tools: RAG + DB)
 - [x] RAG con ChromaDB (colección `swift_studio_docs`, cita fuentes)
-- [ ] N8N workflow activo con lógica condicional *(pendiente fase 7)*
+- [ ] N8N workflow activo con lógica condicional _(pendiente fase 7)_
 - [x] POST /api/chat + GET /api/chat/history/:conversationId
 - [x] Frontend React 19 + Vite + Router v7
 - [x] Chat widget IA en el frontend
@@ -578,8 +585,8 @@ graph TB
 - [x] Backend desplegado (Render)
 - [x] Frontend desplegado (Vercel)
 - [x] BD en la nube (Render PostgreSQL)
-- [ ] Swagger / documentación API *(disponible en dev: `/api/docs`)*
-- [ ] README completo *(pendiente)*
-- [ ] ai_log.md *(pendiente)*
-- [ ] Workflows N8N exportados como JSON *(pendiente)*
+- [ ] Swagger / documentación API _(disponible en dev: `/api/docs`)_
+- [ ] README completo _(pendiente)_
+- [ ] ai_log.md _(pendiente)_
+- [ ] Workflows N8N exportados como JSON _(pendiente)_
 - [ ] Presentación ≤10 min con demo en vivo
