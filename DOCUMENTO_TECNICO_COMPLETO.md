@@ -25,16 +25,12 @@ graph LR
         BE["Backend<br/>Express.js v5<br/>(Render)"]
         DB[("PostgreSQL 18<br/>(Render)")]
         CHROMA[("ChromaDB<br/>RAG")]
+        GROQ["Groq API<br/>LLM Llama 3.1"]
+        LF["LangFuse<br/>Observabilidad IA"]
     end
-
-    %% NODO INVISIBLE DE ESPACIADO
-    SPACE1["<br/><br/><br/>"]
-    style SPACE1 fill:none,stroke:none
 
     subgraph EXTERNAL["☁️ Servicios Externos"]
         N8N["n8n<br/>Automatización leads"]
-        GROQ["Groq API<br/>LLM Llama 3.1"]
-        LF["LangFuse<br/>Observabilidad IA"]
         RESEND["Resend<br/>Email"]
     end
 
@@ -587,6 +583,6 @@ graph TB
 - [x] BD en la nube (Render PostgreSQL)
 - [ ] Swagger / documentación API _(disponible en dev: `/api/docs`)_
 - [ ] README completo _(pendiente)_
-- [ ] ai_log.md _(pendiente)_
+- [ ] ai*log.md *(pendiente)\_
 - [ ] Workflows N8N exportados como JSON _(pendiente)_
 - [ ] Presentación ≤10 min con demo en vivo
