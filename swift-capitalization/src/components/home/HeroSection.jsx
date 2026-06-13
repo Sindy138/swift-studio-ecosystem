@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { RiBookOpenLine } from "react-icons/ri";
+import { CiDesktopMouse2 } from "react-icons/ci";
 import SECTOR_CONFIG from "../../config/content";
 import styles from "./styles/HeroSection.module.css";
 
@@ -33,7 +33,7 @@ const HeroSection = ({ config = SECTOR_CONFIG.hero }) => {
       </div>
 
       <div className={styles.scrollIndicator} aria-hidden="true">
-        <RiBookOpenLine size={22} />
+        <CiDesktopMouse2 size={36} />
       </div>
     </section>
   );

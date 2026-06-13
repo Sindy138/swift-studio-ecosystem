@@ -11,6 +11,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   padding: 1.2rem 0;
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
 }
 
 .container {
@@ -62,7 +63,7 @@
   text-decoration: none;
   color: #333;
   font-weight: 500;
-  font-size: clamp(0.9rem, 1.2vw, 1.2rem);
+  font-size: clamp(var(--font-size-base), 1.2vw, var(--font-size-lg));
   white-space: nowrap;
   position: relative;
   transition: all 0.3s ease;
@@ -194,7 +195,7 @@
 .mobileLinks a {
   display: block;
   padding: 1rem 2rem;
-  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-3xl));
   font-weight: 500;
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
@@ -219,7 +220,7 @@
   -webkit-text-fill-color: white !important;
   padding: 0.85rem 2.5rem !important;
   border-radius: var(--radius-md);
-  font-size: clamp(1rem, 3vw, 1.2rem) !important;
+  font-size: clamp(var(--font-size-base), 3vw, var(--font-size-lg)) !important;
   font-weight: 600;
   transition:
     transform 0.3s ease,

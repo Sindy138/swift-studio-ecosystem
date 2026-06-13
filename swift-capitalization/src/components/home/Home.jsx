@@ -28,14 +28,11 @@ const Home = () => {
       {/* 2. Social Proof - Logos + Testimonios */}
       <SocialProof config={SECTOR_CONFIG.socialProof} />
 
-      {/* 3. Service Grid - The Core (5 Pilares) */}
-      <ServiceGrid config={SECTOR_CONFIG.services} />
+      {/* 3. SEO Authority - Autoridad + Structured Data */}
+      <SEOAuthority config={SECTOR_CONFIG.services} />
 
       {/* 4. Engine Section - Diferenciación Tecnológica */}
       <EngineSection config={SECTOR_CONFIG.engine} />
-
-      {/* 5. SEO Authority - Autoridad + Structured Data */}
-      <SEOAuthority config={SECTOR_CONFIG.seoAuthority} />
     </main>
   );
 };

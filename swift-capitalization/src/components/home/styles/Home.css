@@ -15,7 +15,7 @@
 
   /* Typography */
   --font-family-serif: "Georgia", serif;
-  --font-family-sans: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-sans: "DM Sans", system-ui, -apple-system, sans-serif;
   --font-size-base: 16px;
   --font-size-lg: 20px;
   --font-size-xl: 24px;
@@ -83,7 +83,7 @@ section {
 }
 
 .section-title {
-  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  font-size: clamp(var(--font-size-lg), 2.2vw, var(--font-size-2xl));
   font-weight: 700;
   color: var(--color-dark);
   margin-bottom: var(--spacing-md);
@@ -218,5 +218,14 @@ section {
 
   .btn-lg {
     padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .home-page,
+  .hero-container,
+  .social-proof-container,
+  .services-container,
+  .engine-container,
+  .authority-container {
+    padding: 0 0.5rem;
   }
 }

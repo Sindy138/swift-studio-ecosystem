@@ -1,89 +1,99 @@
-import { FiTrendingUp, FiGitMerge, FiBarChart2, FiUsers, FiXCircle, FiCheckCircle } from "react-icons/fi";
+import { FiMonitor, FiGitMerge, FiBarChart2, FiUsers } from "react-icons/fi";
 import SECTOR_CONFIG from "../../config/content";
 import styles from "./styles/EngineSection.module.css";
 
 const ICON_MAP = {
-  TrendingUp: FiTrendingUp,
+  Monitor: FiMonitor,
   GitMerge: FiGitMerge,
   BarChart2: FiBarChart2,
   Users: FiUsers,
 };
 
-const HUB_URL = import.meta.env.VITE_HUB_URL || "https://ecommerce.swiftstudio.com";
+const CTA_ORBS = [
+  { size: 180, left: "3%",  top: "-30%", dur: "18s", del: "0s",   op: 0.55 },
+  { size: 110, left: "83%", top: "5%",   dur: "22s", del: "-6s",  op: 0.45 },
+  { size: 260, left: "58%", top: "35%",  dur: "28s", del: "-11s", op: 0.3  },
+  { size: 90,  left: "14%", top: "52%",  dur: "20s", del: "-4s",  op: 0.5  },
+  { size: 200, left: "38%", top: "-25%", dur: "25s", del: "-15s", op: 0.25 },
+];
 
 const EngineSection = ({ config = SECTOR_CONFIG.engine }) => {
-  const { title, description, advantages, cta } = config;
+  const { title, description, leftCol, advantages, cta, ctaBanner } = config;
 
   return (
     <section className={styles["engine-section"]} id="engine">
       <div className={styles["engine-container"]}>
-
-        {/* Header */}
         <div className={styles["section-header"]}>
           <h2 className={styles["section-title"]}>{title}</h2>
           <p className={styles["section-description"]}>{description}</p>
         </div>
 
-        {/* Advantages — flex centrado */}
-        <div className={styles["advantages-grid"]}>
-          {advantages.map((advantage) => {
-            const IconComponent = ICON_MAP[advantage.iconName];
-            return (
-              <div key={advantage.id} className={styles["advantage-card"]}>
-                {IconComponent && (
-                  <div className={styles["advantage-icon"]}>
-                    <IconComponent size={32} />
-                  </div>
-                )}
-                <h3 className={styles["advantage-title"]}>{advantage.title}</h3>
-                <p className={styles["advantage-description"]}>{advantage.description}</p>
-              </div>
-            );
-          })}
-        </div>
+        <hr className={styles.divider} />
 
-        {/* Comparación */}
-        <div className={styles["comparison-section"]}>
-          <h3 className={styles["comparison-title"]}>Comparación</h3>
-          <div className={styles["comparison-table"]}>
-            <div className={`${styles["comparison-column"]} ${styles.traditional}`}>
-              <h4>Agencia Tradicional</h4>
-              <ul>
-                <li><FiXCircle size={15} color="#ff6b6b" />Múltiples herramientas sin integración</li>
-                <li><FiXCircle size={15} color="#ff6b6b" />Reportes manuales cada 15 días</li>
-                <li><FiXCircle size={15} color="#ff6b6b" />Equipo disperso en especialidades</li>
-                <li><FiXCircle size={15} color="#ff6b6b" />ROI difícil de medir</li>
-                <li><FiXCircle size={15} color="#ff6b6b" />Procesos lentos y burocráticos</li>
-              </ul>
-            </div>
-            <div className={`${styles["comparison-column"]} ${styles.modern}`}>
-              <h4>Swift Studio</h4>
-              <ul>
-                <li><FiCheckCircle size={15} color="#4ecdc4" />Dashboard centralizado en tiempo real</li>
-                <li><FiCheckCircle size={15} color="#4ecdc4" />Datos live y automatización n8n</li>
-                <li><FiCheckCircle size={15} color="#4ecdc4" />Equipo integrado + especialistas</li>
-                <li><FiCheckCircle size={15} color="#4ecdc4" />ROI visible al día siguiente</li>
-                <li><FiCheckCircle size={15} color="#4ecdc4" />Escalable y ágil</li>
-              </ul>
-            </div>
+        <div className={styles["engine-body"]}>
+          <div className={styles["left-col"]}>
+            <h3 className={styles["left-heading"]}>{leftCol.heading}</h3>
+            <p className={styles["left-body"]}>{leftCol.body}</p>
+            <a href={cta.link} className={styles["cta-btn"]}>
+              {cta.text} →
+            </a>
+          </div>
+
+          <div className={styles["right-col"]}>
+            {advantages.map((advantage) => {
+              const Icon = ICON_MAP[advantage.iconName];
+              return (
+                <div key={advantage.id} className={styles["pill-card"]}>
+                  {Icon && (
+                    <div
+                      className={styles["pill-icon"]}
+                      style={{
+                        background: advantage.iconBg,
+                        color: advantage.iconColor,
+                      }}
+                    >
+                      <Icon size={22} />
+                    </div>
+                  )}
+                  <div className={styles["pill-text"]}>
+                    <strong className={styles["pill-title"]}>
+                      {advantage.title}
+                    </strong>
+                    <p className={styles["pill-description"]}>
+                      {advantage.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
+      </div>
 
-        {/* CTA */}
-        <div className={styles["engine-cta-section"]}>
-          <a
-            href={HUB_URL}
-            className={styles["cta-btn"]}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {cta.text}
+      {/* CTA Banner */}
+      <div className={styles["cta-banner"]}>
+        {CTA_ORBS.map((orb, i) => (
+          <div
+            key={i}
+            className={styles["cta-orb"]}
+            style={{
+              width: orb.size + "px",
+              height: orb.size + "px",
+              left: orb.left,
+              top: orb.top,
+              opacity: orb.op,
+              animationDuration: orb.dur,
+              animationDelay: orb.del,
+            }}
+          />
+        ))}
+        <div className={styles["cta-banner-content"]}>
+          <h3 className={styles["cta-banner-headline"]}>{ctaBanner.headline}</h3>
+          <p className={styles["cta-banner-subtext"]}>{ctaBanner.subtext}</p>
+          <a href={ctaBanner.buttonLink} className={styles["cta-banner-btn"]}>
+            {ctaBanner.button}
           </a>
-          <p className={styles["cta-subtitle"]}>
-            Acceso a tu panel de control y gestión de proyectos
-          </p>
         </div>
-
       </div>
     </section>
   );

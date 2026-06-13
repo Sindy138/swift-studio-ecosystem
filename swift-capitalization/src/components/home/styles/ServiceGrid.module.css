@@ -151,18 +151,18 @@ p .card-main-desc {
 
 .memory-label {
   color: #ffffff;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 500;
 }
 
 .sparkle-icon {
   color: #ffffff;
-  font-size: 14px;
+  font-size: var(--font-size-base);
 }
 
 .pref-label {
   color: #6b7280;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   margin-bottom: 0.5rem;
@@ -257,8 +257,32 @@ p .card-main-desc {
   }
 }
 
+@media (max-width: 780px) {
+  .services-section {
+    padding: 2.5rem 0;
+  }
+
+  .services-grid {
+    margin: 1.25rem 0;
+  }
+
+  .services-cta-section {
+    margin: 2rem 0;
+    padding: var(--space-8);
+  }
+}
+
 @media (max-width: 480px) {
+  .services-section {
+    padding: 2rem 0;
+  }
+
   .service-card {
     max-width: 100%;
+  }
+
+  .services-cta-section {
+    margin: 1.5rem 0;
+    padding: var(--space-6);
   }
 }

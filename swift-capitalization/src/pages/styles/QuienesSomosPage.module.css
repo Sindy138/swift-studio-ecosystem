@@ -6,7 +6,9 @@
 .fadeIn {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
 }
 
 .fadeIn.visible {
@@ -14,10 +16,18 @@
   transform: translateY(0);
 }
 
-.fadeIn.delay1 { transition-delay: 0.1s; }
-.fadeIn.delay2 { transition-delay: 0.2s; }
-.fadeIn.delay3 { transition-delay: 0.3s; }
-.fadeIn.delay4 { transition-delay: 0.4s; }
+.fadeIn.delay1 {
+  transition-delay: 0.1s;
+}
+.fadeIn.delay2 {
+  transition-delay: 0.2s;
+}
+.fadeIn.delay3 {
+  transition-delay: 0.3s;
+}
+.fadeIn.delay4 {
+  transition-delay: 0.4s;
+}
 
 /* Texto con gradiente de marca */
 .gradientText {
@@ -35,11 +45,13 @@
   padding: 1rem 2.5rem;
   background: linear-gradient(90deg, #ffae8e, #ff7da2, #aa73fa);
   color: #ffffff;
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  font-size: clamp(var(--font-size-base), 1.5vw, var(--font-size-lg));
   font-weight: 600;
   text-decoration: none;
   border-radius: 8px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .btnPrimary:hover {
@@ -53,7 +65,7 @@
 .hero {
   background: #ffffff;
   padding: 5rem 0;
-  min-height: 65vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
 }
@@ -66,7 +78,7 @@
 }
 
 .heroHeadline {
-  font-size: clamp(1.75rem, 3.5vw, 2.8rem);
+  font-size: clamp(var(--font-size-2xl), 3.5vw, var(--font-size-3xl));
   font-weight: 700;
   color: var(--color-dark);
   line-height: 1.2;
@@ -75,7 +87,7 @@
 }
 
 .heroSubheadline {
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: clamp(var(--font-size-base), 2vw, var(--font-size-lg));
   color: var(--color-text-light);
   line-height: 1.7;
   max-width: 700px;
@@ -96,7 +108,10 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.1) 1px,
+    transparent 1px
+  );
   background-size: 16px 16px;
   pointer-events: none;
   z-index: 0;
@@ -115,14 +130,14 @@
 }
 
 .origenText h2 {
-  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  font-size: clamp(var(--font-size-lg), 2.2vw, var(--font-size-2xl));
   font-weight: 700;
   color: white;
   margin-bottom: 0.5rem;
 }
 
 .origenSubheadline {
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  font-size: clamp(var(--font-size-base), 1.5vw, var(--font-size-lg));
   color: rgba(255, 255, 255, 0.5);
   margin-bottom: 2rem;
   text-transform: uppercase;
@@ -130,7 +145,7 @@
 }
 
 .origenParagraph {
-  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  font-size: clamp(var(--font-size-base), 1.6vw, var(--font-size-lg));
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.8;
   margin-bottom: 1.25rem;
@@ -153,7 +168,7 @@
 }
 
 .origenStatValue {
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(var(--font-size-3xl), 6vw, var(--font-size-4xl));
   font-weight: 700;
   line-height: 1;
   margin-bottom: 0.75rem;
@@ -164,7 +179,7 @@
 }
 
 .origenStatLabel {
-  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-size: clamp(0.85rem, 1.5vw, var(--font-size-base));
   color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -189,14 +204,14 @@
 }
 
 .sectionTitle {
-  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  font-size: clamp(var(--font-size-lg), 2.2vw, var(--font-size-2xl));
   font-weight: 700;
   color: var(--color-dark);
   margin-bottom: 0.75rem;
 }
 
 .sectionSubtitle {
-  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  font-size: clamp(var(--font-size-base), 1.8vw, var(--font-size-lg));
   color: var(--color-text-light);
 }
 
@@ -229,7 +244,7 @@
 }
 
 .perfilAreaTitle {
-  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  font-size: clamp(var(--font-size-base), 1.8vw, var(--font-size-lg));
   font-weight: 700;
   color: var(--color-dark);
 }
@@ -247,7 +262,7 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-size: clamp(0.875rem, 1.5vw, var(--font-size-base));
   color: var(--color-text);
 }
 
@@ -273,7 +288,10 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.1) 1px,
+    transparent 1px
+  );
   background-size: 16px 16px;
   pointer-events: none;
   z-index: 0;
@@ -293,14 +311,14 @@
 }
 
 .filosofiaSectionTitle {
-  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  font-size: clamp(var(--font-size-lg), 2.2vw, var(--font-size-2xl));
   font-weight: 700;
   color: white;
   margin-bottom: 0.75rem;
 }
 
 .filosofiaSectionSubtitle {
-  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  font-size: clamp(var(--font-size-base), 1.8vw, var(--font-size-lg));
   color: rgba(255, 255, 255, 0.55);
 }
 
@@ -326,7 +344,9 @@
   border-radius: 3px;
   padding: 2rem;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .principleCard:hover {
@@ -347,14 +367,14 @@
 }
 
 .principleTitle {
-  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  font-size: clamp(var(--font-size-base), 1.8vw, var(--font-size-lg));
   font-weight: 700;
   color: white;
   margin-bottom: 0.75rem;
 }
 
 .principleDescription {
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-size: clamp(0.875rem, 1.5vw, var(--font-size-base));
   color: rgba(255, 255, 255, 0.72);
   line-height: 1.65;
 }
@@ -384,14 +404,14 @@
 }
 
 .ctaHeadline {
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-size: clamp(var(--font-size-lg), 2.5vw, var(--font-size-2xl));
   font-weight: 700;
   color: var(--color-dark);
   margin-bottom: 0.75rem;
 }
 
 .ctaSubheadline {
-  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  font-size: clamp(var(--font-size-base), 1.8vw, var(--font-size-lg));
   color: var(--color-text-light);
   margin-bottom: 2rem;
 }

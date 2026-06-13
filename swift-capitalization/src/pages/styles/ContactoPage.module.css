@@ -5,12 +5,23 @@
 .fadeIn {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
 }
-.fadeIn.visible { opacity: 1; transform: translateY(0); }
-.fadeIn.delay1 { transition-delay: 0.1s; }
-.fadeIn.delay2 { transition-delay: 0.2s; }
-.fadeIn.delay3 { transition-delay: 0.3s; }
+.fadeIn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fadeIn.delay1 {
+  transition-delay: 0.1s;
+}
+.fadeIn.delay2 {
+  transition-delay: 0.2s;
+}
+.fadeIn.delay3 {
+  transition-delay: 0.3s;
+}
 
 /* ============================================
    HERO — white
@@ -19,6 +30,7 @@
   background: #ffffff;
   padding: 5rem 0 3rem;
   text-align: center;
+  min-height: 40vh;
 }
 
 .heroContainer {
@@ -38,7 +50,7 @@
 }
 
 .heroHeadline {
-  font-size: clamp(1.75rem, 3.5vw, 2.8rem);
+  font-size: clamp(var(--font-size-2xl), 3.5vw, var(--font-size-3xl));
   font-weight: 700;
   color: var(--color-dark);
   line-height: 1.2;
@@ -47,7 +59,7 @@
 }
 
 .heroSubheadline {
-  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-size: clamp(var(--font-size-base), 2vw, var(--font-size-lg));
   color: var(--color-text-light);
   line-height: 1.7;
   max-width: 560px;
@@ -79,7 +91,7 @@
 }
 
 .infoHeadline {
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-size: clamp(var(--font-size-lg), 2vw, var(--font-size-xl));
   font-weight: 700;
   color: var(--color-dark);
   margin-bottom: 1rem;
@@ -87,7 +99,7 @@
 }
 
 .infoText {
-  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  font-size: clamp(var(--font-size-base), 1.6vw, var(--font-size-lg));
   color: var(--color-text-light);
   line-height: 1.75;
   margin-bottom: 2.5rem;
@@ -115,7 +127,11 @@
   font-size: clamp(0.7rem, 1.1vw, 0.8rem);
   font-weight: 700;
   letter-spacing: 0.05em;
-  background: linear-gradient(145deg, rgba(170, 115, 250, 0.12), rgba(255, 125, 162, 0.08));
+  background: linear-gradient(
+    145deg,
+    rgba(170, 115, 250, 0.12),
+    rgba(255, 125, 162, 0.08)
+  );
   border: 1px solid rgba(170, 115, 250, 0.25);
   border-radius: 3px;
   color: #aa73fa;
@@ -123,7 +139,7 @@
 
 .stepText {
   padding-top: 0.45rem;
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-size: clamp(0.875rem, 1.5vw, var(--font-size-base));
   color: var(--color-text);
   line-height: 1.55;
 }
@@ -165,7 +181,7 @@
 .input {
   width: 100%;
   padding: 1.45rem 1rem 0.55rem 2.75rem;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-size: clamp(var(--font-size-base), 1.5vw, var(--font-size-lg));
   font-family: inherit;
   color: var(--color-dark);
   background: #ffffff;
@@ -191,7 +207,7 @@
   left: 2.75rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-size: clamp(var(--font-size-base), 1.5vw, var(--font-size-lg));
   color: rgba(0, 0, 0, 0.4);
   pointer-events: none;
   transition: all 0.2s ease;
@@ -283,7 +299,10 @@
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 100px;
   cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
   user-select: none;
 }
 
@@ -319,7 +338,7 @@
 .submitBtn {
   width: 100%;
   padding: 1rem 2rem;
-  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  font-size: clamp(var(--font-size-base), 1.5vw, var(--font-size-lg));
   font-weight: 600;
   font-family: inherit;
   color: #ffffff;
@@ -332,7 +351,10 @@
   justify-content: center;
   gap: 0.6rem;
   margin-top: 0.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .submitBtn:hover:not(:disabled) {
@@ -346,8 +368,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner {
@@ -390,13 +416,13 @@
 }
 
 .successHeadline {
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-size: clamp(var(--font-size-lg), 2vw, var(--font-size-xl));
   font-weight: 700;
   color: var(--color-dark);
 }
 
 .successText {
-  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+  font-size: clamp(var(--font-size-base), 1.6vw, var(--font-size-lg));
   color: var(--color-text-light);
   line-height: 1.7;
   max-width: 380px;
@@ -407,7 +433,7 @@
   align-items: center;
   gap: 0.4rem;
   margin-top: 0.5rem;
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-size: clamp(0.875rem, 1.5vw, var(--font-size-base));
   font-weight: 600;
   color: #aa73fa;
   text-decoration: none;
@@ -444,6 +470,6 @@
   }
 
   .submitBtn {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
   }
 }
