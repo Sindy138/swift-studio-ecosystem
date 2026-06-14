@@ -124,6 +124,10 @@ section {
 /* ============================================
    CONTAINER
    ============================================ */
+.home-page {
+  position: relative;
+}
+
 .home-page,
 .hero-container,
 .social-proof-container,

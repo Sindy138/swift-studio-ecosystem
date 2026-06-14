@@ -4,12 +4,8 @@
 
 .heroSection {
   position: relative;
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 100vh;
   overflow: hidden;
-  padding: 0;
 }
 
 /* Background video / image */
@@ -29,14 +25,172 @@
 }
 
 /* ============================================
-   CONTENT
+   ORBIT STAGE — centrado absolutamente
    ============================================ */
-.heroContent {
+
+.orbitStage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(680px, 84vw);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  z-index: 5;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+/* El orbit stage permanece visible en hover — solo desaparece el ícono */
+
+/* ============================================
+   ORBITAL RINGS — gradiente con pseudo-element
+   ============================================ */
+
+.orbitalRing {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Técnica: fondo gradiente + pseudo-element blanco interior */
+.orbitalRing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffae8e, #ff7da2, #aa73fa, #ffae8e);
+}
+
+.orbitalRing::after {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.ringOne {
+  width: 56%;
+  height: 56%;
+  animation: rotateSlow 28s linear infinite;
+}
+
+.ringTwo {
+  width: 74%;
+  height: 74%;
+  opacity: 0.55;
+  animation: rotateSlowReverse 40s linear infinite;
+}
+
+.ringThree {
+  width: 91%;
+  height: 91%;
+  opacity: 0.28;
+}
+
+/* ============================================
+   ORBIT NODES
+   ============================================ */
+
+.orbitNode {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff7da2, #aa73fa);
+  box-shadow: 0 0 12px rgba(170, 115, 250, 0.8);
+  z-index: 6;
+  opacity: 0.9;
+}
+
+.nodeA { top: 21%; left: 30%; }
+.nodeB { right: 18%; top: 43%; }
+.nodeC { left: 20%; bottom: 25%; }
+
+/* ============================================
+   CORE — ícono central grande
+   ============================================ */
+
+.coreWrap {
+  position: relative;
+  width: 38%;
+  min-width: 200px;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.glow {
+  position: absolute;
+  width: 155%;
+  height: 155%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(86, 179, 255, 0.75), transparent 32%),
+    radial-gradient(circle at 70% 38%, rgba(139, 90, 255, 0.65), transparent 34%),
+    radial-gradient(circle at 55% 72%, rgba(255, 89, 180, 0.62), transparent 38%),
+    radial-gradient(circle at 35% 70%, rgba(255, 177, 90, 0.45), transparent 40%);
+  filter: blur(36px);
+  opacity: 0.58;
+  animation: pulseGlow 5.5s ease-in-out infinite;
+}
+
+.iconShell {
+  position: relative;
+  width: 155%;
+  height: 100%;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.18));
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.heroSection:hover .iconShell {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.authorityIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
   position: relative;
   z-index: 2;
-  width: 100%;
-  text-align: center;
+  user-select: none;
+  pointer-events: none;
 }
+
+/* ============================================
+   HERO TEXT — oculto por defecto, aparece en hover
+   ============================================ */
+
+.heroText {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 15;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.2s;
+  pointer-events: none;
+}
+
+.heroSection:hover .heroText {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================
+   CONTENT
+   ============================================ */
 
 .heroContainer {
   max-width: 1000px;
@@ -51,7 +205,6 @@
   line-height: 1.5;
   letter-spacing: -0.02em;
   margin: 0 0 1.5rem;
-  animation: fadeInUp 0.8s ease forwards;
 }
 
 .heroSubheadline {
@@ -61,21 +214,18 @@
   line-height: 1.65;
   max-width: 640px;
   margin: 0 auto 1.5rem;
-  animation: fadeInUp 0.8s ease 0.2s forwards;
-  opacity: 0;
 }
 
 /* ============================================
    CTA
    ============================================ */
+
 .heroCtaGroup {
   display: flex;
   gap: clamp(1rem, 3vw, 1.5rem);
   justify-content: center;
   flex-wrap: wrap;
   margin: 2rem 0;
-  animation: fadeInUp 0.8s ease 0.4s forwards;
-  opacity: 0;
 }
 
 .btnPrimary {
@@ -89,13 +239,10 @@
   font-weight: 600;
   text-decoration: none;
   border-radius: 8px;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btnPrimary:hover {
-  background: var(--color-base);
   color: white;
   transform: scale(1.1);
 }
@@ -103,12 +250,13 @@
 /* ============================================
    SCROLL INDICATOR
    ============================================ */
+
 .scrollIndicator {
   position: absolute;
   bottom: 2.5rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 20;
   color: var(--color-text-light);
   line-height: 0;
   animation: bounce 2.5s ease-in-out infinite;
@@ -123,33 +271,48 @@
 /* ============================================
    ANIMATIONS
    ============================================ */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+
+@keyframes rotateSlow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotateSlowReverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(0.95); opacity: 0.45; }
+  50%       { transform: scale(1.08); opacity: 0.72; }
 }
 
 @keyframes bounce {
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(10px);
-  }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(10px); }
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
+
 @media (max-width: 780px) {
-  .heroSection {
-    padding: 3rem 0;
+  .orbitStage {
+    width: min(420px, 90vw);
+  }
+
+  .coreWrap {
+    min-width: 150px;
+  }
+
+  /* Touch: ícono oculto, texto y órbita visibles */
+  .iconShell {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .heroText {
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
   }
 
   .heroCtaGroup {
@@ -169,8 +332,7 @@
 }
 
 @media (max-width: 480px) {
-  .heroSection {
-    padding: 2rem 0;
+  .orbitStage {
+    width: min(320px, 92vw);
   }
-
 }

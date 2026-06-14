@@ -7,16 +7,9 @@ import SEOAuthority from "./SEOAuthority";
 import SECTOR_CONFIG from "../../config/content";
 import "./styles/Home.css";
 
-/**
- * HOME - Página de inicio completa
- * Ensambla todos los módulos en el orden correcto
- * Data-driven: Todo viene de SECTOR_CONFIG
- * Escalable: Cambiar config = cambiar sector (Ej. Inmobiliaria)
- */
 const Home = () => {
   return (
     <main className="home-page" itemScope itemType="https://schema.org/WebPage">
-      {/* Meta Description para SEO */}
       <meta
         itemProp="description"
         content={SECTOR_CONFIG.hero.valueProp.headline}
