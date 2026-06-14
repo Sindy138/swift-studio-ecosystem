@@ -32,7 +32,7 @@
 }
 
 .footer-logo img {
-  width: clamp(120px, 15vw, 200px);
+  width: clamp(60px, 7.5vw, 100px);
   height: auto;
 }
 
