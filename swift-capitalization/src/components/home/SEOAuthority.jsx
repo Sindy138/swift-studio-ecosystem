@@ -131,7 +131,7 @@ const SEOAuthority = ({ config = SECTOR_CONFIG.services }) => {
             <div className={styles.glow} />
             <div className={styles["icon-shell"]}>
               <img
-                src="../public/seo/icon-seo.png"
+                src="/seo/icon-seo.png"
                 alt="Swift Studio Core"
                 className={styles["authority-icon"]}
                 loading="lazy"
